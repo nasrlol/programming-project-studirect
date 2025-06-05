@@ -60,9 +60,14 @@ class StudentController extends Controller
             $student = Student::findOrFail($id);
             
             $validated = $request->validate([
-                'name' => 'sometimes|required|string|max:255',
-                'email' => 'sometimes|required|email|unique:students,email,'.$id,
-                // Add more validation rules as needed
+                'email' => 'required|email|unique:students,email',
+                'password' => 'required|string|min:8',
+                'study_direction' => 'required|string|max:255',
+                'graduation_track' => 'required|string|max:255',
+                'interests' => 'required|string',
+                'job_preferences' => 'required|string',
+                'cv' => 'nullable|string',
+                'profile_complete' => 'boolean',
             ]);
             
             $student->update($validated);

@@ -5,11 +5,11 @@ use App\Http\Controllers\StudentController;
 use App\Http\Controllers\CompanyController;
 
 // studenten routes
-Route::get('/students', [StudentenController::class, 'index']);
-Route::post('/students', [StudentenController::class, 'store']);
-Route::get('/students/{id}', [StudentenController::class, 'show']);
-Route::put('/students', [StudentenController::class, 'update']);
-Route::delete('/students', [StudentenController::class, 'destroy']);
+Route::get('/students', [StudentController::class, 'index']);
+Route::post('/students', [StudentController::class, 'store']);
+Route::get('/students/{id}', [StudentController::class, 'show']);
+Route::put('/students/{id}', [StudentController::class, 'update']);
+Route::delete('/students/{id}', [StudentController::class, 'destroy']);
 
 // company routes
 Route::get('/companys', [CompanyController::class, 'index']);

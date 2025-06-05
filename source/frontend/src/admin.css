@@ -40,6 +40,10 @@ th {
     background-color: darkgrey;
 }
 
+#create:hover {
+    cursor:pointer;
+}
+
 nav {
     margin-left:2%;
     margin-top: 2.5%;

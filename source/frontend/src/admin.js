@@ -9,7 +9,12 @@ document.getElementById('gebruikers').addEventListener('click', () => {
     gebruikers(resultContainer)
 })
 
-//Add link to stylesheet
+document.getElementById('bedrijven').addEventListener('click', () => {
+    bedrijven(resultContainer)
+})
+
+window.addEventListener('load', () => {
+    //Add link to stylesheet
     const head = document.head;
     //Code borowed from https://stackoverflow.com/questions/11833759/add-stylesheet-to-head-using-javascript-in-body
     const link = document.createElement('link')
@@ -19,3 +24,4 @@ document.getElementById('gebruikers').addEventListener('click', () => {
     head.appendChild(link)
     //start with dashboard
     dashboard(resultContainer)
+})

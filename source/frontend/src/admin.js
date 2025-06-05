@@ -1,4 +1,24 @@
-const resultContainer = document.getElementById('result-container') 
+const mainContainer = document.createElement('div')
+mainContainer.id = 'main-container'
+
+const nav = document.createElement('nav')
+nav.innerHTML = "Admin<br>"
+
+for (let button of ["Dashboard", "Gebruikers", "Bedrijven", "Logs"]) {
+    const btn = document.createElement('button')
+    btn.innerHTML = button
+    btn.classList = "btn-nav"
+    btn.id = button.toLocaleLowerCase()
+    nav.appendChild(btn)
+}
+
+const resultContainer = document.createElement('div')
+resultContainer.id = "result-container"
+
+mainContainer.appendChild(nav)
+mainContainer.appendChild(resultContainer)
+
+document.querySelector('body').appendChild(mainContainer)
 
 
 document.getElementById('dashboard').addEventListener('click', () => {

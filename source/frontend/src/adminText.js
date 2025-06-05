@@ -26,11 +26,14 @@ function gebruikers (element) {
     const search = createSearch();
     gebruiker.appendChild(search)
 
-    //Create a table to show the student amount
-    const userTable = document.createElement('table');
-    userTable.appendChild(createTableLegend())
-
-    gebruiker.appendChild(userTable)
+    //TestData, to be removed
+    const test = [
+        {name: "Steven Deloof", mail: "steven.deloof@student.ehb.be", login:"03-06-2025"},
+        {name: "Livia Deloof", mail: "Livia.deloof@student.ehb.be", login:"01-06-2025"},
+        {name: "Marc Deloof", mail: "Marc.deloof@ehb.be", login:"31-05-2025"}
+    ]
+    //end TestData
+    gebruiker.appendChild(createTable(test))
     element.appendChild(gebruiker)
 }
 
@@ -46,7 +49,15 @@ function bedrijven (element) {
     create.addEventListener("click", () => {addBedrijf(element)})
     bedrijf.appendChild(create)
     bedrijf.appendChild(createSearch())
-    bedrijf.appendChild(createTableLegend())
+
+    //TestData, to be removed
+    const test = [
+        {name: "IT Solutions", mail: "support@ITSolutions.com", login:"02-04-2025"},
+        {name: "Security Fight", mail: "contact@SecurityFight.com", login:"01-06-2025"},
+        {name: "Business Helper", mail: "helper@Business.com", login:"31-05-2025"}
+    ]
+    //end TestData
+    bedrijf.appendChild(createTable(test))
 
     element.appendChild(bedrijf)
 }
@@ -78,9 +89,21 @@ function createSearch() {
     return form
 }
 
-const createTableLegend = () => {
+const createTable = (data) => {
+    const table = document.createElement('table')
     const legend = document.createElement('tr')
+    legend.innerHTML = "<th>naam</th><th>email</th><th>laatste login</th><th>Acties</th>"
+    table.appendChild(legend)
+    for (let element of data) {
+        const line = document.createElement('tr')
+        line.innerHTML = `<td>${element.name}</td>`
+        line.innerHTML += `<td>${element.mail}</td>`
+        line.innerHTML += `<td>${element.login}</td>`
+        //last line will be kept for the actions
+        line.innerHTML += `<td>eye||delete</td>`
+        table.appendChild(line)
+    }
+    //end TestData
 
-    legend.innerHTML = "<th>naam</th><th>email</th><th>laatste login</th>"
-    return legend
+    return table
 }

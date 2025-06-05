@@ -63,9 +63,60 @@ function bedrijven (element) {
 }
 
 function addBedrijf (element) {
-    console.log("click")
-}
+    element.innerHTML = ""
+    //button to go back to previous screen
+    const back = document.createElement('button')
+    back.innerHTML = "Terug"
+    back.classList = "btn-nav"
+    back.addEventListener('click', () => bedrijven(element))
+    element.appendChild(back)
+    //Form to add a company
+    element.innerHTML += "<h2>Bedrijf toevoegen</h2>"
+    const formContainer = document.createElement('div')
+    formContainer.classList = "addCompany"
 
+    formContainer.innerHTML = "<h2>Bedrijf gegevens</h2>"
+    const AddForm = document.createElement('form')
+    //temporary action. Must be replaced with file that adds the company
+    AddForm.action = "./admin.html"
+
+    let input = document.createElement('input')
+    input.type = "text"
+    input.id = "name"
+    input.name = "name"
+    input.placeholder = "Naam"
+    AddForm.appendChild(input);
+
+    input = document.createElement('input')
+    input.type = "text"
+    input.id = "mail"
+    input.name = "mail"
+    input.placeholder = "E-mail"
+    AddForm.appendChild(input);
+
+    input = document.createElement('input')
+    input.type = "password"
+    input.id = "password1"
+    input.name = "password1"
+    input.placeholder = "Wachtwoord"
+    AddForm.appendChild(input);
+
+    input = document.createElement('input')
+    input.type = "password"
+    input.id = "password2"
+    input.name = "password2"
+    input.placeholder = "Bevestig wachtwoord"
+    AddForm.appendChild(input);
+
+    input = document.createElement('input')
+    input.type = "submit"
+    input.value = "Opslaan"
+    AddForm.appendChild(input);
+
+    formContainer.appendChild(AddForm);
+
+    element.appendChild(formContainer)
+}
 function createSearch() {
     const form = document.createElement('form')
     form.classList= 'filter'

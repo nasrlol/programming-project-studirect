@@ -2,9 +2,18 @@ body {
     margin:0;
 }
 
-form {
+h2 {
+    margin:0;
+}
+
+.filter {
     display: flex;
     flex-direction: row;
+}
+.addCompany {
+    width:40%;
+    margin-left:30%;
+    align-content:center;
 }
 
 table {

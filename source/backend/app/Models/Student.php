@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
+
 class Student extends Model
 {
     // Deze velden mogen via mass-assignment ingevuld worden (bijv. create())
@@ -21,14 +22,18 @@ class Student extends Model
     ];
 
     // Een student kan meerdere afspraken hebben
+    
+    /*
     public function appointments(): HasMany
     {
         return $this->hasMany(Appointment::class);
     }
 
     // Een student kan meerdere matches hebben
-    public function matches(): HasMany
+    public function connecties(): HasMany
     {
         return $this->hasMany(Match::class);
     }
+
+    */
 }

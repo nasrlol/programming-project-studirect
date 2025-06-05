@@ -23,8 +23,41 @@ function gebruikers (element) {
     const gebruiker = document.createElement('div')
     gebruiker.innerHTML = "<div>Gebruikers</div>"
 
-    const search = document.createElement('form')
-    search.classList= 'filter'
+    const search = createSearch();
+    gebruiker.appendChild(search)
+
+    //Create a table to show the student amount
+    const userTable = document.createElement('table');
+    userTable.appendChild(createTableLegend())
+
+    gebruiker.appendChild(userTable)
+    element.appendChild(gebruiker)
+}
+
+function bedrijven (element) {
+    element.innerHTML = ""
+    const bedrijf = document.createElement('div')
+    bedrijf.innerHTML = "<div>Bedrijven</div>"
+
+    //Line which will take the admin to a form to add a new company
+    const create = document.createElement('button')
+    create.innerHTML = "Bedrijf toevoegen "
+    create.classList = "btn-nav"
+    create.addEventListener("click", () => {addBedrijf(element)})
+    bedrijf.appendChild(create)
+    bedrijf.appendChild(createSearch())
+    bedrijf.appendChild(createTableLegend())
+
+    element.appendChild(bedrijf)
+}
+
+function addBedrijf (element) {
+    console.log("click")
+}
+
+function createSearch() {
+    const form = document.createElement('form')
+    form.classList= 'filter'
     //Action must be a backend action that takes users/companies from the database
     /*Just an example: search.action='./'*/
     //Icon
@@ -34,22 +67,15 @@ function gebruikers (element) {
     const iconHTML = document.createElement('div');
     iconHTML.style.height = 'fit-content'
     iconHTML.appendChild(icon)
-    search.appendChild(iconHTML)
+    form.appendChild(iconHTML)
     //element for searching name
     const nameSearch  = document.createElement('input')
     nameSearch.type = 'text'
     nameSearch.id='nameSearch'
     nameSearch.name="userName"
-    search.appendChild(nameSearch)
-    search.innerHTML += "<input type='submit' value='filter'>"
-    gebruiker.appendChild(search)
-
-    //Create a table to show the student amount
-    const userTable = document.createElement('table');
-    userTable.appendChild(createTableLegend())
-
-    gebruiker.appendChild(userTable)
-    element.appendChild(gebruiker)
+    form.appendChild(nameSearch)
+    form.innerHTML += "<input type='submit' value='filter'>"
+    return form
 }
 
 const createTableLegend = () => {

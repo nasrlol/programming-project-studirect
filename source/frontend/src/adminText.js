@@ -18,19 +18,22 @@ function dashboard (element)  {
     element.innerHTML = dashboard.innerHTML;
 }
 
-function gebruikers (element) {
+function gebruikers (element, extra = null) {
     element.innerHTML = ""
     const gebruiker = document.createElement('div')
     gebruiker.innerHTML = "<div>Gebruikers</div>"
 
-    const search = createSearch();
+    const search = createSearch("student", element);
     gebruiker.appendChild(search)
     //Table data must be replaced with data from database, when ready
-    gebruiker.appendChild(createTable(test.student))
+
+    if (extra == null)gebruiker.appendChild(createTable(data.student));
+    //If filtered is active, will seperate found names
+    else gebruiker.appendChild(createTable(extra.notFound, extra.found));
     element.appendChild(gebruiker)
 }
 
-function bedrijven (element) {
+function bedrijven (element, extra = null) {
     element.innerHTML = ""
     const bedrijf = document.createElement('div')
     bedrijf.innerHTML = "<div>Bedrijven</div>"
@@ -41,9 +44,10 @@ function bedrijven (element) {
     create.classList = "btn-nav"
     create.addEventListener("click", () => {addBedrijf(element)})
     bedrijf.appendChild(create)
-    bedrijf.appendChild(createSearch())
+    bedrijf.appendChild(createSearch("bedrijf", element))
     //Table data must be replaced with data from database, when ready
-    bedrijf.appendChild(createTable(test.bedrijf))
+    if (extra == null) bedrijf.appendChild(createTable(data.bedrijf));
+    else bedrijf.appendChild(createTable(extra.notFound, extra.found));
 
     element.appendChild(bedrijf)
 }
@@ -105,7 +109,12 @@ function addBedrijf (element) {
     element.appendChild(formContainer)
 }
 
-function createSearch() {
+function filterName(array, name) {
+    //https://stackoverflow.com/questions/35235794/filter-strings-in-array-based-on-content-filter-search-value
+    return array.filter(obj => {return obj.name.indexOf(name) > -1})
+}
+
+function createSearch(type, element) {
     const form = document.createElement('div')
     form.classList= 'filter'
     const icon = document.createElement('img')
@@ -119,23 +128,60 @@ function createSearch() {
     const nameSearch  = document.createElement('input')
     nameSearch.type = 'text'
     nameSearch.id='nameSearch'
+    form.appendChild(nameSearch)
+    //input used to see what type of user we want, a student or a company
+    const typeSearch = document.createElement('input')
+    typeSearch.id = "typeSearch"
+    typeSearch.type = 'hidden'
+    typeSearch.value = type;
 
+    //Button to search for name
     const search = document.createElement('button');
     search.innerHTML = "Filter"
     search.addEventListener('click', () => {
+        //If nothing is in the text field don't execute the function
+        if (nameSearch.value == "") return 0
+        const type = document.getElementById("typeSearch").value
+        let array
+        if (type == "student") array = copyObjectArray(data.student)
+        else array = copyObjectArray(data.bedrijf)
 
+        //Filter the array. First has the searched value, second doesn't
+        //https://stackoverflow.com/questions/35235794/filter-strings-in-array-based-on-content-filter-search-value
+        const filteredArray = array.filter(obj => {return obj.name.indexOf(nameSearch.value) > -1})
+        console.log(filteredArray)
+        for (let filteredItem of filteredArray) {
+            let index = array.indexOf(filteredItem)
+            array.splice(index, 1)
+        }
+        const arrayList = {
+            found: filteredArray,
+            notFound: array
+        }
+        if (type == "student") gebruikers(element, arrayList)
+        else bedrijven(element, arrayList)
     })
-
-    form.appendChild(nameSearch)
+    form.appendChild(typeSearch)
     form.appendChild(search)
     return form
 }
 
-function createTable (data) {
+function createTable (data, extra) {
     const table = document.createElement('table')
     const legend = document.createElement('tr')
     legend.innerHTML = "<th>naam</th><th>email</th><th>laatste login</th><th>Acties</th>"
     table.appendChild(legend)
+    if (extra) {
+        for (let element of extra) {
+            const line = document.createElement('tr')
+            line.innerHTML = `<td>|${element.name}</td>`
+            line.innerHTML += `<td>${element.mail}</td>`
+            line.innerHTML += `<td>${element.login}</td>`
+            //last line will be kept for the actions
+            line.innerHTML += `<td>eye||delete</td>`
+            table.appendChild(line)
+        }
+    }
     for (let element of data) {
         const line = document.createElement('tr')
         line.innerHTML = `<td>${element.name}</td>`
@@ -148,4 +194,13 @@ function createTable (data) {
     //end TestData
 
     return table
+}
+
+//I have no idea how to copy an object by value in javascript, so yeah. Used to copy the arrays inside an object
+function copyObjectArray(array) {
+    let newArray = new Array()
+    for (let el of array) {
+        newArray.push(el)
+    }
+    return newArray;
 }

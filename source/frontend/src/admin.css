@@ -39,20 +39,6 @@ th {
     font-family: Verdana, sans-serif;
 }
 
-#result-container {
-    margin-left: 2%;
-    width:82.5%;
-
-
-    height:90%;
-    margin-top: 3%;
-    background-color: darkgrey;
-}
-
-#create:hover {
-    cursor:pointer;
-}
-
 nav {
     margin-left:2%;
     margin-top: 2.5%;
@@ -73,6 +59,20 @@ nav {
 }
 
 .btn-nav:hover {
+    cursor:pointer;
+}
+
+#result-container {
+    margin-left: 2%;
+    width:82.5%;
+
+
+    height:90%;
+    margin-top: 2.5%;
+    background-color: darkgrey;
+}
+
+#create:hover {
     cursor:pointer;
 }
 

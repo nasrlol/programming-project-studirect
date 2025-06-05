@@ -25,15 +25,8 @@ function gebruikers (element) {
 
     const search = createSearch();
     gebruiker.appendChild(search)
-
-    //TestData, to be removed
-    const test = [
-        {name: "Steven Deloof", mail: "steven.deloof@student.ehb.be", login:"03-06-2025"},
-        {name: "Livia Deloof", mail: "Livia.deloof@student.ehb.be", login:"01-06-2025"},
-        {name: "Marc Deloof", mail: "Marc.deloof@ehb.be", login:"31-05-2025"}
-    ]
-    //end TestData
-    gebruiker.appendChild(createTable(test))
+    //Table data must be replaced with data from database, when ready
+    gebruiker.appendChild(createTable(test.student))
     element.appendChild(gebruiker)
 }
 
@@ -49,18 +42,12 @@ function bedrijven (element) {
     create.addEventListener("click", () => {addBedrijf(element)})
     bedrijf.appendChild(create)
     bedrijf.appendChild(createSearch())
-
-    //TestData, to be removed
-    const test = [
-        {name: "IT Solutions", mail: "support@ITSolutions.com", login:"02-04-2025"},
-        {name: "Security Fight", mail: "contact@SecurityFight.com", login:"01-06-2025"},
-        {name: "Business Helper", mail: "helper@Business.com", login:"31-05-2025"}
-    ]
-    //end TestData
-    bedrijf.appendChild(createTable(test))
+    //Table data must be replaced with data from database, when ready
+    bedrijf.appendChild(createTable(test.bedrijf))
 
     element.appendChild(bedrijf)
 }
+
 
 function addBedrijf (element) {
     element.innerHTML = ""
@@ -117,12 +104,10 @@ function addBedrijf (element) {
 
     element.appendChild(formContainer)
 }
+
 function createSearch() {
-    const form = document.createElement('form')
+    const form = document.createElement('div')
     form.classList= 'filter'
-    //Action must be a backend action that takes users/companies from the database
-    /*Just an example: search.action='./'*/
-    //Icon
     const icon = document.createElement('img')
     icon.src = "./public/magnifying glass.jpg"
     icon.style.height = "20px"
@@ -134,13 +119,19 @@ function createSearch() {
     const nameSearch  = document.createElement('input')
     nameSearch.type = 'text'
     nameSearch.id='nameSearch'
-    nameSearch.name="userName"
+
+    const search = document.createElement('button');
+    search.innerHTML = "Filter"
+    search.addEventListener('click', () => {
+
+    })
+
     form.appendChild(nameSearch)
-    form.innerHTML += "<input type='submit' value='filter'>"
+    form.appendChild(search)
     return form
 }
 
-const createTable = (data) => {
+function createTable (data) {
     const table = document.createElement('table')
     const legend = document.createElement('tr')
     legend.innerHTML = "<th>naam</th><th>email</th><th>laatste login</th><th>Acties</th>"

@@ -27,7 +27,7 @@ th {
     background-color: grey;
     height:90vh;
     width:95vw;
-
+    font-family: Verdana, sans-serif;
 }
 
 #result-container {
@@ -37,7 +37,6 @@ th {
 
     height:90%;
     margin-top: 3%;
-
     background-color: darkgrey;
 }
 
@@ -51,12 +50,17 @@ nav {
     flex-direction: column;
     color: white;
     background-color: #252D3C;
+    font: Verdana, sans-serif;
 }
 
 .btn-nav {
     border: none;
     background-color: inherit;
     color: inherit;
+}
+
+.btn-nav:hover {
+    cursor:pointer;
 }
 
 .member-amount {

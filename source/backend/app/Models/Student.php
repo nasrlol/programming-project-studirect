@@ -23,17 +23,15 @@ class Student extends Model
 
     // Een student kan meerdere afspraken hebben
     
-    /*
     public function appointments(): HasMany
     {
         return $this->hasMany(Appointment::class);
     }
 
-    // Een student kan meerdere matches hebben
+    // Een student kan meerdere matches/connecties hebben
     public function connecties(): HasMany
     {
-        return $this->hasMany(Match::class);
+        return $this->hasMany(connecties::class);
     }
 
-    */
 }

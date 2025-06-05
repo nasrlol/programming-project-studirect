@@ -4,10 +4,13 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 
 class Student extends Model
 {
+    use HasFactory;  // Add this line
+    
     // Deze velden mogen via mass-assignment ingevuld worden (bijv. create())
     protected $fillable = [
         'email',
@@ -18,11 +21,9 @@ class Student extends Model
         'job_preferences',
         'cv',
         'profile_complete',
-        'is_active',
     ];
 
     // Een student kan meerdere afspraken hebben
-    
     public function appointments(): HasMany
     {
         return $this->hasMany(Appointment::class);
@@ -31,7 +32,6 @@ class Student extends Model
     // Een student kan meerdere matches/connecties hebben
     public function connecties(): HasMany
     {
-        return $this->hasMany(connecties::class);
+        return $this->hasMany(Connectie::class);  // Fix class name capitalization
     }
-
 }

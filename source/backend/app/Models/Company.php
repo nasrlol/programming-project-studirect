@@ -19,7 +19,6 @@ class Company extends Model
         'booth_location',
         'photo',
         'speeddate_duration',
-        'is_active',
     ];
 
     // Relatie: een bedrijf kan meerdere afspraken hebben
@@ -29,8 +28,8 @@ class Company extends Model
     }
 
     // Relatie: een bedrijf kan meerdere matches hebben
-    public function matches(): HasMany
+    public function connecties(): HasMany
     {
-        return $this->hasMany(Match::class);
+        return $this->hasMany(Connectie::class);
     }
 }

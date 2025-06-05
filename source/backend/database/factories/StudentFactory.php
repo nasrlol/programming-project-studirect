@@ -21,7 +21,6 @@ class StudentFactory extends Factory
             'job_preferences' => $this->faker->sentence(3),
             'cv' => 'cv_' . Str::random(10) . '.pdf', // Placeholder for file name
             'profile_complete' => $this->faker->boolean,
-            'is_active' => $this->faker->boolean,
         ];
     }
 }

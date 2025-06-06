@@ -9,10 +9,11 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Student extends Model
 {
-    use HasFactory;  // Add this line
-    
-    // Deze velden mogen via mass-assignment ingevuld worden (bijv. create())
+    use HasFactory;
+
     protected $fillable = [
+        'first_name',
+        'last_name',
         'email',
         'password',
         'study_direction',

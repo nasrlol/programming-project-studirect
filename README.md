@@ -29,9 +29,6 @@ cd studirect
 2. installeren (Laravel)
 
 cd source 
-composer install
-cp .env.example .env
-php artisan key:generate
-php artisan migrate --seed
-php artisan serve
+npm run install
+npm run dev
 ```

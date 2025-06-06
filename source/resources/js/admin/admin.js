@@ -1,4 +1,3 @@
-import { data } from "./adminVars"
 import { dashboard, users, companies   } from "./adminText"
 
 const mainContainer = document.createElement('div')

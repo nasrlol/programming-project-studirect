@@ -121,7 +121,7 @@ function createSearch(type, element) {
     const form = document.createElement('div')
     form.classList= 'filter'
     const icon = document.createElement('img')
-    icon.src = "./public/magnifying glass.jpg"
+    icon.src = "./images/magnifying glass.jpg"
     icon.style.height = "20px"
     const iconHTML = document.createElement('div');
     iconHTML.style.height = 'fit-content'

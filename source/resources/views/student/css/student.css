@@ -66,19 +66,19 @@ header nav ul li a {        /*navigatie knoppen*/
     height: 100%;
 }
 
-#screen-rechthoek {          /*rechthoek voor matches scherm rechts*/
+#screen-rectangle {          /*rechthoek voor matches scherm rechts*/
     width: 400px;
     height: 700px;
     background: #424242;
 }
 
-#bedrijf-naam {         /*naam van bedrijf*/
+#company-name {         /*naam van bedrijf*/
     font-weight: 900;
     padding: 1rem 1rem 0 1rem;
     margin: 0;
 }
 
-#bedrijf-titel p {          /*positie binnen bedrijf*/
+#company-title p {          /*positie binnen bedrijf*/
     padding: 0.5rem 1rem 1rem 1.5rem;
     margin: 0;
 }
@@ -89,27 +89,27 @@ header nav ul li a {        /*navigatie knoppen*/
     height: 100px;
 }
 
-#bedrijf-info {            /*informatie over bedrijf*/
+#company-info {            /*informatie over bedrijf*/
     padding: 1rem;
 }
 
-#bedrijf-info h5 {
+#company-info h5 {
     margin: 0;
     font-size: 1rem;
 }
 
-#bedrijf-info ul, p {
+#company-info ul, p {
     padding-left: 1.5rem;
     color: #eee;
     list-style-type: circle;
 }
 
-#swipen {         /*swipe knoppen*/
+#swipe {         /*swipe knoppen*/
     display: flex;
     justify-content: space-between;
 }
 
-#swipen button {
+#swipe button {
       background-color: #aaa;
       border: 2px solid #fff;
       border-radius: 50%;
@@ -119,7 +119,7 @@ header nav ul li a {        /*navigatie knoppen*/
       cursor: pointer;
 }
 
-#plattegrond {          /*plattegrond van EHB omkadering*/
+#groundplan {          /*plattegrond van EHB omkadering*/
     width: 100%;
     height: 300px;
     overflow: auto;
@@ -128,42 +128,42 @@ header nav ul li a {        /*navigatie knoppen*/
     margin-top: auto;
 }
 
-#plattegrond img {
+#groundplan img {
     width: 100%;
 }
 
-#berichten-lijst {          /*berichten lijst van bedrijven*/
+#message-list {          /*message lijst van bedrijven*/
     display: flex;
     flex-direction: column;
 }
 
-.bericht-item {             /*naam van bedrijf voor bericht*/
+.message-item {             /*naam van bedrijf voor messages*/
     padding: 1rem;
     border: solid #fff;
     border-radius: 6px;
 }
 
-#bericht-info {             /*als niks geselecteerd is op het berichten scherm*/
+#message-info {             /*als niks geselecteerd is op het messages scherm*/
     text-align: center;
 }
 
-#bericht-info h3 {
+#message-info h3 {
     margin-bottom: 0.3rem;
     font-size: 2rem;
     color: #e8e8e8;
 }
 
-#bericht-info p {
+#message-info p {
     font-size: 1rem;
     color: #ccc;
 }
 
-#afspraken-lijst {          /*lijst van gereserveerde tijden*/
+#times-list {          /*lijst van gereserveerde tijden*/
     display: flex;
     flex-direction: column;
 }
 
-#kalender-tabel {           /* tabel van gereserveerde tijden*/
+#calendar-table {           /* tabel van gereserveerde tijden*/
     width: 100%;
     border-collapse: collapse;
     background: #2e2e2e;
@@ -171,13 +171,13 @@ header nav ul li a {        /*navigatie knoppen*/
     table-layout: fixed;
 }
 
-#kalender-tabel td, th {        /*opmaak cellen van de tabel*/
+#calendar-table td, th {        /*opmaak cellen van de tabel*/
     border: 0.5px solid #ccc;
     width: 50px;
     height: 50px;
     text-align: center;
 }
 
-#kalender-tabel th:first-child{     /*fix voor probleem eerste rij van tabel*/
+#calendar-table th:first-child{     /*fix voor probleem eerste rij van tabel*/
     width: 0.5rem;
 }

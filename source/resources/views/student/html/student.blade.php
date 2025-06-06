@@ -14,9 +14,9 @@
                 <h1>StuDirect</h1>
                 <nav>
                     <ul>
-                        <li><a id="matches">Matches</a></li>
-                        <li><a id="berichten">Berichten</a></li>
-                        <li><a id="kalender">Kalender</a></li>
+                        <li><a id="match">Matches</a></li>
+                        <li><a id="message">Berichten</a></li>
+                        <li><a id="calendar">Kalender</a></li>
                     </ul>
                 </nav>
             </header>

@@ -31,7 +31,7 @@ class StudentController extends Controller
         ]);
 
         $student = Student::create($validated);
-        
+
         return response()->json([
             'data' => $student,
             'message' => 'Student created successfully'
@@ -58,8 +58,10 @@ class StudentController extends Controller
     {
         try {
             $student = Student::findOrFail($id);
-            
+
             $validated = $request->validate([
+                'first_name' => 'required|string|max:255',
+                'last_name' => 'required|string|max:255',
                 'email' => 'required|email|unique:students,email',
                 'password' => 'required|string|min:8',
                 'study_direction' => 'required|string|max:255',
@@ -69,9 +71,9 @@ class StudentController extends Controller
                 'cv' => 'nullable|string',
                 'profile_complete' => 'boolean',
             ]);
-            
+
             $student->update($validated);
-            
+
             return response()->json([
                 'data' => $student,
                 'message' => 'Student updated successfully'
@@ -89,7 +91,7 @@ class StudentController extends Controller
         try {
             $student = Student::findOrFail($id);
             $student->delete();
-            
+
             return response()->json([
                 'message' => 'Student deleted successfully'
             ]);

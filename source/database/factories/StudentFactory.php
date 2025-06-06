@@ -13,6 +13,8 @@ class StudentFactory extends Factory
     public function definition(): array
     {
         return [
+            'first_name' => $this->faker->name(),
+            'last_name' => $this->faker->lastName(),
             'email' => $this->faker->unique()->safeEmail,
             'password' => bcrypt('password'), // You can hash a default password
             'study_direction' => $this->faker->randomElement(['Informatica', 'Economie', 'Talen', 'Wetenschappen']),

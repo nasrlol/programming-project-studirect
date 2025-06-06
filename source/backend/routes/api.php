@@ -24,11 +24,11 @@ Route::put('/companys', [CompanyController::class, 'update']);
 Route::delete('/companys', [CompanyController::class, 'destroy']);
 
 // appointement routes
-Route::get('/appointements', [AppointementController::class, 'index']);
-Route::post('/appointements', [AppointementController::class, 'store']);
-Route::get('/appointements/{id}', [AppointementController::class, 'show']);
-Route::put('/appointements', [AppointementController::class, 'update']);
-Route::delete('/appointements', [AppointementController::class, 'destroy']);
+/*Route::get('/appointements', [App::class, 'index']);
+Route::post('/appointements', [AppointmentController::class, 'store']);
+Route::get('/appointements/{id}', [AppointmentController::class, 'show']);
+Route::put('/appointements', [AppointmentController::class, 'update']);
+Route::delete('/appointements', [AppointmentController::class, 'destroy']);*/
 
 
 

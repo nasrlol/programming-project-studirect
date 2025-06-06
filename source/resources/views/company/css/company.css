@@ -1,139 +1,132 @@
-  body {
-    margin: 0;
-    background-color: hwb(0 11% 89%);
-    font-family: Verdana, Geneva, Tahoma, sans-serif;
-  }
+body {
+  margin: 0;
+  background-color: hwb(0 11% 89%);
+  font-family: Verdana, Geneva, Tahoma, sans-serif;
+}
 
-  header {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    background-color: #0066ff;
-    border-bottom: 3px solid #00aaff;
-  }
+header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background-color: #0066ff;
+  border-bottom: 3px solid #00aaff;
+}
 
-  .left,
-  .center,
-  .right {
-    display: flex;
-    align-items: center;
-  }
+.left,
+.center,
+.right {
+  display: flex;
+  align-items: center;
+}
 
+.left img {
+  height: 150px;
+  margin-right: 8px;
+}
 
+.center button,
+.right button {
+  color: black;
+  text-decoration: none;
+  margin: 0 10px;
+  border-radius: 25px;
+  padding: 10px 20px;
+  font-size: 16px;
+  border: 2px solid black;
+  background-color: wheat;
+  cursor: pointer;
+}
 
-  .left img {
-    height: 150px;
-    margin-right: 8px;
-  }
+.center button:hover,
+.right button:hover {
+  background-color: coral;
+}
 
-  .center button {
-    color: black;
-    text-decoration: none;
-    margin: 0 10px;
-    border-radius: 25px;
-    padding: 10px 20px;
-    font-size: 16px;
-    border: 2px solid black;
-    background-color: wheat;
-    cursor: pointer;
-  }
+.main-container {
+  display: flex;
+  gap: 40px;
+  justify-content: center;
+  align-items: flex-start;
+  padding: 40px;
+  flex-wrap: wrap;
+}
 
-  .right button {
-    color: black;
-    text-decoration: none;
-    margin: 0 10px;
-    border-radius: 25px;
-    padding: 10px 20px;
-    font-size: 16px;
-    border: 2px solid black;
-    background-color: wheat;
-    cursor: pointer;
-  }
+.notifications {
+  flex: 1;
+  max-width: 100%;
+  width: fit-content;
+  color: white;
+  font-size: clamp(1rem, 2.5vw, 1.5rem);
+  line-height: 1.6;
+}
 
-  .right button:hover{
-    background-color: coral;
-  }
+.notifications h2 {
+  font-size: 1.8rem;
+  margin-bottom: 15px;
+  color: #ffffff;
+}
 
-  .center button:hover{
-    background-color: coral;
-  }
+.notifications p {
+  background-color: #2a2a2a;
+  padding: 10px 15px;
+  margin-bottom: 10px;
+  border-radius: 10px;
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.5);
+}
 
-   .main-container {
-    display: flex;
-    gap: 40px;
-    justify-content: center;
-    align-items: flex-start;
-    padding: 40px;
-    flex-wrap: wrap;
-  }
+.map {
+  flex: 1;
+  max-width: 100%;
+}
 
-  .meldingen {
-    flex: 1;
-    max-width: 100%;
-    width: fit-content;
-    color: white;
-    font-size: clamp(1rem, 2.5vw, 1.5rem);
-    line-height: 1.6;
-  }
+.map img {
+  width: fit-content;
+  height: auto;
+  border: 2px solid #444;
+  border-radius: 10px;
+}
 
+/* message */
 
-  .meldingen h2 {
-    font-size: 1.8rem;
-    margin-bottom: 15px;
-    color: #ffffff;
-  }
-
-  .meldingen p {
-    background-color: #2a2a2a;
-    padding: 10px 15px;
-    margin-bottom: 10px;
-    border-radius: 10px;
-    box-shadow: 0 0 5px rgba(0, 0, 0, 0.5);
-  }
-
-  .plattegrond {
-    flex: 1;
-    max-width: 100%;
-  }
-
-  .plattegrond img {
-    width: fit-content;
-    height: auto;
-    border: 2px solid #444;
-    border-radius: 10px;
-
-  }
-
-  /*berichten*/
-
-
-
-  .berichten-container {
+.message-container {
   display: flex;
   height: 80vh;
   background-color: #111;
   color: white;
 }
 
-.gesprekken-lijst {
+.chat-list {
   width: 25%;
   border-right: 2px solid #333;
   padding: 10px;
 }
 
-.gesprekken-lijst h3 {
+.chat-list h3 {
   margin-top: 0;
 }
 
-.gebruiker {
+.user {
   background-color: #222;
   padding: 10px;
   margin-bottom: 10px;
   border-radius: 5px;
   cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 10px;
 }
 
-.chat-venster {
+.user:hover {
+  background-color: #333;
+}
+
+.avatar {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+}
+
+.chat-window {
   flex: 1;
   display: flex;
   flex-direction: column;
@@ -141,7 +134,7 @@
   position: relative;
 }
 
-.chat-naam {
+.chat-name {
   display: flex;
   align-items: center;
   gap: 10px;
@@ -149,7 +142,7 @@
   margin-bottom: 10px;
 }
 
-.chat-bubbel {
+.chat-bubble {
   background-color: #ccc;
   color: black;
   padding: 10px 15px;
@@ -168,30 +161,9 @@
   font-size: 1rem;
 }
 
+/* calendar */
 
-.gebruiker {
-  background-color: #222;
-  padding: 10px;
-  margin-bottom: 10px;
-  border-radius: 5px;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  gap: 10px;
-}
-
-.gebruiker:hover {
-  background-color: #333;
-}
-
-.avatar {
-  width: 30px;
-  height: 30px;
-  border-radius: 50%;
-}
-
-
-.kalender-container {
+.calendar-container {
   display: flex;
   gap: 30px;
   padding: 20px;
@@ -200,53 +172,50 @@
   box-sizing: border-box;
 }
 
-.afspraken-lijst {
-   flex: 0 0 40%;
+.appointment-list {
+  flex: 0 0 40%;
   border-right: 2px solid #444;
   padding-right: 20px;
   box-sizing: border-box;
 }
 
-.afspraken-lijst h3 {
+.appointment-list h3 {
   margin-top: 0;
 }
 
-.kalender-tabel table {
+.calendar-table {
+  flex: 0 0 55%;
+  box-sizing: border-box;
+}
+
+.calendar-table table {
   border-collapse: collapse;
   width: 100%;
   background-color: #111;
   color: white;
-  
 }
 
-.kalender-tabel{
-
-  flex: 0 0 55%;
-  box-sizing: border-box;
-
-}
-
-.kalender-tabel th,
-.kalender-tabel td {
+.calendar-table th,
+.calendar-table td {
   border: 1px solid #444;
   padding: 8px 12px;
   text-align: center;
 }
 
-.kalender-tabel th {
+.calendar-table th {
   background-color: #222;
 }
 
-.kalender-tabel td {
+.calendar-table td {
   background-color: #1a1a1a;
 }
 
-.kalender-tabel td span {
+.calendar-table td span {
   font-weight: bold;
 }
 
 .center button.active {
   text-decoration: underline;
   font-weight: bold;
-  background-color: #ffffffaa; /* optioneel: visueel accent */
+  background-color: #ffffffaa;
 }

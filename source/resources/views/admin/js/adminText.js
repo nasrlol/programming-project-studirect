@@ -4,21 +4,21 @@ function dashboard (element)  {
     const feedback = document.createElement('div')
     feedback.classList = "member-amount"
 
-    const studenten = document.createElement('div')
-    /*student amount from backend*/studenten.innerHTML = "42<br>"
-    studenten.innerHTML += 'studenten'
-    feedback.appendChild(studenten)
+    const students = document.createElement('div')
+    /*student amount from backend*/students.innerHTML = "42<br>"
+    students.innerHTML += 'students'
+    feedback.appendChild(students)
 
-    const bedrijven = document.createElement('div')
-    /*bedrijven amount from backend*/bedrijven.innerHTML = "21<br>"
-    bedrijven.innerHTML += "bedrijven";
-    feedback.appendChild(bedrijven)
+    const companies = document.createElement('div')
+    /*bedrijven amount from backend*/companies.innerHTML = "21<br>"
+    companies.innerHTML += "bedrijven";
+    feedback.appendChild(companies)
 
     dashboard.appendChild(feedback)
     element.innerHTML = dashboard.innerHTML;
 }
 
-function gebruikers (element, extra = null) {
+function users (element, extra = null) {
     element.innerHTML = ""
     const gebruiker = document.createElement('div')
     gebruiker.innerHTML = "<div>Gebruikers</div>"
@@ -33,33 +33,33 @@ function gebruikers (element, extra = null) {
     element.appendChild(gebruiker)
 }
 
-function bedrijven (element, extra = null) {
+function companies (element, extra = null) {
     element.innerHTML = ""
-    const bedrijf = document.createElement('div')
-    bedrijf.innerHTML = "<div>Bedrijven</div>"
+    const company = document.createElement('div')
+    company.innerHTML = "<div>Bedrijven</div>"
 
     //Line which will take the admin to a form to add a new company
     const create = document.createElement('button')
     create.innerHTML = "Bedrijf toevoegen "
     create.classList = "btn-nav"
-    create.addEventListener("click", () => {addBedrijf(element)})
-    bedrijf.appendChild(create)
-    bedrijf.appendChild(createSearch("bedrijf", element))
+    create.addEventListener("click", () => {addCompany(element)})
+    company.appendChild(create)
+    company.appendChild(createSearch("company", element))
     //Table data must be replaced with data from database, when ready
-    if (extra == null) bedrijf.appendChild(createTable(data.bedrijf));
-    else bedrijf.appendChild(createTable(extra.notFound, extra.found));
+    if (extra == null) company.appendChild(createTable(data.company));
+    else company.appendChild(createTable(extra.notFound, extra.found));
 
-    element.appendChild(bedrijf)
+    element.appendChild(company)
 }
 
 
-function addBedrijf (element) {
+function addCompany (element) {
     element.innerHTML = ""
     //button to go back to previous screen
     const back = document.createElement('button')
     back.innerHTML = "Terug"
     back.classList = "btn-nav"
-    back.addEventListener('click', () => bedrijven(element))
+    back.addEventListener('click', () => companies(element))
     element.appendChild(back)
     //Form to add a company
     element.innerHTML += "<h2>Bedrijf toevoegen</h2>"
@@ -144,7 +144,7 @@ function createSearch(type, element) {
         const type = document.getElementById("typeSearch").value
         let array
         if (type == "student") array = copyObjectArray(data.student)
-        else array = copyObjectArray(data.bedrijf)
+        else array = copyObjectArray(data.company)
 
         //Filter the array. First has the searched value, second doesn't
         //https://stackoverflow.com/questions/35235794/filter-strings-in-array-based-on-content-filter-search-value
@@ -158,8 +158,8 @@ function createSearch(type, element) {
             found: filteredArray,
             notFound: array
         }
-        if (type == "student") gebruikers(element, arrayList)
-        else bedrijven(element, arrayList)
+        if (type == "student") users(element, arrayList)
+        else companies(element, arrayList)
     })
     form.appendChild(typeSearch)
     form.appendChild(search)

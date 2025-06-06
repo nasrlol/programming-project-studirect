@@ -1,6 +1,6 @@
 //test data voor de tabellen
 const data = {
-    bedrijf: [
+    company: [
         {name: "IT Solutions", mail: "support@ITSolutions.com", login:"02-04-2025", searched: 0},
         {name: "IT Helper", mail: "support@ITHelper.com", login:"10-04-2025", searched: 0},
         {name: "Security Solutions", mail: "support@SecuritySolutions.com", login:"02-01-2025", searched: 0},

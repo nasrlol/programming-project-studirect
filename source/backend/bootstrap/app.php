@@ -10,7 +10,7 @@ return Application::configure(basePath: dirname(__DIR__))
         api: __DIR__.'/../routes/api.php',  // Voeg deze regel toe
         commands: __DIR__.'/../routes/console.php',
         health: '/up',
-    )
+    )   
     ->withMiddleware(function (Middleware $middleware) {
         //
     })

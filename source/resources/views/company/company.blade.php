@@ -5,7 +5,7 @@
     <link rel="icon" type="image/svg+xml" href="/vite.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Main scherm</title>
-    <link rel="stylesheet" href="src/bedrijf.css">
+    <link rel="stylesheet" href="source\resources\views\company\css\company.css">
   </head>
   <body>
 
@@ -14,8 +14,8 @@
   <img id="logo" src="public/studirect.png" alt="studirect logo">
 </div>
 <div class="center">  <button id="homeBtn">home page</button>
-<button id="messageBtn">berichten</button>
-<button id="calenderBtn">kalender</button>
+<button id="messageBtn">messages</button>
+<button id="calendarBtn">calendar</button>
 </div>
 <div class="right">
 <button>settings</button></div>
@@ -25,6 +25,6 @@
 
 
 </main>
-<script src="src/bedrijf.js"></script>
+<script src="source\resources\views\company\js\company.js"></script>
   </body>
 </html>

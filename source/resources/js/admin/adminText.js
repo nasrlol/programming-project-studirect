@@ -1,4 +1,7 @@
-function dashboard (element)  {
+import { data } from "./adminVars"
+
+
+export function dashboard (element)  {
     const dashboard = document.createElement('div')
     dashboard.innerHTML += "<div>Dashboard</div>"
     const feedback = document.createElement('div')
@@ -18,7 +21,7 @@ function dashboard (element)  {
     element.innerHTML = dashboard.innerHTML;
 }
 
-function users (element, extra = null) {
+export function users (element, extra = null) {
     element.innerHTML = ""
     const gebruiker = document.createElement('div')
     gebruiker.innerHTML = "<div>Gebruikers</div>"
@@ -33,7 +36,7 @@ function users (element, extra = null) {
     element.appendChild(gebruiker)
 }
 
-function companies (element, extra = null) {
+export function companies (element, extra = null) {
     element.innerHTML = ""
     const company = document.createElement('div')
     company.innerHTML = "<div>Bedrijven</div>"
@@ -118,7 +121,7 @@ function createSearch(type, element) {
     const form = document.createElement('div')
     form.classList= 'filter'
     const icon = document.createElement('img')
-    icon.src = "./public/magnifying glass.jpg"
+    icon.src = "./images/magnifying glass.jpg"
     icon.style.height = "20px"
     const iconHTML = document.createElement('div');
     iconHTML.style.height = 'fit-content'

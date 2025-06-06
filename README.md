@@ -24,16 +24,18 @@ De backend van deze applicatie is beschikbaar op [nasrlol/studirect-api](https:/
 
 ## Installatie
 
-### 1. Repository klonen
-
 
 **De installatie van de frontend is nog niet volledig afgerond. De pagina-navigatie werkt deels, maar het correct laden van de juiste pagina's via Laravel-routing moet nog verder onderzocht en uitgewerkt worden.**
-```bash run
+
+1. Repository klonen
+
+```bash
 git clone https://github.com/nasrlol/programming-project-studirect
 cd programming-project-studirect
-
+```
 2. starten
 
+```bash
 cd source 
 npm run install
 npm run dev

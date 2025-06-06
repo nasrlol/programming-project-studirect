@@ -5,6 +5,8 @@ De applicatie is ontwikkeld als onderdeel van het programmeerproject en biedt ee
 
 ![StuDirect UI](https://github.com/user-attachments/assets/8a2230b3-5fd6-4c3a-99ef-2bc7d66b84d1)
 
+De backend van deze applicatie is beschikbaar op [nasrlol/studirect-api](https://github.com/nasrlol/studirect-api).
+
 ## Functionaliteiten
 
 - Swipe-functionaliteit om studenten en bedrijven te matchen
@@ -22,7 +24,9 @@ De applicatie is ontwikkeld als onderdeel van het programmeerproject en biedt ee
 
 ### 1. Repository klonen
 
-```bash
+
+**De installatie van de frontend is nog niet volledig afgerond. De pagina-navigatie werkt deels, maar het correct laden van de juiste pagina's via Laravel-routing moet nog verder onderzocht en uitgewerkt worden.**
+```bash run
 git clone https://github.com/nasrlol/programming-project-studirect
 cd studirect
 
@@ -32,3 +36,5 @@ cd source
 npm run install
 npm run dev
 ```
+
+

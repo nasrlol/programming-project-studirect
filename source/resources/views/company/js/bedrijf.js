@@ -43,8 +43,8 @@ document.addEventListener("DOMContentLoaded", () => {
     const content = document.getElementById("content");
 
     const homeBtn = document.getElementById("homeBtn");
-    const berichtenBtn = document.getElementById("berichtenBtn");
-    const kalenderBtn = document.getElementById("kalenderBtn");
+    const messageBtn = document.getElementById("messageBtn");
+    const calenderBtn = document.getElementById("calenderBtn");
     // initialiseer bij laden
     laadHomeContent();
     setActiveButton("homeBtn");
@@ -59,22 +59,22 @@ document.addEventListener("DOMContentLoaded", () => {
 
 /*berichten page*/
 
-berichtenBtn.addEventListener("click", () => {
+messageBtn.addEventListener("click", () => {
     console.log("Klik op berichten-knop");
-    setActiveButton("berichtenBtn");
+    setActiveButton("messag3Btn");
     content.innerHTML = "";
 
-    const berichtenContainer = document.createElement("div");
-    berichtenContainer.classList.add("berichten-container");
+    const messageContainer = document.createElement("div");
+    messageContainer.classList.add("message-container");
 
-    const gesprekkenLijst = document.createElement("div");
-    gesprekkenLijst.classList.add("gesprekken-lijst");
+    const discussionList = document.createElement("div");
+    discussionList.classList.add("discussion-list");
 
-    const gesprekkenTitel = document.createElement("h3");
-    gesprekkenTitel.textContent = "berichten:";
-    gesprekkenLijst.appendChild(gesprekkenTitel);
+    const discussionTitel = document.createElement("h3");
+    discussionTitel.textContent = "message:";
+    discussionList.appendChild(discussionTitel);
 
-    const gebruikers = [
+    const user = [
         {
             naam: "alexandra",
             foto: "https://i.pravatar.cc/40?img=1",
@@ -92,22 +92,22 @@ berichtenBtn.addEventListener("click", () => {
         }
     ];
 
-    const chatVenster = document.createElement("div");
-    chatVenster.classList.add("chat-venster");
+    const chatWindow = document.createElement("div");
+    chatWindow.classList.add("chat-Window");
 
-    function laadChat(gebruiker) {
-        chatVenster.innerHTML = "";
+    function laadChat(user) {
+        chatWindow.innerHTML = "";
 
-        const naam = document.createElement("div");
-        naam.classList.add("chat-naam");
-        naam.innerHTML = `<img src="${gebruiker.foto}" class="avatar"> ${gebruiker.naam}`;
-        chatVenster.appendChild(naam);
+        const name = document.createElement("div");
+        name.classList.add("chat-name");
+        name.innerHTML = `<img src="${user.foto}" class="avatar"> ${gebruiker.name}`;
+        chatWindow.appendChild(name);
 
-        gebruiker.berichten.forEach(msg => {
-            const chatBubbel = document.createElement("div");
-            chatBubbel.classList.add("chat-bubbel");
-            chatBubbel.textContent = msg;
-            chatVenster.appendChild(chatBubbel);
+        user.message.forEach(msg => {
+            const chatBubble = document.createElement("div");
+            chatBubble.classList.add("chat-bubbel");
+            chatBubble.textContent = msg;
+            chatWindow.appendChild(chatBubble);
         });
 
         const input = document.createElement("input");
@@ -118,7 +118,7 @@ berichtenBtn.addEventListener("click", () => {
         input.addEventListener("keydown", e => {
             if (e.key === "Enter" && input.value.trim() !== "") {
                 const nieuwBericht = input.value;
-                gebruiker.berichten.push(nieuwBericht);
+                user.message.push(nieuwBericht);
                 laadChat(gebruiker); // herlaad om het toe te voegen
             }
         });
@@ -126,7 +126,7 @@ berichtenBtn.addEventListener("click", () => {
         chatVenster.appendChild(input);
     }
 
-    gebruikers.forEach(gebruiker => {
+    user.forEach(gebruiker => {
         const knop = document.createElement("div");
         knop.classList.add("gebruiker");
         knop.innerHTML = `<img src="${gebruiker.foto}" class="avatar"> ${gebruiker.naam}`;

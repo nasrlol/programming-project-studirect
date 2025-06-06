@@ -14,8 +14,8 @@
   <img id="logo" src="public/studirect.png" alt="studirect logo">
 </div>
 <div class="center">  <button id="homeBtn">home page</button>
-<button id="berichtenBtn">berichten</button>
-<button id="kalenderBtn">kalender</button>
+<button id="messageBtn">berichten</button>
+<button id="calenderBtn">kalender</button>
 </div>
 <div class="right">
 <button>settings</button></div>

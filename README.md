@@ -23,7 +23,7 @@ De applicatie is ontwikkeld als onderdeel van het programmeerproject en biedt ee
 ### 1. Repository klonen
 
 ```bash
-git clone https://github.com/nasrlol/studirect
+git clone https://github.com/nasrlol/programming-project-studirect
 cd studirect
 
 2. installeren (Laravel)

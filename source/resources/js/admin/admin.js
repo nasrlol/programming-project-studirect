@@ -1,40 +1,166 @@
-import { dashboard, users, companies   } from "./adminText"
+//Code orgineel kwijtgespeeld, teruggekregen uit uglified VITE code
 
-const mainContainer = document.createElement('div')
-mainContainer.id = 'main-container'
+function dashboard() {
+    const d = document.getElementById("student-amount");
+    d.innerHTML = "42";
+    const t = document.getElementById("company-amount");
+    t.innerHTML = "21"
+}
+//g
+function createSearch(d, t) {
+    return t.innerHTML += '<div style="height: fit-content;"><img src="./images/magnifying glass.jpg" style="height: 20px;"></div>',
+    d == 0 ? t.innerHTML += '<input type="text" id="nameSearchS">' : t.innerHTML += '<input type="text" id="nameSearchC">',
+    t.innerHTML += `<input id="typeSearch" type="hidden" value="${d}">`,
+    t.innerHTML += `<button id=search${d} class='filterAction'>Filter</button>`,
+    t
+}
+function switchDisplay(element) {
+    const dashboard = document.getElementById("dashboard")
+      , students = document.getElementById("students")
+      , companies = document.getElementById("companies")
+      , addCompany = document.getElementById("addCompany");
+    dashboard.style.display = "none",
+    students.style.display = "none",
+    companies.style.display = "none",
+    addCompany.style.display = "none",
+    document.getElementById(element).style.display = "block"
+}
+//u
+function filterArray(array, name) {
+    return array.filter(obj => obj.name.indexOf(name) > -1)
+}
+//m
+function createTable(input, extra = null) {
+    let table;
+    document.getElementById("students").style.display != "none" ? table = document.getElementById("studentTable") : table = document.getElementById("companyTable"),
+    table.innerHTML = "";
+    const legend = document.createElement("tr");
+    legend.innerHTML = "<th>naam</th><th>email</th><th>laatste login</th><th>Acties</th>"
+    table.appendChild(legend)
+    if (extra) {
+        for (let e of extra) {
+            const a = document.createElement("tr");
+            a.innerHTML = `<td>|${e.name}</td>`,
+            a.innerHTML += `<td>${e.mail}</td>`,
+            a.innerHTML += `<td>${e.login}</td>`,
+            a.innerHTML += "<td>eye||delete</td>",
+            table.appendChild(a)
+        }
+    }
+    for (let e of input) {
+        const a = document.createElement("tr");
+        a.innerHTML = `<td>${e.name}</td>`,
+        a.innerHTML += `<td>${e.mail}</td>`,
+        a.innerHTML += `<td>${e.login}</td>`,
+        a.innerHTML += "<td>eye||delete</td>",
+        table.appendChild(a)
+    }
+    return table
+}
+//y
+function copyArray(array) {
+    let newArray = new Array;
+    for (let el of array)
+        newArray.push(el);
+    return newArray
+}
+//f
+function tableToObjects() {
+    let objects = {
+        company: new Array,
+        student: new Array
+    }
+    let names = document.getElementsByClassName("studentName")
+    let mails = document.getElementsByClassName("studentMail")
+    let logins = document.getElementsByClassName("studentLogin");
+    for (let i = 0; i < names.length; i++)
+    {
+        objects.student.push({
+            name: names[i].innerHTML,
+            mail: mails[i].innerHTML,
+            login: logins[i].innerHTML
+        });
+    }
+    names = document.getElementsByClassName("companyName"),
+    mails = document.getElementsByClassName("companyMail"),
+    logins = document.getElementsByClassName("companyLogin");
+    for (let i = 0; i < names.length; i++)
+        objects.company.push({
+            name: names[i].innerHTML,
+            mail: mails[i].innerHTML,
+            login: logins[i].innerHTML
+        });
+    return objects
+}
+//s
+const data = tableToObjects()
 
-const nav = document.querySelector('nav')
+console.log(data)
 
-const resultContainer = document.createElement('div')
-resultContainer.id = "result-container"
+const result = document.getElementById("result-container");
+document.getElementById("nav-dashboard").addEventListener("click", () => {
+    switchDisplay("dashboard")
+}
+);
+document.getElementById("nav-users").addEventListener("click", () => {
+    switchDisplay("students")
+}
+);
+document.getElementById("nav-companies").addEventListener("click", () => {
+    switchDisplay("companies")
+}
+);
+document.getElementById("toAddCompany").addEventListener("click", () => {
+    switchDisplay("addCompany")
+}
+);
+document.getElementById("backToCompanies").addEventListener("click", () => {
+    switchDisplay("companies")
+}
+);
+window.addEventListener("load", () => {
+    dashboard(),
+    switchDisplay("dashboard");
+    const filterElements = document.getElementsByClassName("filter");
+    let count = 0;
+    for (let element of filterElements)
+        createSearch(count, element),
+        count++;
+    for (let filter of document.getElementsByClassName("filterAction"))
+        filter.addEventListener("click", () => {
+            //l, e
+            let nameInput, type;
+            //Checks if we're on the studentpage. Else, we can assume we're on the company page
+            if (document.getElementById("students").style.display != "none" ? (nameInput = document.getElementById("nameSearchS").value,
+            type = "student") : (nameInput = document.getElementById("nameSearchC").value,
+            type = "company"))
 
-mainContainer.appendChild(nav)
-mainContainer.appendChild(resultContainer)
-
-document.querySelector('body').appendChild(mainContainer)
-
-
-document.getElementById('dashboard').addEventListener('click', () => {
-    dashboard(resultContainer)
-})
-
-document.getElementById('users').addEventListener('click', () => {
-    users(resultContainer)
-})
-
-document.getElementById('companies').addEventListener('click', () => {
-    companies(resultContainer)
-})
-
-window.addEventListener('load', () => {
-    //Add link to stylesheet
-    const head = document.head;
-    //Code borowed from https://stackoverflow.com/questions/11833759/add-stylesheet-to-head-using-javascript-in-body
-    const link = document.createElement('link')
-    link.type = "text/css";
-    link.rel= "stylesheet"
-    link.href = "./src/admin.css"
-    head.appendChild(link)
-    //start with dashboard
-    dashboard(resultContainer)
-})
+            //If no name was found, create the table without any extras
+            if (nameInput == '') {
+                type == "student" ? createTable(data.student) : createTable(data.company)
+                return 0 ;
+            }
+            let filtered;
+            //Filter the name through the arrays, depending on wether it's a student or a company
+            type == "student" ? filtered = filterArray(data.student, nameInput) : filtered = filterArray(data.company, nameInput)
+            //If no names were found, just create regular table
+            if (filtered.length == 0) {
+                type == "student" ? createTable(data.student) : createTable(data.company);
+                return 0;
+            }
+            //remove found objects from the original array
+            let rest;
+            if (type == "student") {
+                rest = copyArray(data.student);
+                for (let el of filtered) rest = rest.filter(obj=> obj.name != el.name)
+            } 
+            else {
+                rest = copyArray(data.company);
+                for (let el of filtered) rest = rest.filter(obj => obj.name != el.name)
+            }
+            //create table, starting with highlighted names, then the rest
+            createTable(rest, filtered)
+        }
+        )
+}
+);

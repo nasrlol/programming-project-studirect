@@ -9,7 +9,7 @@
     <h1>Student List</h1>
     <ul>
         @foreach ($students as $student)
-            <li>{{ $student->study_direction }} ({{ $student->email }})</li>
+            <li>{{ $student['study_direction'] ?? 'Onbekend' }} ({{ $student['email'] ?? 'Geen email' }})</li>
         @endforeach
     </ul>
 

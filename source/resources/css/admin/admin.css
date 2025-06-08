@@ -1,0 +1,82 @@
+body {
+    margin:0;
+}
+
+h2 {
+    margin:0;
+}
+
+.filter {
+    display: flex;
+    flex-direction: row;
+}
+.addCompany {
+    width:40%;
+    margin-left:30%;
+    align-content:center;
+}
+
+table {
+    width:100%
+}
+
+th {
+    text-align: left;
+    width:20%;
+}
+
+#main-container 
+{
+    margin-top: 5vh;
+    margin-bottom: 5vh;
+    margin-left:2.5vw;
+    margin-right:2.5vw;
+    display:flex;
+    flex-direction: row;
+    background-color: grey;
+    height:90vh;
+    width:95vw;
+    font-family: Verdana, sans-serif;
+}
+
+nav {
+    margin-left:2%;
+    margin-top: 2.5%;
+    height: 90%;
+    width:15%;
+
+    display: inherit;
+    flex-direction: column;
+    color: white;
+    background-color: #252D3C;
+    font: Verdana, sans-serif;
+}
+
+.btn-nav {
+    border: none;
+    background-color: inherit;
+    color: inherit;
+}
+
+.btn-nav:hover {
+    cursor:pointer;
+}
+
+#result-container {
+    margin-left: 2%;
+    width:82.5%;
+
+
+    height:90%;
+    margin-top: 2.5%;
+    background-color: darkgrey;
+}
+
+#create:hover {
+    cursor:pointer;
+}
+
+.member-amount {
+    display: flex;
+    flex-direction: row;
+}

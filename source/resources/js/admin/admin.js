@@ -57,9 +57,9 @@ function switchDisplay(element) {
     addCompany.style.display = "none",
     document.getElementById(element).style.display = "block"
 }
-//u
+
 function filterArray(array, name) {
-    return array.filter(obj => obj.name.indexOf(name) > -1)
+    return array.filter(obj => obj.name.toLocaleLowerCase().indexOf(name.toLocaleLowerCase()) > -1)
 }
 //m
 function createTable(input, extra = null) {

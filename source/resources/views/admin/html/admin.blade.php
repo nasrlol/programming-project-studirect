@@ -36,25 +36,17 @@
                 <div class='filter' id='student'></div>
                 <table id='studentTable'>
                     <tr><th>naam</th><th>email</th><th>laatste login</th><th>Acties</th></tr>
-                    <!-- Table is to be generated using API, currently test data-->
-                     <tr class='studentValue'>
-                        <td class='studentName'>Steven Deloof</td>
-                        <td class='studentMail'>steven.deloof@student.ehb.be</td>
-                        <td class='studentLogin'>03-06-2025</td>
-                        <td>eye||delete</td>
-                     </tr>
-                     <tr class='studentValue'>
-                        <td class='studentName'>Livia Deloof</td>
-                        <td class='studentMail'>livia.deloof@student.ehb.be</td>
-                        <td class='studentLogin'>01-06-2025</td>
-                        <td>eye||delete</td>
-                     </tr>
-                     <tr class='studentValue'>
-                        <td class='studentName'>Marc Deloof</td>
-                        <td class='studentMail'>marc.deloof@student.ehb.be</td>
-                        <td class='studentLogin'>31-05-2025</td>
-                        <td>eye||delete</td>
-                     </tr>
+                    <!--API call-->
+                    <!--Last log still needs to be added-->
+                    @foreach ($students as $student)
+                        <tr>
+                            <td class='studentName'>{{ $student['first_name'] ?? 'Onbekend' }} {{ $student['last_name'] ?? 'onbekend' }}</td>
+                            <td class='studentMail'>{{ $student['email'] ?? 'Geen email' }}</td>
+                            <td class='studentLogin'>03-06-2025</td>
+                            <td>eye||delete</td>
+                        </tr>
+                    @endforeach
+                    
                 </table>
             </section>
 
@@ -64,43 +56,14 @@
                 <div class='filter' id='bedrijf'></div>
                 <table id='companyTable'>
                     <tr><th>naam</th><th>email</th><th>laatste login</th><th>Acties</th></tr>
-                    <!-- Table is to be generated using API, currently test data-->
-                    <tr class='companyValue'>
-                        <td class='companyName'>IT Solutions</td>
-                        <td class='companyMail'>support@ITSolutions.com</td>
-                        <td class='companyLogin'>02-04-2025</td>
-                        <td>eye||delete</td>
-                    </tr>
-                    <tr class='companyValue'>
-                        <td class='companyName'>IT Helper</td>
-                        <td class='companyMail'>support@ITHelper.com</td>
-                        <td class='companyLogin'>10-04-2025</td>
-                        <td>eye||delete</td>
-                    </tr>
-                    <tr class='companyValue'>
-                        <td class='companyName'>Security Solutions</td>
-                        <td class='companyMail'>support@SecuritySolutions.com</td>
-                        <td class='companyLogin'>02-01-2025</td>
-                        <td>eye||delete</td>
-                    </tr>
-                    <tr class='companyValue'>
-                        <td class='companyName'>Security Fight</td>
-                        <td class='companyMail'>contact@SecurityFight.com</td>
-                        <td class='companyLogin'>01-06-2025</td>
-                        <td>eye||delete</td>
-                    </tr>
-                    <tr class='companyValue'>
-                        <td class='companyName'>Business Helper</td>
-                        <td class='companyMail'>contact@BusinessHelper.com</td>
-                        <td class='companyLogin'>31-05-2025</td>
-                        <td>eye||delete</td>
-                    </tr>
-                    <tr class='companyValue'>
-                        <td class='companyName'>Business Solutions</td>
-                        <td class='companyMail'>contact@BusinessSolutions.com</td>
-                        <td class='companyLogin'>26-02-2025</td>
-                        <td>eye||delete</td>
-                    </tr>
+                    @foreach ($companies as $company)
+                        <tr class='companyValue'>
+                            <td class='companyName'>{{ $company['name'] ?? 'Onbekend' }}</td>
+                            <td class='companyMail'>{{ $company['email'] ?? 'Onbekend' }}</td>
+                            <td class='companyLogin'>02-04-2025</td>
+                            <td>eye||delete</td>
+                        </tr>
+                    @endforeach
                 </table>
             </section>
 

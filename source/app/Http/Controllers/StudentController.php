@@ -11,6 +11,11 @@ use Illuminate\View\View;
 
 class StudentController extends Controller
 {
+<<<<<<< Updated upstream
+=======
+    private string $apiUrl = 'http://10.2.160.208/api/';
+
+>>>>>>> Stashed changes
     /**
      * Display a listing of the resource.
      */
@@ -24,8 +29,27 @@ class StudentController extends Controller
         return view('student.index', [
             'students' => $students, //linkerkant frontend mannen naam, rechterkant is gewoon data
         ]);
+<<<<<<< Updated upstream
     }
 
+=======
+    }*/
+    public function index(): View
+{
+    try {
+        $response = Http::get($this->apiUrl);
+        
+        if (!$response->successful()) {
+            return view('voorbeeld.index', ['error' => 'API niet beschikbaar', 'students' => []]);
+        }
+        
+        $students = $response->json('data');
+        return view('voorbeeld.index', ['students' => $students]);
+    } catch (\Exception $e) {
+        return view('voorbeeld.index', ['error' => 'Er is een fout opgetreden', 'students' => []]);
+    }
+}
+>>>>>>> Stashed changes
     /**
      * Store a newly created resource in storage.
      */
@@ -57,6 +81,35 @@ class StudentController extends Controller
             return response()->json(['message' => 'Student not found'], 404);
         }
     }
+
+        //Test function for admin
+    public function showAllStudents(): View
+{
+    try {
+        $apiStudents = $this->apiUrl . 'students';
+        $apiCompanies = $this->apiUrl . 'companys';
+        $response = Http::get($apiStudents);
+        if (!$response->successful()) {
+            return view('voorbeeld.index', ['error' => 'API niet beschikbaar', 'students' => []]);
+        }
+        $students = $response->json('data');
+
+        //Second response for companies
+        $response = Http::get($apiCompanies);
+        if (!$response->successful()) {
+            return view('voorbeeld.index', ['error' => 'API niet beschikbaar', 'students' => []]);
+        }
+        $companies = $response->json('data');
+
+        return view('/admin/html/admin', [
+            'students' => $students, 
+            'companies' => $companies
+    ]);
+    } catch (\Exception $e) {
+        dd('failure');
+        return view('voorbeeld.index', ['error' => 'Er is een fout opgetreden', 'students' => []]);
+    }
+}
 
     /**
      * Update the specified resource in storage.
@@ -106,4 +159,23 @@ class StudentController extends Controller
             return response()->json(['message' => 'Student not found'], 404);
         }
     }
+<<<<<<< Updated upstream
 }
+=======
+    public function adminIndex(): View
+{
+    try {
+        $response = Http::get($this->apiUrl);
+
+        if (!$response->successful()) {
+            return view('admin.html.admin', ['error' => 'API niet beschikbaar', 'students' => []]);
+        }
+
+        $students = $response->json('data');
+        return view('admin.html.admin', ['students' => $students]);
+    } catch (\Exception $e) {
+        return view('admin.html.admin', ['error' => 'Er is een fout opgetreden: ' . $e->getMessage(), 'students' => []]);
+    }
+}
+}
+>>>>>>> Stashed changes

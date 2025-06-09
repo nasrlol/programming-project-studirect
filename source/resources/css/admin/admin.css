@@ -6,6 +6,11 @@ h2 {
     margin:0;
 }
 
+section {
+    /*Sections are already hidden to prevent funny bussiness when loading page*/
+    display: none;
+}
+
 .filter {
     display: flex;
     flex-direction: row;
@@ -31,6 +36,9 @@ th {
     margin-bottom: 5vh;
     margin-left:2.5vw;
     margin-right:2.5vw;
+
+    border-radius: 10px;
+
     display:flex;
     flex-direction: row;
     background-color: grey;
@@ -39,11 +47,11 @@ th {
     font-family: Verdana, sans-serif;
 }
 
+/* NAVIGATION ELEMENTS-----------------*/
 nav {
-    margin-left:2%;
-    margin-top: 2.5%;
-    height: 90%;
+    height: 100%;
     width:15%;
+    border-radius: 3%;
 
     display: inherit;
     flex-direction: column;
@@ -51,17 +59,32 @@ nav {
     background-color: #252D3C;
     font: Verdana, sans-serif;
 }
+/*Nav element is both info-nav and btn-nav*/
+.nav-element {
+    margin-left:10%;
+    margin-top: 10%;
+}
+
+.info-nav {
+    font-size: 200%;
+}
 
 .btn-nav {
     border: none;
+    height:7%;
+    width:80%;
     background-color: inherit;
     color: inherit;
+    font-size: 150%;
+    border-radius: 5px;
+    background-color: #365B93;
 }
 
 .btn-nav:hover {
     cursor:pointer;
+    background-color: #365B93;
 }
-
+/*RESULT ELEMENTS---------------------*/
 #result-container {
     margin-left: 2%;
     width:82.5%;
@@ -76,7 +99,37 @@ nav {
     cursor:pointer;
 }
 
+
+h2 {
+    padding-top: 3%;
+    padding-left: 4%;
+}
+
+#dashboard {
+    background-color: white;
+    height: 50%;
+    width:95%;
+    margin-left: 4%;
+    margin-top: 1%;
+}
+
 .member-amount {
     display: flex;
     flex-direction: row;
+    margin-left:5%;
+}
+
+.amount-section {
+    color:white;
+    font-size: large;
+    background-color: #648EE3;
+
+    width:17.5%;
+    height:100%;
+
+    margin-right: 7.5%;
+}
+.section-inside {
+    padding-top: 15%;
+    padding-bottom: 15%;
 }

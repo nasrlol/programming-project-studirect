@@ -9,29 +9,33 @@
 <body>
     <div id='main-container'>
         <nav id="navigation">
-            Admin<br>
-            <button class="btn-nav" id="nav-dashboard">Dashboard</button>
-            <button class="btn-nav" id="nav-users">Gebruikers</button>
-            <button class="btn-nav" id="nav-companies">Bedrijven</button>
-            <button class="btn-nav" id="nav-logs">Logs</button>
+            <span class='info-nav nav-element'>Admin</span><br>
+            <button class="btn-nav nav-element" id="nav-dashboard">Dashboard</button>
+            <button class="btn-nav nav-element" id="nav-users">Gebruikers</button>
+            <button class="btn-nav nav-element" id="nav-companies">Bedrijven</button>
+            <button class="btn-nav nav-element" id="nav-logs">Logs</button>
         </nav>
 
-        <section id='result-container'>
+        <div id='result-container'>
             <section id='dashboard'>
                 <h2>Dashboard</h2>
                 <div class='member-amount'>
-                    <section class='amount-section'>
-                        <span id='student-amount'></span><br>
-                        <span>students</span>
-                    </section>
-                    <section class='amount-section'>
-                        <span id='company-amount'></span><br>
-                        bedrijven    
-                    </section>
+                    <div class='amount-section'>
+                        <div class='section-inside'>
+                            <span id='student-amount'></span><br>
+                            <span>students</span>
+                        </div>
+                    </div>
+                    <div class='amount-section'>
+                        <div class='section-inside'>
+                            <span id='company-amount'></span><br>
+                            <span>bedrijven</span>    
+                        </div>
+                    </div>
                 </div>
             </section>
 
-            <section id='students' style='display=none;'>
+            <section id='students'>
                 <h2>Gebruikers</h2>
                 <div class='filter' id='student'></div>
                 <table id='studentTable'>
@@ -50,7 +54,7 @@
                 </table>
             </section>
 
-            <section id='companies' style="display=none;">
+            <section id='companies'>
                 <h2>Bedrijven</h2>
                 <button id='toAddCompany' class='btn-nav'>Bedrijf toevoegen</button>
                 <div class='filter' id='bedrijf'></div>
@@ -84,9 +88,8 @@
                     </form>
                 </div>
             </section>
-        </section>
+        </div>
     </div>
-    @vite('resources/js/admin/adminText.js')
     @vite('resources/js/admin/admin.js')
 </body>
 </html>

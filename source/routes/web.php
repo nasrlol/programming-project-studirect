@@ -6,9 +6,6 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', [StudentController::class, 'index']);
 
 Route::get('/students', [StudentController::class, 'index']);
-<<<<<<< Updated upstream
-//Route::post('/students', [StudentController::class, 'store']);
-=======
 //Route::post('/students', [StudentController::class, 'store']);
 
 Route::get('/company', function () {
@@ -23,4 +20,3 @@ Route::prefix('admin')->group(function () {
 });
 */
 Route::get('/admin', [StudentController::class, 'showAllStudents']);
->>>>>>> Stashed changes

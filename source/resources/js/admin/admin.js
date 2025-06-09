@@ -1,10 +1,42 @@
-//Code orgineel kwijtgespeeld, teruggekregen uit uglified VITE code
+//changes contents of table to arrays for the js functions
+function tableToObjects() {
+    let objects = {
+        company: new Array,
+        student: new Array
+    }
+    let names = document.getElementsByClassName("studentName")
+    let mails = document.getElementsByClassName("studentMail")
+    let logins = document.getElementsByClassName("studentLogin");
+    for (let i = 0; i < names.length; i++)
+    {
+        objects.student.push({
+            name: names[i].innerHTML,
+            mail: mails[i].innerHTML,
+            login: logins[i].innerHTML
+        });
+    }
+    names = document.getElementsByClassName("companyName"),
+    mails = document.getElementsByClassName("companyMail"),
+    logins = document.getElementsByClassName("companyLogin");
+    for (let i = 0; i < names.length; i++)
+        objects.company.push({
+            name: names[i].innerHTML,
+            mail: mails[i].innerHTML,
+            login: logins[i].innerHTML
+        });
+    return objects
+}
 
+const data = tableToObjects()
+
+console.log(data)
+
+//Sets the amount of students and companies based on the amount of rows in the table
 function dashboard() {
     const d = document.getElementById("student-amount");
-    d.innerHTML = "42";
+    d.innerHTML = data.student.length;
     const t = document.getElementById("company-amount");
-    t.innerHTML = "21"
+    t.innerHTML = data.company.length
 }
 //g
 function createSearch(d, t) {
@@ -64,38 +96,6 @@ function copyArray(array) {
         newArray.push(el);
     return newArray
 }
-//f
-function tableToObjects() {
-    let objects = {
-        company: new Array,
-        student: new Array
-    }
-    let names = document.getElementsByClassName("studentName")
-    let mails = document.getElementsByClassName("studentMail")
-    let logins = document.getElementsByClassName("studentLogin");
-    for (let i = 0; i < names.length; i++)
-    {
-        objects.student.push({
-            name: names[i].innerHTML,
-            mail: mails[i].innerHTML,
-            login: logins[i].innerHTML
-        });
-    }
-    names = document.getElementsByClassName("companyName"),
-    mails = document.getElementsByClassName("companyMail"),
-    logins = document.getElementsByClassName("companyLogin");
-    for (let i = 0; i < names.length; i++)
-        objects.company.push({
-            name: names[i].innerHTML,
-            mail: mails[i].innerHTML,
-            login: logins[i].innerHTML
-        });
-    return objects
-}
-//s
-const data = tableToObjects()
-
-console.log(data)
 
 const result = document.getElementById("result-container");
 document.getElementById("nav-dashboard").addEventListener("click", () => {

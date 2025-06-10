@@ -1,17 +1,17 @@
 'use strict';
 
-//renderen van elementen voor matches pagina
-function renderMatches() {
+//renderen van elementen voor match pagina
+function renderMatch() {
     const sidebar = document.getElementById('sidebar-content');
     
     //renderen van sidebar
     if (sidebar) {
         sidebar.innerHTML = `
-            <div id="meldingen">
+            <div id="notifications">
                 <h2>Meldingen:</h2>
                 <p>Je hebt geen nieuwe meldingen.</p>
             </div>
-            <div id="plattegrond">
+            <div id="groundplan">
                 <img src="../public/plattegrondEHB.png">
             </div>
         `;
@@ -21,13 +21,13 @@ function renderMatches() {
     //renderen van bedrijf kaart
     if (screenContent) {
         screenContent.innerHTML = `
-            <div id="screen-rechthoek">
-                <div id="bedrijf-titel">
-                    <h2 id="bedrijf-naam">Byteforge Solutions</h2>
+            <div id="screen-rectangle">
+                <div id="company-title">
+                    <h2 id="company-name">Byteforge Solutions</h2>
                     <p>IT Support Intern</p>
                 </div>
                 <div id="logo-placeholder"></div>
-                <div id="bedrijf-info">
+                <div id="company-info">
                     <div>
                         <h5>Omschrijving</h5>
                         <ul>
@@ -50,7 +50,7 @@ function renderMatches() {
                         <p>ByteForge Solutions is een groeiend softwarebedrijf gespecialiseerd in maatwerkapplicaties voor KMO's. Met een klein maar gedreven team bouwen we weboplossingen, automatisering, ...</p>
                     </div>
                 </div>
-                <div id="swipen">
+                <div id="swipe">
                     <button>✕</button>
                     <button>✓</button>
                 </div>
@@ -59,28 +59,28 @@ function renderMatches() {
     }
 }
 
-//renderen van matches pagina wanneer de pagina geladen wordt
-renderMatches();
+//renderen van match pagina wanneer de pagina geladen wordt
+renderMatch();
 
-//renderen van elementen voor berichten pagina
-function renderBerichten() {
+//renderen van elementen voor message pagina
+function renderMessage() {
     const sidebar = document.getElementById('sidebar-content');
     
     //renderen van sidebar
     if (sidebar) {
         const names = ['BATO nv', 'Werkgroep', 'Blah Blah', 'Amplifon'];
         sidebar.innerHTML = `
-            <div id="berichten-lijst">
-                ${names.map(name => `<div class="bericht-item">${name}</div>`).join('')}
+            <div id="message-list">
+                ${names.map(name => `<div class="message-item">${name}</div>`).join('')}
             </div>
         `;
     }
     const screenContent = document.getElementById('screen-content');
     
-    //renderen van berichten
+    //renderen van messages
     if (screenContent) {
         screenContent.innerHTML = `
-            <div id="bericht-info">
+            <div id="message-info">
                 <h3>Je chatberichten</h3>
                 <p>Selecteer een naam om het gesprek te openen</p>
             </div>
@@ -89,22 +89,22 @@ function renderBerichten() {
 }
 
 //renderen van elementen voor kalender pagina
-function renderKalender() {
+function renderCalendar() {
     const sidebar = document.getElementById('sidebar-content');
     
     //renderen van sidebar
     if (sidebar) {
-        const afspraken = [
+        const times = [
             '09:00 - BATO nv',
             '11:30 - Amplifon',
             '13:00 - Blah Blah',
             '15:00 - Werkgroep',
         ];
         sidebar.innerHTML = `
-            <div id="afspraken-lijst">
+            <div id="times-list">
                 <h2>Afspraken</h2>
                 <div>
-                    ${afspraken.map(tijd => `<div class="afspraak-item">${tijd}</div>`).join('')}
+                    ${times.map(tijd => `<div class="afspraak-item">${tijd}</div>`).join('')}
                 </div>
             </div>
         `;
@@ -113,7 +113,7 @@ function renderKalender() {
     
     //renderen van kalender
     if (screenContent) {
-        let table = '<table id="kalender-tabel">';
+        let table = '<table id="calendar-table">';
         table += `
             <tr><th rowspan=2>Tijdslot</th><th colspan=4>Bedrijven</th></tr>
             <tr><th>:00</th><th>:15</th><th>:30</th><th>:45</th></tr>
@@ -131,16 +131,16 @@ function renderKalender() {
         screenContent.innerHTML = table;
 
         //afspraken toevoegen aan de kalender
-        setAfspraak(2, 1, 'BATO nv');
-        setAfspraak(4, 3, 'Amplifon');
-        setAfspraak(6, 1, 'Blah Blah');
-        setAfspraak(8, 1, 'Werkgroep');
+        setTime(2, 1, 'BATO nv');
+        setTime(4, 3, 'Amplifon');
+        setTime(6, 1, 'Blah Blah');
+        setTime(8, 1, 'Werkgroep');
     }
 }
 
 //functie om afspraken toe te voegen aan de kalender
-function setAfspraak(rowIndex, colIndex, text) {
-    const table = document.getElementById("kalender-tabel");
+function setTime(rowIndex, colIndex, text) {
+    const table = document.getElementById("calendar-table");
     if (!table) return;
     const row = table.rows[rowIndex];
     if (row && row.cells[colIndex]) {
@@ -150,30 +150,30 @@ function setAfspraak(rowIndex, colIndex, text) {
 
 window.addEventListener('DOMContentLoaded', () => { 
 
-    //event listeners voor matches knop
-    const matchesBtn = document.getElementById('matches');
-    if (matchesBtn) {
-        matchesBtn.addEventListener('click', function(e) {
+    //event listeners voor match knop
+    const matchBtn = document.getElementById('match');
+    if (matchBtn) {
+        matchBtn.addEventListener('click', function(e) {
             e.preventDefault();
-            renderMatches();
+            renderMatch();
         });
     }
 
-    //event listeners voor berichten knop
-    const berichtenBtn = document.getElementById('berichten');
-    if (berichtenBtn) {
-        berichtenBtn.addEventListener('click', function(e) {
+    //event listeners voor message knop
+    const messageBtn = document.getElementById('message');
+    if (messageBtn) {
+        messageBtn.addEventListener('click', function(e) {
             e.preventDefault();
-            renderBerichten();
+            renderMessage();
         });
     }
 
     //event listeners voor kalender knop
-    const kalenderBtn = document.getElementById('kalender');
-    if (kalenderBtn) {
-        kalenderBtn.addEventListener('click', function(e) {
+    const calendarBtn = document.getElementById('calendar');
+    if (calendarBtn) {
+        calendarBtn.addEventListener('click', function(e) {
             e.preventDefault();
-            renderKalender();
+            renderCalendar();
         });
     }
 });

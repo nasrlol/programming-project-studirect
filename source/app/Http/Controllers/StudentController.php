@@ -3,37 +3,28 @@
 namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
-use App\Models\Student;
 use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\View\View;
+use Illuminate\Support\Facades\Http;
 
 class StudentController extends Controller
 {
-<<<<<<< Updated upstream
-=======
-    private string $apiUrl = 'http://10.2.160.208/api/';
+    private string $apiUrl = 'http://127.0.0.1:8001/api/students';
 
->>>>>>> Stashed changes
     /**
      * Display a listing of the resource.
      */
-    public function index(): View //je kan in laravel zorgen dat het niet json teruggeeft maar bladeview
+    /*public function index(): View
     {
-        $students = Student::all();
-        // call API /GetAllStudents
-        // receive JSON-response, parse to objects (§students)
-        // send objects to View
-        //return response()->json(['data' => $students]);
-        return view('student.index', [
-            'students' => $students, //linkerkant frontend mannen naam, rechterkant is gewoon data
-        ]);
-<<<<<<< Updated upstream
-    }
+        $response = Http::get($this->apiUrl);
+        $students = $response->json('data');
 
-=======
+        return view('student.index', [
+            'students' => $students,
+        ]);
     }*/
+
     public function index(): View
 {
     try {
@@ -49,24 +40,28 @@ class StudentController extends Controller
         return view('voorbeeld.index', ['error' => 'Er is een fout opgetreden', 'students' => []]);
     }
 }
->>>>>>> Stashed changes
+
     /**
      * Store a newly created resource in storage.
      */
     public function store(Request $request): JsonResponse
     {
         $validated = $request->validate([
-            'name' => 'required|string|max:255',
-            'email' => 'required|email|unique:students,email',
-            // Add more validation rules as needed
+            'first_name' => 'required|string|max:255',
+            'last_name' => 'required|string|max:255',
+            'email' => 'required|email',
+            'password' => 'required|string|min:8',
+            'study_direction' => 'required|string|max:255',
+            'graduation_track' => 'required|string|max:255',
+            'interests' => 'required|string',
+            'job_preferences' => 'required|string',
+            'cv' => 'nullable|string',
+            'profile_complete' => 'boolean',
         ]);
 
-        $student = Student::create($validated);
+        $response = Http::post($this->apiUrl, $validated);
 
-        return response()->json([
-            'data' => $student,
-            'message' => 'Student created successfully'
-        ], 201);
+        return response()->json($response->json(), $response->status());
     }
 
     /**
@@ -74,71 +69,38 @@ class StudentController extends Controller
      */
     public function show(string $id): JsonResponse
     {
-        try {
-            $student = Student::findOrFail($id);
-            return response()->json(['data' => $student]);
-        } catch (ModelNotFoundException $e) {
+        $response = Http::get("{$this->apiUrl}/{$id}");
+
+        if ($response->successful()) {
+            return response()->json($response->json());
+        } else {
             return response()->json(['message' => 'Student not found'], 404);
         }
     }
-
-        //Test function for admin
-    public function showAllStudents(): View
-{
-    try {
-        $apiStudents = $this->apiUrl . 'students';
-        $apiCompanies = $this->apiUrl . 'companys';
-        $response = Http::get($apiStudents);
-        if (!$response->successful()) {
-            return view('voorbeeld.index', ['error' => 'API niet beschikbaar', 'students' => []]);
-        }
-        $students = $response->json('data');
-
-        //Second response for companies
-        $response = Http::get($apiCompanies);
-        if (!$response->successful()) {
-            return view('voorbeeld.index', ['error' => 'API niet beschikbaar', 'students' => []]);
-        }
-        $companies = $response->json('data');
-
-        return view('/admin/html/admin', [
-            'students' => $students, 
-            'companies' => $companies
-    ]);
-    } catch (\Exception $e) {
-        dd('failure');
-        return view('voorbeeld.index', ['error' => 'Er is een fout opgetreden', 'students' => []]);
-    }
-}
 
     /**
      * Update the specified resource in storage.
      */
     public function update(Request $request, string $id): JsonResponse
     {
-        try {
-            $student = Student::findOrFail($id);
+        $validated = $request->validate([
+            'first_name' => 'sometimes|required|string|max:255',
+            'last_name' => 'sometimes|required|string|max:255',
+            'email' => 'sometimes|required|email',
+            'password' => 'sometimes|required|string|min:8',
+            'study_direction' => 'sometimes|required|string|max:255',
+            'graduation_track' => 'sometimes|required|string|max:255',
+            'interests' => 'sometimes|required|string',
+            'job_preferences' => 'sometimes|required|string',
+            'cv' => 'nullable|string',
+            'profile_complete' => 'boolean',
+        ]);
 
-            $validated = $request->validate([
-                'first_name' => 'required|string|max:255',
-                'last_name' => 'required|string|max:255',
-                'email' => 'required|email|unique:students,email',
-                'password' => 'required|string|min:8',
-                'study_direction' => 'required|string|max:255',
-                'graduation_track' => 'required|string|max:255',
-                'interests' => 'required|string',
-                'job_preferences' => 'required|string',
-                'cv' => 'nullable|string',
-                'profile_complete' => 'boolean',
-            ]);
+        $response = Http::put("{$this->apiUrl}/{$id}", $validated);
 
-            $student->update($validated);
-
-            return response()->json([
-                'data' => $student,
-                'message' => 'Student updated successfully'
-            ]);
-        } catch (ModelNotFoundException $e) {
+        if ($response->successful()) {
+            return response()->json($response->json());
+        } else {
             return response()->json(['message' => 'Student not found'], 404);
         }
     }
@@ -148,34 +110,12 @@ class StudentController extends Controller
      */
     public function destroy(string $id): JsonResponse
     {
-        try {
-            $student = Student::findOrFail($id);
-            $student->delete();
+        $response = Http::delete("{$this->apiUrl}/{$id}");
 
-            return response()->json([
-                'message' => 'Student deleted successfully'
-            ]);
-        } catch (ModelNotFoundException $e) {
+        if ($response->successful()) {
+            return response()->json($response->json());
+        } else {
             return response()->json(['message' => 'Student not found'], 404);
         }
     }
-<<<<<<< Updated upstream
 }
-=======
-    public function adminIndex(): View
-{
-    try {
-        $response = Http::get($this->apiUrl);
-
-        if (!$response->successful()) {
-            return view('admin.html.admin', ['error' => 'API niet beschikbaar', 'students' => []]);
-        }
-
-        $students = $response->json('data');
-        return view('admin.html.admin', ['students' => $students]);
-    } catch (\Exception $e) {
-        return view('admin.html.admin', ['error' => 'Er is een fout opgetreden: ' . $e->getMessage(), 'students' => []]);
-    }
-}
-}
->>>>>>> Stashed changes

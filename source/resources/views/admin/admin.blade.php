@@ -40,11 +40,18 @@
                 <div class='filter' id='student'></div>
                 <div class='table'>
                     <table id='studentTable'>
-                        <tr><th>naam</th><th>email</th><th>laatste login</th><th>Acties</th></tr>
+                        <tr><th class='th-short'>Actief</th><th>naam</th><th>email</th><th>laatste login</th><th>Acties</th></tr>
                         <!--API call-->
                         <!--Last log still needs to be added-->
                         @foreach ($students as $student)
                         <tr>
+                            <td class='studentActivated'>
+                                @if ($student['profile_complete']) 
+                                    <span class='image-container'><img src='images/check.png' class='image-container' alt='ja'></span>
+                                @else 
+                                    <span class='image-container'><img src='images/delete.png' class='image-container' alt='nee'></span> 
+                                @endif
+                            </td>
                             <td class='studentName'>{{ $student['first_name'] ?? 'Onbekend' }} {{ $student['last_name'] ?? 'onbekend' }}</td>
                             <td class='studentMail'>{{ $student['email'] ?? 'Geen email' }}</td>
                             <td class='studentLogin'>03-06-2025</td>
@@ -114,6 +121,7 @@
                     <!--Data will be based depending on logs data-->
 
                     </select>
+                    <button>Exporteren</button>
                 </div>
             </section>
         </div>

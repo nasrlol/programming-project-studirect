@@ -2,6 +2,10 @@ body {
     margin:0;
 }
 
+.image-container {
+    height:20px;
+}
+
 h2 {
     margin:0;
 }
@@ -24,6 +28,8 @@ section {
     align-content:center;
 }
 
+/*Table*/
+
 table {
     width:100%;
 }
@@ -33,13 +39,22 @@ table {
     height:100%;
 }
 
-.searchable {
-    height:80%;
-}
-
 th {
     text-align: left;
     width:20%;
+}
+
+.th-short {
+    width:5%;
+    background-color: white;
+}
+
+.studentActivated {
+    width:min-content;
+}
+
+.searchable {
+    height:80%;
 }
 
 #main-container 

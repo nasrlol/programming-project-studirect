@@ -29,8 +29,6 @@ function tableToObjects() {
 
 const data = tableToObjects()
 
-console.log(data)
-
 //Sets the amount of students and companies based on the amount of rows in the table
 function dashboard() {
     const d = document.getElementById("student-amount");
@@ -40,7 +38,7 @@ function dashboard() {
 }
 //g
 function createSearch(d, t) {
-    return t.innerHTML += '<div style="height: fit-content;"><img src="./images/magnifying glass.jpg" style="height: 20px;"></div>',
+    return t.innerHTML += '<div class="image-container"><img src="./images/magnifying glass.jpg" style="height: 20px;"></div>',
     d == 0 ? t.innerHTML += '<input type="text" id="nameSearchS">' : t.innerHTML += '<input type="text" id="nameSearchC">',
     t.innerHTML += `<input id="typeSearch" type="hidden" value="${d}">`,
     t.innerHTML += `<button id=search${d} class='filterAction'>Filter</button>`,
@@ -130,6 +128,7 @@ document.getElementById("backToCompanies").addEventListener("click", () => {
 
 
 );
+
 window.addEventListener("load", () => {
     dashboard(),
     switchDisplay("dashboard");
@@ -176,3 +175,8 @@ window.addEventListener("load", () => {
         )
 }
 );
+
+//Add dates from student creation
+for (let student of data.student) {
+    console.log(student)
+}

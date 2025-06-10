@@ -4,8 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>StuDirect</title>
-    <link rel="stylesheet" href="../src/studenten.css">
-    <script src="../src/studenten.js" defer></script>
+    @vite ['resources/css/student/student.css', 'resources/js/student/student.js']
 </head>
 <body>
     <main>

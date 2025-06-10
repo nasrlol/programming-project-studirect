@@ -35,19 +35,36 @@ function renderMatch() {
                         <li>Stage</li>
                         <li>februari - juni 2025 (duur tijd bespreekbaar)</li>
                         <li>Loon: n/a</li>
+                        <li>Fulltime positie</li>
+                        <li>Flexibele uren</li>
+                        <li>Jonge, dynamische werkomgeving</li>
                         </ul>
                     </div>
                     <div>
                         <h5>Vereisten</h5>
                         <ul>
                         <li>Bachelor Toegepaste Informatica / Graduaat Systeem- en Netwerkbeheer</li>
-                        <li>soft skill</li>
-                        <li>rijbewijs</li>
+                        <li>Goede communicatieve vaardigheden</li>
+                        <li>Probleemoplossend denken</li>
+                        <li>Teamplayer mentaliteit</li>
+                        <li>Basiskennis netwerken</li>
+                        <li>Kennis van Windows Server en Active Directory is een plus</li>
+                        <li>Rijbewijs B</li>
                         </ul>
                     </div>
                     <div>
                         <h5>Over dit bedrijf</h5>
-                        <p>ByteForge Solutions is een groeiend softwarebedrijf gespecialiseerd in maatwerkapplicaties voor KMO's. Met een klein maar gedreven team bouwen we weboplossingen, automatisering, ...</p>
+                        <p>ByteForge Solutions is een groeiend softwarebedrijf gespecialiseerd in maatwerkapplicaties voor KMO's. Met een klein maar gedreven team bouwen we weboplossingen, automatisering en business intelligence tools op maat van onze klanten.</p>
+                        <p>We geloven sterk in persoonlijke groei en bieden onze medewerkers veel ruimte voor ontwikkeling en innovatie. Onze moderne kantoren in het hart van Gent zijn uitgerust met de nieuwste technologieën.</p>
+                        <p>Als stagiair(e) word je vanaf dag één beschouwd als volwaardig teamlid en krijg je de kans om mee te werken aan uitdagende projecten voor echte klanten.</p>
+                        <h5>Wat wij bieden</h5>
+                        <ul>
+                        <li>Intensieve begeleiding door ervaren mentoren</li>
+                        <li>Kans op vast contract na succesvolle stage</li>
+                        <li>Moderne werkomgeving met de nieuwste technologieën</li>
+                        <li>Regelmatige team activities en vrijdagmiddagdrinks</li>
+                        <li>Flexibele werktijden en mogelijkheid tot hybride werken</li>
+                        </ul>
                     </div>
                 </div>
                 <div id="swipe">

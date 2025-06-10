@@ -13,7 +13,9 @@
                 <div class="header">
                     <div class="pfp">
                     </div>
-                    <h1>Geruiker</h1>
+                    <h1>
+                        {{ \Illuminate\Support\Str::limit($students[0]['first_name'] ?? 'Gebruiker', 20) }}
+                    </h1>
                 </div>
                 <nav>
                     <ul>

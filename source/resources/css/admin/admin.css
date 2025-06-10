@@ -25,6 +25,7 @@ table {
     width:100%;
 }
 .table {
+    background-color: white;
     overflow: auto;
     height:100%;
 }

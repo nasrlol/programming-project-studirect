@@ -3,7 +3,7 @@
 //renderen van elementen voor match pagina
 function renderMatch() {
     const sidebar = document.getElementById('sidebar-content');
-    
+
     //renderen van sidebar
     if (sidebar) {
         sidebar.innerHTML = `
@@ -12,12 +12,12 @@ function renderMatch() {
                 <p>Je hebt geen nieuwe meldingen.</p>
             </div>
             <div id="groundplan">
-                <img src="../public/plattegrondEHB.png">
+                <img src="./images/plattegrondEHB.png">
             </div>
         `;
     }
     const screenContent = document.getElementById('screen-content');
-    
+
     //renderen van bedrijf kaart
     if (screenContent) {
         screenContent.innerHTML = `
@@ -35,19 +35,36 @@ function renderMatch() {
                         <li>Stage</li>
                         <li>februari - juni 2025 (duur tijd bespreekbaar)</li>
                         <li>Loon: n/a</li>
+                        <li>Fulltime positie</li>
+                        <li>Flexibele uren</li>
+                        <li>Jonge, dynamische werkomgeving</li>
                         </ul>
                     </div>
                     <div>
                         <h5>Vereisten</h5>
                         <ul>
                         <li>Bachelor Toegepaste Informatica / Graduaat Systeem- en Netwerkbeheer</li>
-                        <li>soft skill</li>
-                        <li>rijbewijs</li>
+                        <li>Goede communicatieve vaardigheden</li>
+                        <li>Probleemoplossend denken</li>
+                        <li>Teamplayer mentaliteit</li>
+                        <li>Basiskennis netwerken</li>
+                        <li>Kennis van Windows Server en Active Directory is een plus</li>
+                        <li>Rijbewijs B</li>
                         </ul>
                     </div>
                     <div>
                         <h5>Over dit bedrijf</h5>
-                        <p>ByteForge Solutions is een groeiend softwarebedrijf gespecialiseerd in maatwerkapplicaties voor KMO's. Met een klein maar gedreven team bouwen we weboplossingen, automatisering, ...</p>
+                        <p>ByteForge Solutions is een groeiend softwarebedrijf gespecialiseerd in maatwerkapplicaties voor KMO's. Met een klein maar gedreven team bouwen we weboplossingen, automatisering en business intelligence tools op maat van onze klanten.</p>
+                        <p>We geloven sterk in persoonlijke groei en bieden onze medewerkers veel ruimte voor ontwikkeling en innovatie. Onze moderne kantoren in het hart van Gent zijn uitgerust met de nieuwste technologieën.</p>
+                        <p>Als stagiair(e) word je vanaf dag één beschouwd als volwaardig teamlid en krijg je de kans om mee te werken aan uitdagende projecten voor echte klanten.</p>
+                        <h5>Wat wij bieden</h5>
+                        <ul>
+                        <li>Intensieve begeleiding door ervaren mentoren</li>
+                        <li>Kans op vast contract na succesvolle stage</li>
+                        <li>Moderne werkomgeving met de nieuwste technologieën</li>
+                        <li>Regelmatige team activities en vrijdagmiddagdrinks</li>
+                        <li>Flexibele werktijden en mogelijkheid tot hybride werken</li>
+                        </ul>
                     </div>
                 </div>
                 <div id="swipe">
@@ -65,7 +82,7 @@ renderMatch();
 //renderen van elementen voor message pagina
 function renderMessage() {
     const sidebar = document.getElementById('sidebar-content');
-    
+
     //renderen van sidebar
     if (sidebar) {
         const names = ['BATO nv', 'Werkgroep', 'Blah Blah', 'Amplifon'];
@@ -76,7 +93,7 @@ function renderMessage() {
         `;
     }
     const screenContent = document.getElementById('screen-content');
-    
+
     //renderen van messages
     if (screenContent) {
         screenContent.innerHTML = `
@@ -91,7 +108,7 @@ function renderMessage() {
 //renderen van elementen voor kalender pagina
 function renderCalendar() {
     const sidebar = document.getElementById('sidebar-content');
-    
+
     //renderen van sidebar
     if (sidebar) {
         const times = [
@@ -110,7 +127,7 @@ function renderCalendar() {
         `;
     }
     const screenContent = document.getElementById('screen-content');
-    
+
     //renderen van kalender
     if (screenContent) {
         let table = '<table id="calendar-table">';
@@ -148,7 +165,7 @@ function setTime(rowIndex, colIndex, text) {
     }
 }
 
-window.addEventListener('DOMContentLoaded', () => { 
+window.addEventListener('DOMContentLoaded', () => {
 
     //event listeners voor match knop
     const matchBtn = document.getElementById('match');

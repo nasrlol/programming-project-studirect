@@ -111,6 +111,7 @@
                     <input type='text' placeholder='Zoek...'>
                     <label for='dateSearch'>Datum </label>
                     <select id='dateSearch' style='border:none;'>
+                    <!--Data will be based depending on logs data-->
 
                     </select>
                 </div>

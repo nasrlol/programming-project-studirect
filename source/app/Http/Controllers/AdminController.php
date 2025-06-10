@@ -32,7 +32,7 @@ class AdminController extends Controller
         }
         $companies = $response->json('data');
 
-        return view('/admin/html/admin', [
+        return view('/admin/admin', [
             'students' => $students, 
             'companies' => $companies
     ]);

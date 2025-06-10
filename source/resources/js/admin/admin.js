@@ -1,70 +1,4 @@
-//Code orgineel kwijtgespeeld, teruggekregen uit uglified VITE code
-
-function dashboard() {
-    const d = document.getElementById("student-amount");
-    d.innerHTML = "42";
-    const t = document.getElementById("company-amount");
-    t.innerHTML = "21"
-}
-//g
-function createSearch(d, t) {
-    return t.innerHTML += '<div style="height: fit-content;"><img src="./images/magnifying glass.jpg" style="height: 20px;"></div>',
-    d == 0 ? t.innerHTML += '<input type="text" id="nameSearchS">' : t.innerHTML += '<input type="text" id="nameSearchC">',
-    t.innerHTML += `<input id="typeSearch" type="hidden" value="${d}">`,
-    t.innerHTML += `<button id=search${d} class='filterAction'>Filter</button>`,
-    t
-}
-function switchDisplay(element) {
-    const dashboard = document.getElementById("dashboard")
-      , students = document.getElementById("students")
-      , companies = document.getElementById("companies")
-      , addCompany = document.getElementById("addCompany");
-    dashboard.style.display = "none",
-    students.style.display = "none",
-    companies.style.display = "none",
-    addCompany.style.display = "none",
-    document.getElementById(element).style.display = "block"
-}
-//u
-function filterArray(array, name) {
-    return array.filter(obj => obj.name.indexOf(name) > -1)
-}
-//m
-function createTable(input, extra = null) {
-    let table;
-    document.getElementById("students").style.display != "none" ? table = document.getElementById("studentTable") : table = document.getElementById("companyTable"),
-    table.innerHTML = "";
-    const legend = document.createElement("tr");
-    legend.innerHTML = "<th>naam</th><th>email</th><th>laatste login</th><th>Acties</th>"
-    table.appendChild(legend)
-    if (extra) {
-        for (let e of extra) {
-            const a = document.createElement("tr");
-            a.innerHTML = `<td>|${e.name}</td>`,
-            a.innerHTML += `<td>${e.mail}</td>`,
-            a.innerHTML += `<td>${e.login}</td>`,
-            a.innerHTML += "<td>eye||delete</td>",
-            table.appendChild(a)
-        }
-    }
-    for (let e of input) {
-        const a = document.createElement("tr");
-        a.innerHTML = `<td>${e.name}</td>`,
-        a.innerHTML += `<td>${e.mail}</td>`,
-        a.innerHTML += `<td>${e.login}</td>`,
-        a.innerHTML += "<td>eye||delete</td>",
-        table.appendChild(a)
-    }
-    return table
-}
-//y
-function copyArray(array) {
-    let newArray = new Array;
-    for (let el of array)
-        newArray.push(el);
-    return newArray
-}
-//f
+//changes contents of table to arrays for the js functions
 function tableToObjects() {
     let objects = {
         company: new Array,
@@ -92,10 +26,83 @@ function tableToObjects() {
         });
     return objects
 }
-//s
+
 const data = tableToObjects()
 
 console.log(data)
+
+//Sets the amount of students and companies based on the amount of rows in the table
+function dashboard() {
+    const d = document.getElementById("student-amount");
+    d.innerHTML = data.student.length;
+    const t = document.getElementById("company-amount");
+    t.innerHTML = data.company.length
+}
+//g
+function createSearch(d, t) {
+    return t.innerHTML += '<div style="height: fit-content;"><img src="./images/magnifying glass.jpg" style="height: 20px;"></div>',
+    d == 0 ? t.innerHTML += '<input type="text" id="nameSearchS">' : t.innerHTML += '<input type="text" id="nameSearchC">',
+    t.innerHTML += `<input id="typeSearch" type="hidden" value="${d}">`,
+    t.innerHTML += `<button id=search${d} class='filterAction'>Filter</button>`,
+    t
+}
+function switchDisplay(element) {
+    const dashboard = document.getElementById("dashboard")
+      , students = document.getElementById("students")
+      , companies = document.getElementById("companies")
+      , addCompany = document.getElementById("addCompany")
+      , logs = document.getElementById('logs');
+    dashboard.style.display = "none",
+    students.style.display = "none",
+    companies.style.display = "none",
+    addCompany.style.display = "none",
+    logs.style.display = "none"
+    document.getElementById(element).style.display = "block"
+}
+
+function filterArray(array, name) {
+    return array.filter(obj => obj.name.toLocaleLowerCase().indexOf(name.toLocaleLowerCase()) > -1)
+}
+//m
+function createTable(input, extra = null) {
+    let table;
+    document.getElementById("students").style.display != "none" ? table = document.getElementById("studentTable") : table = document.getElementById("companyTable"),
+    table.innerHTML = "";
+    const legend = document.createElement("tr");
+    legend.innerHTML = "<th>naam</th><th>email</th><th>laatste login</th><th>Acties</th>"
+    table.appendChild(legend)
+    if (extra) {
+        for (let e of extra) {
+            const a = document.createElement("tr");
+            a.innerHTML = `<td>|${e.name}</td>`,
+            a.innerHTML += `<td>${e.mail}</td>`,
+            a.innerHTML += `<td>${e.login}</td>`,
+            a.innerHTML += `<td><span>
+                                    <img class='moreInfo' src='./images/eyeball.png'>
+                                </span>  
+                                <span>
+                                    <img class='moreInfo' src='./images/delete.png'>
+                                </span></td>`,
+            table.appendChild(a)
+        }
+    }
+    for (let e of input) {
+        const a = document.createElement("tr");
+        a.innerHTML = `<td>${e.name}</td>`,
+        a.innerHTML += `<td>${e.mail}</td>`,
+        a.innerHTML += `<td>${e.login}</td>`,
+        a.innerHTML += "<td>eye||delete</td>",
+        table.appendChild(a)
+    }
+    return table
+}
+//y
+function copyArray(array) {
+    let newArray = new Array;
+    for (let el of array)
+        newArray.push(el);
+    return newArray
+}
 
 const result = document.getElementById("result-container");
 document.getElementById("nav-dashboard").addEventListener("click", () => {
@@ -108,8 +115,11 @@ document.getElementById("nav-users").addEventListener("click", () => {
 );
 document.getElementById("nav-companies").addEventListener("click", () => {
     switchDisplay("companies")
-}
-);
+})
+
+document.getElementById('nav-logs').addEventListener('click', () => {
+    switchDisplay('logs')
+})
 document.getElementById("toAddCompany").addEventListener("click", () => {
     switchDisplay("addCompany")
 }
@@ -117,6 +127,8 @@ document.getElementById("toAddCompany").addEventListener("click", () => {
 document.getElementById("backToCompanies").addEventListener("click", () => {
     switchDisplay("companies")
 }
+
+
 );
 window.addEventListener("load", () => {
     dashboard(),

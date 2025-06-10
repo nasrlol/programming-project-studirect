@@ -9,99 +9,82 @@
 <body>
     <div id='main-container'>
         <nav id="navigation">
-            Admin<br>
-            <button class="btn-nav" id="nav-dashboard">Dashboard</button>
-            <button class="btn-nav" id="nav-users">Gebruikers</button>
-            <button class="btn-nav" id="nav-companies">Bedrijven</button>
-            <button class="btn-nav" id="nav-logs">Logs</button>
+            <span class='info-nav nav-element'>Admin</span><br>
+            <button class="btn-nav nav-element" id="nav-dashboard">Dashboard</button>
+            <button class="btn-nav nav-element" id="nav-users">Gebruikers</button>
+            <button class="btn-nav nav-element" id="nav-companies">Bedrijven</button>
+            <button class="btn-nav nav-element" id="nav-logs">Logs</button>
         </nav>
 
-        <section id='result-container'>
+        <div id='result-container'>
             <section id='dashboard'>
                 <h2>Dashboard</h2>
                 <div class='member-amount'>
-                    <section class='amount-section'>
-                        <span id='student-amount'></span><br>
-                        <span>students</span>
-                    </section>
-                    <section class='amount-section'>
-                        <span id='company-amount'></span><br>
-                        bedrijven    
-                    </section>
+                    <div class='amount-section'>
+                        <div class='section-inside'>
+                            <span id='student-amount'></span><br>
+                            <span>students</span>
+                        </div>
+                    </div>
+                    <div class='amount-section'>
+                        <div class='section-inside'>
+                            <span id='company-amount'></span><br>
+                            <span>bedrijven</span>    
+                        </div>
+                    </div>
                 </div>
             </section>
 
-            <section id='students' style='display=none;'>
+            <section id='students' class='searchable'>
                 <h2>Gebruikers</h2>
                 <div class='filter' id='student'></div>
-                <table id='studentTable'>
-                    <tr><th>naam</th><th>email</th><th>laatste login</th><th>Acties</th></tr>
-                    <!-- Table is to be generated using API, currently test data-->
-                     <tr class='studentValue'>
-                        <td class='studentName'>Steven Deloof</td>
-                        <td class='studentMail'>steven.deloof@student.ehb.be</td>
-                        <td class='studentLogin'>03-06-2025</td>
-                        <td>eye||delete</td>
-                     </tr>
-                     <tr class='studentValue'>
-                        <td class='studentName'>Livia Deloof</td>
-                        <td class='studentMail'>livia.deloof@student.ehb.be</td>
-                        <td class='studentLogin'>01-06-2025</td>
-                        <td>eye||delete</td>
-                     </tr>
-                     <tr class='studentValue'>
-                        <td class='studentName'>Marc Deloof</td>
-                        <td class='studentMail'>marc.deloof@student.ehb.be</td>
-                        <td class='studentLogin'>31-05-2025</td>
-                        <td>eye||delete</td>
-                     </tr>
-                </table>
+                <div class='table'>
+                    <table id='studentTable'>
+                        <tr><th>naam</th><th>email</th><th>laatste login</th><th>Acties</th></tr>
+                        <!--API call-->
+                        <!--Last log still needs to be added-->
+                        @foreach ($students as $student)
+                        <tr>
+                            <td class='studentName'>{{ $student['first_name'] ?? 'Onbekend' }} {{ $student['last_name'] ?? 'onbekend' }}</td>
+                            <td class='studentMail'>{{ $student['email'] ?? 'Geen email' }}</td>
+                            <td class='studentLogin'>03-06-2025</td>
+                            <td>
+                                <span>
+                                    <img class='moreInfo' src='./images/eyeball.png'>
+                                </span>  <span>
+                                    <img class='moreInfo' src='./images/delete.png'>
+                                </span>
+                            </td>
+                        </tr>
+                        @endforeach
+                    </table>
+                </div>
             </section>
 
-            <section id='companies' style="display=none;">
+            <section id='companies' class='searchable'>
                 <h2>Bedrijven</h2>
                 <button id='toAddCompany' class='btn-nav'>Bedrijf toevoegen</button>
                 <div class='filter' id='bedrijf'></div>
-                <table id='companyTable'>
-                    <tr><th>naam</th><th>email</th><th>laatste login</th><th>Acties</th></tr>
-                    <!-- Table is to be generated using API, currently test data-->
-                    <tr class='companyValue'>
-                        <td class='companyName'>IT Solutions</td>
-                        <td class='companyMail'>support@ITSolutions.com</td>
-                        <td class='companyLogin'>02-04-2025</td>
-                        <td>eye||delete</td>
-                    </tr>
-                    <tr class='companyValue'>
-                        <td class='companyName'>IT Helper</td>
-                        <td class='companyMail'>support@ITHelper.com</td>
-                        <td class='companyLogin'>10-04-2025</td>
-                        <td>eye||delete</td>
-                    </tr>
-                    <tr class='companyValue'>
-                        <td class='companyName'>Security Solutions</td>
-                        <td class='companyMail'>support@SecuritySolutions.com</td>
-                        <td class='companyLogin'>02-01-2025</td>
-                        <td>eye||delete</td>
-                    </tr>
-                    <tr class='companyValue'>
-                        <td class='companyName'>Security Fight</td>
-                        <td class='companyMail'>contact@SecurityFight.com</td>
-                        <td class='companyLogin'>01-06-2025</td>
-                        <td>eye||delete</td>
-                    </tr>
-                    <tr class='companyValue'>
-                        <td class='companyName'>Business Helper</td>
-                        <td class='companyMail'>contact@BusinessHelper.com</td>
-                        <td class='companyLogin'>31-05-2025</td>
-                        <td>eye||delete</td>
-                    </tr>
-                    <tr class='companyValue'>
-                        <td class='companyName'>Business Solutions</td>
-                        <td class='companyMail'>contact@BusinessSolutions.com</td>
-                        <td class='companyLogin'>26-02-2025</td>
-                        <td>eye||delete</td>
-                    </tr>
-                </table>
+                <div class='table'>
+                    <table id='companyTable'>
+                        <tr><th>naam</th><th>email</th><th>laatste login</th><th>Acties</th></tr>
+                        @foreach ($companies as $company)
+                            <tr class='companyValue'>
+                                <td class='companyName'>{{ $company['name'] ?? 'Onbekend' }}</td>
+                                <td class='companyMail'>{{ $company['email'] ?? 'Onbekend' }}</td>
+                                <td class='companyLogin'>02-04-2025</td>
+                                <td>
+                                <span>
+                                    <img class='moreInfo' src='./images/eyeball.png'>
+                                </span>  
+                                <span>
+                                    <img class='moreInfo' src='./images/delete.png'>
+                                </span>
+                                </td>
+                            </tr>
+                        @endforeach
+                    </table>
+                </div>
             </section>
 
             <section id='addCompany' style='display=none;'>
@@ -121,9 +104,15 @@
                     </form>
                 </div>
             </section>
-        </section>
+
+            <section id='logs'>
+                <h2>Logs</h2>
+                <div id='events'>
+
+                </div>
+            </section>
+        </div>
     </div>
-    @vite('resources/js/admin/adminText.js')
     @vite('resources/js/admin/admin.js')
 </body>
 </html>

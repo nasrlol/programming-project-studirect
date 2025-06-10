@@ -31,7 +31,6 @@ class AdminController extends Controller
             return view('voorbeeld.index', ['error' => 'API niet beschikbaar', 'students' => []]);
         }
         $companies = $response->json('data');
-
         return view('/admin/admin', [
             'students' => $students, 
             'companies' => $companies

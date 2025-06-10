@@ -17,23 +17,32 @@ section {
     margin-left: 3.5%;
     margin-top: 1%;
 }
+/*Companies and students*/
+
 
 .filter {
     display: flex;
     flex-direction: row;
 }
+
+/*For adding to company*/
 .addCompany {
     width:40%;
     margin-left:30%;
     align-content:center;
 }
 
+#toAddCompany {
+    margin-left:80%;
+}
+
 /*Table*/
 
 table {
     width:100%;
+    border:solid;
 }
-.table {
+.list {
     background-color: white;
     overflow: auto;
     height:100%;
@@ -164,4 +173,13 @@ h2 {
     width:16px;
 }
 /*LOGS*/
+li {
+    padding-bottom:2%;
+    display: flex;
+    flex-direction: row;
+    justify-content: right;
+}
 
+.creationLogRes {
+    width:80%;
+}

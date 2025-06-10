@@ -38,7 +38,7 @@
             <section id='students' class='searchable'>
                 <h2>Gebruikers</h2>
                 <div class='filter' id='student'></div>
-                <div class='table'>
+                <div class='list'>
                     <table id='studentTable'>
                         <tr><th class='th-short'>Actief</th><th>naam</th><th>email</th><th>laatste login</th><th>Acties</th></tr>
                         <!--API call-->
@@ -70,13 +70,13 @@
 
             <section id='companies' class='searchable'>
                 <h2>Bedrijven</h2>
-                <button id='toAddCompany' class='btn-nav'>Bedrijf toevoegen</button>
-                <div class='filter' id='bedrijf'></div>
-                <div class='table'>
-                    <table id='companyTable'>
-                        <tr><th>naam</th><th>email</th><th>laatste login</th><th>Acties</th></tr>
-                        @foreach ($companies as $company)
-                            <tr class='companyValue'>
+                <button id='toAddCompany'>Bedrijf toevoegen</button>
+                <div class='searchContainer list'>
+                    <div class='filter' id='company'></div>
+                        <table id='companyTable'> 
+                            <tr><th>naam</th><th>email</th><th>laatste login</th><th>Acties</th></tr>
+                            @foreach ($companies as $company)
+                            <tr>
                                 <td class='companyName'>{{ $company['name'] ?? 'Onbekend' }}</td>
                                 <td class='companyMail'>{{ $company['email'] ?? 'Onbekend' }}</td>
                                 <td class='companyLogin'>02-04-2025</td>
@@ -89,12 +89,12 @@
                                 </span>
                                 </td>
                             </tr>
-                        @endforeach
-                    </table>
+                            @endforeach
+                        </table>
                 </div>
             </section>
 
-            <section id='addCompany' style='display=none;'>
+            <section id='addCompany'>
                 <button id='backToCompanies' class='btn-nav'>Terug</button>
                 <h2>Bedrijf toevoegen</h2>
                 <div class='addCompany'>
@@ -112,16 +112,34 @@
                 </div>
             </section>
 
-            <section id='logs'>
+            <section id='logs' class='searchable'>
                 <h2>Logs</h2>
                 <div id='events'>
-                    <input type='text' placeholder='Zoek...'>
-                    <label for='dateSearch'>Datum </label>
-                    <select id='dateSearch' style='border:none;'>
-                    <!--Data will be based depending on logs data-->
+                    <div>
+                        <input type='text' placeholder='Zoek...'>
+                        <label for='dateSearch'>Datum </label>
+                        <select id='dateSearch' style='border:none;'>
+                            <!--Data will be based depending on logs data-->
+                        </select>
+                        <button>Exporteren</button>
+                    </div>
+                </div>
+                <div class='list'>
+                    <ul>
 
-                    </select>
-                    <button>Exporteren</button>
+                        @foreach ($companies as $company)
+                        @php
+                            #php code added here as in the controller didn't work
+                            $year = substr($company['created_at'], 0, 4);
+                            $month = substr($company['created_at'], 5, 2);
+                            $day = substr($company['created_at'], 8, 2);
+
+                            $time = substr($company['created_at'], 11, 5);
+                            $date = $day . "/" . $month . "/" . $year;
+                        @endphp
+                            <li><div class='creationLogRes'>{{$company['name']}} heeft een account aangemaakt</div><div class='creationLogDate'>{{$date}}, {{$time}}</div></li>
+                        @endforeach 
+                    </ul>
                 </div>
             </section>
         </div>

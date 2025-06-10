@@ -9,6 +9,9 @@ h2 {
 section {
     /*Sections are already hidden to prevent funny bussiness when loading page*/
     display: none;
+    background-color: white;
+    margin-left: 3.5%;
+    margin-top: 1%;
 }
 
 .filter {
@@ -118,8 +121,6 @@ h2 {
     background-color: white;
     height: 50%;
     width:95%;
-    margin-left: 4%;
-    margin-top: 1%;
 }
 
 .member-amount {
@@ -147,5 +148,5 @@ h2 {
     height:16px;
     width:16px;
 }
-
+/*LOGS*/
 

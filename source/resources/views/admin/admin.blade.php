@@ -108,7 +108,11 @@
             <section id='logs'>
                 <h2>Logs</h2>
                 <div id='events'>
+                    <input type='text' placeholder='Zoek...'>
+                    <label for='dateSearch'>Datum </label>
+                    <select id='dateSearch' style='border:none;'>
 
+                    </select>
                 </div>
             </section>
         </div>

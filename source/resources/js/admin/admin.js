@@ -50,11 +50,13 @@ function switchDisplay(element) {
     const dashboard = document.getElementById("dashboard")
       , students = document.getElementById("students")
       , companies = document.getElementById("companies")
-      , addCompany = document.getElementById("addCompany");
+      , addCompany = document.getElementById("addCompany")
+      , logs = document.getElementById('logs');
     dashboard.style.display = "none",
     students.style.display = "none",
     companies.style.display = "none",
     addCompany.style.display = "none",
+    logs.style.display = "none"
     document.getElementById(element).style.display = "block"
 }
 
@@ -75,7 +77,12 @@ function createTable(input, extra = null) {
             a.innerHTML = `<td>|${e.name}</td>`,
             a.innerHTML += `<td>${e.mail}</td>`,
             a.innerHTML += `<td>${e.login}</td>`,
-            a.innerHTML += "<td>eye||delete</td>",
+            a.innerHTML += `<td><span>
+                                    <img class='moreInfo' src='./images/eyeball.png'>
+                                </span>  
+                                <span>
+                                    <img class='moreInfo' src='./images/delete.png'>
+                                </span></td>`,
             table.appendChild(a)
         }
     }
@@ -108,8 +115,11 @@ document.getElementById("nav-users").addEventListener("click", () => {
 );
 document.getElementById("nav-companies").addEventListener("click", () => {
     switchDisplay("companies")
-}
-);
+})
+
+document.getElementById('nav-logs').addEventListener('click', () => {
+    switchDisplay('logs')
+})
 document.getElementById("toAddCompany").addEventListener("click", () => {
     switchDisplay("addCompany")
 }
@@ -117,6 +127,8 @@ document.getElementById("toAddCompany").addEventListener("click", () => {
 document.getElementById("backToCompanies").addEventListener("click", () => {
     switchDisplay("companies")
 }
+
+
 );
 window.addEventListener("load", () => {
     dashboard(),

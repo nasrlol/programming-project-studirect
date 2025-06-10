@@ -48,7 +48,13 @@
                             <td class='studentName'>{{ $student['first_name'] ?? 'Onbekend' }} {{ $student['last_name'] ?? 'onbekend' }}</td>
                             <td class='studentMail'>{{ $student['email'] ?? 'Geen email' }}</td>
                             <td class='studentLogin'>03-06-2025</td>
-                            <td>eye||delete</td>
+                            <td>
+                                <span>
+                                    <img class='moreInfo' src='./images/eyeball.png'>
+                                </span>  <span>
+                                    <img class='moreInfo' src='./images/delete.png'>
+                                </span>
+                            </td>
                         </tr>
                         @endforeach
                     </table>
@@ -67,7 +73,14 @@
                                 <td class='companyName'>{{ $company['name'] ?? 'Onbekend' }}</td>
                                 <td class='companyMail'>{{ $company['email'] ?? 'Onbekend' }}</td>
                                 <td class='companyLogin'>02-04-2025</td>
-                                <td>eye||delete</td>
+                                <td>
+                                <span>
+                                    <img class='moreInfo' src='./images/eyeball.png'>
+                                </span>  
+                                <span>
+                                    <img class='moreInfo' src='./images/delete.png'>
+                                </span>
+                                </td>
                             </tr>
                         @endforeach
                     </table>
@@ -89,6 +102,13 @@
                         <div id='formResponse'></div>
                         <input type='submit' value='opslaan'>
                     </form>
+                </div>
+            </section>
+
+            <section id='logs'>
+                <h2>Logs</h2>
+                <div id='events'>
+
                 </div>
             </section>
         </div>

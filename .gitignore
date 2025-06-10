@@ -29,3 +29,5 @@ Homestead.json
 auth.json
 
 .idea
+# dit niet verwijderen :)
+.env

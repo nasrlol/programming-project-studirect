@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\StudentController;
+use App\Http\Controllers\AdminController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', [StudentController::class, 'index']);
@@ -11,12 +12,5 @@ Route::get('/students', [StudentController::class, 'index']);
 Route::get('/company', function () {
     return view('company'); // zoekt 'resources/views/home.blade.php'
 });
-/*
-Route::prefix('admin')->group(function () {
-    // Admin homepage route 
-    Route::get('/', function () {
-        return view('admin/html/admin', [StudentController::class, 'showAllStudents']);
-    });
-});
-*/
-Route::get('/admin', [StudentController::class, 'showAllStudents']);
+
+Route::get('/admin', [AdminController::class, 'showAllUsers']);

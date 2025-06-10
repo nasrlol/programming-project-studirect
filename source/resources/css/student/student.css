@@ -181,3 +181,16 @@ header nav ul li a {        /*navigatie knoppen*/
 #calendar-table th:first-child{     /*fix voor probleem eerste rij van tabel*/
     width: 0.5rem;
 }
+
+.pfp {       /*profielfoto in header*/
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    background: #ccc;
+    margin: 0 1rem;
+}
+
+.header {
+    display: flex;
+    align-items: center;
+}

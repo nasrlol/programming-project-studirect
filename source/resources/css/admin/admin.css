@@ -22,7 +22,15 @@ section {
 }
 
 table {
-    width:100%
+    width:100%;
+}
+.table {
+    overflow: auto;
+    height:100%;
+}
+
+.searchable {
+    height:80%;
 }
 
 th {
@@ -133,3 +141,4 @@ h2 {
     padding-top: 15%;
     padding-bottom: 15%;
 }
+

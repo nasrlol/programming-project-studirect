@@ -35,40 +35,43 @@
                 </div>
             </section>
 
-            <section id='students'>
+            <section id='students' class='searchable'>
                 <h2>Gebruikers</h2>
                 <div class='filter' id='student'></div>
-                <table id='studentTable'>
-                    <tr><th>naam</th><th>email</th><th>laatste login</th><th>Acties</th></tr>
-                    <!--API call-->
-                    <!--Last log still needs to be added-->
-                    @foreach ($students as $student)
+                <div class='table'>
+                    <table id='studentTable'>
+                        <tr><th>naam</th><th>email</th><th>laatste login</th><th>Acties</th></tr>
+                        <!--API call-->
+                        <!--Last log still needs to be added-->
+                        @foreach ($students as $student)
                         <tr>
                             <td class='studentName'>{{ $student['first_name'] ?? 'Onbekend' }} {{ $student['last_name'] ?? 'onbekend' }}</td>
                             <td class='studentMail'>{{ $student['email'] ?? 'Geen email' }}</td>
                             <td class='studentLogin'>03-06-2025</td>
                             <td>eye||delete</td>
                         </tr>
-                    @endforeach
-                    
-                </table>
+                        @endforeach
+                    </table>
+                </div>
             </section>
 
-            <section id='companies'>
+            <section id='companies' class='searchable'>
                 <h2>Bedrijven</h2>
                 <button id='toAddCompany' class='btn-nav'>Bedrijf toevoegen</button>
                 <div class='filter' id='bedrijf'></div>
-                <table id='companyTable'>
-                    <tr><th>naam</th><th>email</th><th>laatste login</th><th>Acties</th></tr>
-                    @foreach ($companies as $company)
-                        <tr class='companyValue'>
-                            <td class='companyName'>{{ $company['name'] ?? 'Onbekend' }}</td>
-                            <td class='companyMail'>{{ $company['email'] ?? 'Onbekend' }}</td>
-                            <td class='companyLogin'>02-04-2025</td>
-                            <td>eye||delete</td>
-                        </tr>
-                    @endforeach
-                </table>
+                <div class='table'>
+                    <table id='companyTable'>
+                        <tr><th>naam</th><th>email</th><th>laatste login</th><th>Acties</th></tr>
+                        @foreach ($companies as $company)
+                            <tr class='companyValue'>
+                                <td class='companyName'>{{ $company['name'] ?? 'Onbekend' }}</td>
+                                <td class='companyMail'>{{ $company['email'] ?? 'Onbekend' }}</td>
+                                <td class='companyLogin'>02-04-2025</td>
+                                <td>eye||delete</td>
+                            </tr>
+                        @endforeach
+                    </table>
+                </div>
             </section>
 
             <section id='addCompany' style='display=none;'>

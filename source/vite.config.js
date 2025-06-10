@@ -8,7 +8,9 @@ export default defineConfig({
             input: ['resources/css/admin/admin.css', 
                 'resources/js/admin/admin.js', 
                 'resources/js/admin/adminText.js', 
-                'resources/js/admin/adminVars.js'
+                'resources/js/admin/adminVars.js',
+                'resources/css/student/student.css',
+                'resources/js/student/student.js'
             ],
             refresh: true,
         }),

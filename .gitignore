@@ -31,3 +31,4 @@ auth.json
 .idea
 # dit niet verwijderen :)
 .env
+.DS_Store

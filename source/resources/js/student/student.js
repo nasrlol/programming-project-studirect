@@ -3,7 +3,7 @@
 //renderen van elementen voor match pagina
 function renderMatch() {
     const sidebar = document.getElementById('sidebar-content');
-    
+
     //renderen van sidebar
     if (sidebar) {
         sidebar.innerHTML = `
@@ -12,12 +12,12 @@ function renderMatch() {
                 <p>Je hebt geen nieuwe meldingen.</p>
             </div>
             <div id="groundplan">
-                <img src="../public/plattegrondEHB.png">
+                <img src="./images/plattegrondEHB.png">
             </div>
         `;
     }
     const screenContent = document.getElementById('screen-content');
-    
+
     //renderen van bedrijf kaart
     if (screenContent) {
         screenContent.innerHTML = `
@@ -65,7 +65,7 @@ renderMatch();
 //renderen van elementen voor message pagina
 function renderMessage() {
     const sidebar = document.getElementById('sidebar-content');
-    
+
     //renderen van sidebar
     if (sidebar) {
         const names = ['BATO nv', 'Werkgroep', 'Blah Blah', 'Amplifon'];
@@ -76,7 +76,7 @@ function renderMessage() {
         `;
     }
     const screenContent = document.getElementById('screen-content');
-    
+
     //renderen van messages
     if (screenContent) {
         screenContent.innerHTML = `
@@ -91,7 +91,7 @@ function renderMessage() {
 //renderen van elementen voor kalender pagina
 function renderCalendar() {
     const sidebar = document.getElementById('sidebar-content');
-    
+
     //renderen van sidebar
     if (sidebar) {
         const times = [
@@ -110,7 +110,7 @@ function renderCalendar() {
         `;
     }
     const screenContent = document.getElementById('screen-content');
-    
+
     //renderen van kalender
     if (screenContent) {
         let table = '<table id="calendar-table">';
@@ -148,7 +148,7 @@ function setTime(rowIndex, colIndex, text) {
     }
 }
 
-window.addEventListener('DOMContentLoaded', () => { 
+window.addEventListener('DOMContentLoaded', () => {
 
     //event listeners voor match knop
     const matchBtn = document.getElementById('match');

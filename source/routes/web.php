@@ -11,5 +11,5 @@ Route::get('/students', [StudentController::class, 'index']);
 //Route::post('/students', [StudentController::class, 'store']);
 
 Route::get('/company', function () {
-    return view('company'); // zoekt 'resources/views/home.blade.php'
+    return view('company.company'); // zoekt 'resources/views/home.blade.php'
 });

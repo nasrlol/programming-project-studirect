@@ -8,7 +8,7 @@
     @vite ('resources/css/student/student.css')
 </head>
 <body>
-    @include('layouts.navbar')
+    @include('student.layouts.navbar')
 
     <main class="container">
         @yield('content')

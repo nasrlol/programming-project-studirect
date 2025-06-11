@@ -80,7 +80,7 @@ body {
     gap: 1rem;
 }
 
-.section {
+.sectionType1 {
     flex: 1;
     border: 1px solid #aaa;
     border-radius: 8px;
@@ -90,7 +90,7 @@ body {
     overflow: auto;
 }
 
-/* Section 1 container to keep the map at the bottom */
+/* flex container to keep the map at the bottom */
 #map-fix {
     display: flex;
     flex-direction: column;

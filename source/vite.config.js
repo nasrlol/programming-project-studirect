@@ -9,8 +9,8 @@ export default defineConfig({
                 'resources/js/admin/admin.js',
                 'resources/css/student/student.css',
                 'resources/js/student/student.js',
-                'resources/bedrijf/css/company.css',
-                'resources/bedrijf/js/company.js'
+                'resources/css/company/company.css',
+                'resources/js/company/company.js'
             ],
             refresh: true,
         }),

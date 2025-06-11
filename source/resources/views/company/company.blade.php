@@ -6,7 +6,7 @@
     <link rel="icon" type="image/svg+xml" href="/vite.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Main scherm</title>
-    <link rel="stylesheet" href="{{ asset('company/css/company.css') }}">
+    @vite('resources/bedrijf/css/company.css')
 </head>
 
 <body>
@@ -28,7 +28,7 @@
 
 
     </main>
-    <script src="{{ asset('company/js/company.js') }}"></script>
+     @vite('resources/bedrijf/js/company.js')
 </body>
 
 </html>

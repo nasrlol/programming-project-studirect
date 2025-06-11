@@ -10,16 +10,18 @@ body {
     background-color: #3a3550;
 }
 
-/* Navigation Bar Styles */
+/* navigation bar styles */
 .navbar {
     display: flex;
     justify-content: space-between;
     align-items: center;
     background-color: #3b3b70;
+    border-bottom: 1px solid #aaa;
     font-size: 1.2rem;
-    padding: 1rem;
+    padding: 0.5rem;
 }
 
+/* nav buttons styles */
 .nav-links {
     display: flex;
     list-style: none;
@@ -33,16 +35,21 @@ body {
 .nav-links a {
     text-decoration: none;
     font-weight: 500;
-    padding: 0.5rem 1rem;
+    padding: 0.5rem;
     border-radius: 4px;
     transition: background-color 0.3s;
 }
 
 .nav-links a:hover,
 .nav-links a.active {
-    background-color: rgba(255, 255, 255, 0.1);
+    background-color: #4a4a8c;
 }
 
+.nav-links a.active {
+    text-decoration: underline;
+}
+
+/* nav profile styles */
 .nav-profile {
     display: flex;
     align-items: center;
@@ -60,11 +67,12 @@ body {
     font-weight: 500;
 }
 
+/* nav logo styles */
 .nav-logo img {
     height: 40px;
 }
 
-/* Main Container Styles */
+/* main container styles */
 .container {
     display: flex;
     height: calc(100vh - 78px);
@@ -77,4 +85,128 @@ body {
     border: 1px solid #aaa;
     border-radius: 8px;
     padding: 1rem;
+    background: #2a2a44;
+    max-width: 33%;
+    overflow: auto;
+}
+
+/* Section 1 container to keep the map at the bottom */
+#map-fix {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}
+
+/* notifications styles */
+#notifications {
+    margin-bottom: 1.5rem;
+}
+
+#notifications p {
+    background: #363656;
+    padding: 1rem;
+    border-radius: 6px;
+    margin: 0.5rem 0;
+}
+
+/* map styles */
+#groundplan {
+    height: 300px;
+    overflow: auto;
+    border: 1px solid #aaa;
+    background: #fff;
+    border-radius: 6px;
+    margin-top: auto;
+}
+
+#groundplan img {
+    width: 100%;
+    height: auto;
+}
+
+/* company screen styles */
+#company-screen {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
+    height: 100%;
+    padding: 2rem;
+    overflow: hidden;
+}
+
+#company-title {
+    text-align: center;
+    font-size: 1.4rem;
+    margin-bottom: 0.3rem;
+}
+
+#company-title p {
+    color: #aaa;
+    font-size: 1.2rem;
+}
+
+#company-logo {
+    width: 100%;
+    height: 200px;
+    background-color: #4d4157;
+}
+
+/* swipe button styles */
+#swipe {
+    display: flex;
+    gap: 6rem;
+    margin-top: 2rem;
+}
+
+#swipe button {
+    background-color: #4e4268;
+    width: 60px;
+    height: 60px;
+    border: 2px solid #fff;
+    border-radius: 50%;
+    font-size: 1.5rem;
+    cursor: pointer;
+    transition: transform 0.2s ease, background-color 0.3s;
+}
+
+#dislike {
+    color: #ff4444;
+}
+
+#like {
+    color: #44ff44;
+}
+
+#swipe button:hover {
+    transform: scale(1.1);
+    background-color: #4d4157;
+}
+
+/* company info styles */
+#company-info {
+    padding: 0 1rem 2rem 1rem;
+    overflow-y: auto;
+    height: 100%;
+}
+
+#company-info h5 {
+    color: #fff;
+    margin: 1.5rem 0 1rem;
+    font-size: 1.2rem;
+}
+
+#company-info ul {
+    list-style-type: circle;
+    padding-left: 1rem;
+}
+
+#company-info li {
+    margin: 0.5rem 0;
+    color: #ddd;
+}
+
+#company-info p {
+    color: #ddd;
+    line-height: 1.6;
 }

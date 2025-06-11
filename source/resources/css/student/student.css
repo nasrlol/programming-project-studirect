@@ -1,227 +1,80 @@
-body {
+* {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
-    font-family: Verdana, sans-serif;
     color: #fff;
 }
 
-main {
-    display: flex;
-    height: 100vh;
+body {
+    font-family: 'EB Garamond', serif;
+    background-color: #3a3550;
 }
 
-#sidebar {      /*sidebar links*/
-    width: 35%;
-    background: #252D3C;
-    display: flex;
-    flex-direction: column;
-    height: 100vh;
-}
-
-#sidebar-content {
-    margin: 1rem;
-    display: flex;
-    flex-direction: column;
-    flex: 1;
-}
-
-header {            /*header boven sidebar*/
-    background: #0046C9;
-    display: flex;
-    flex-direction: column;
-    margin-bottom: 1rem;
-}
-
-header h1 {         /*profielfoto en naam*/
-    margin: 1.5rem;
-}
-
-header nav {        /*navigatie balk*/
-    background: #000;
-    padding: 0.5rem;
-}
-
-header nav ul {     /*navigatie oplijsting*/
-    display: flex;
-    gap: 1.5rem;
-    margin: 0;
-    list-style-type: none;
-}
-
-header nav ul li a {        /*navigatie knoppen*/
-    font-weight: bold;
-    cursor: pointer;
-}
-
-#screen {            /*main scherm rechts*/
-    width: 65%;
-    background: #000000;
-}
-
-#screen-content {            /*positionering rechthoek*/
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    height: 100%;
-}
-
-#screen-rectangle {          /*rechthoek voor matches scherm rechts*/
-    width: 500px;
-    height: 700px;
-    background: #424242;
-    display: flex;
-    flex-direction: column;
-    position: relative;
-}
-
-#company-name {         /*naam van bedrijf*/
-    font-weight: 900;
-    padding: 1rem 1rem 0 1rem;
-    margin: 0;
-}
-
-#company-title p {          /*positie binnen bedrijf*/
-    padding: 0.5rem 1rem 1rem 1.5rem;
-    margin: 0;
-}
-
-#logo-placeholder {         /*placeholder voor logo van bedrijf*/
-    background-color: #ccc;
-    width: 100%;
-    height: 100px;
-}
-
-#company-info {            /*informatie over bedrijf*/
-    padding: 1rem;
-    flex: 1;
-    overflow-y: auto;
-    max-height: 100%;
-}
-
-#company-info h5 {
-    margin: 0;
-    font-size: 1rem;
-}
-
-#company-info ul, p {
-    padding-left: 1.5rem;
-    color: #eee;
-    list-style-type: circle;
-}
-
-#swipe {            /*swipe knoppen*/
-    position: absolute;
+/* Navigation Bar Styles */
+.navbar {
     display: flex;
     justify-content: space-between;
-    width: 140%;
-    left: -20%;
-    bottom: 10%;
-    transform: translateY(50%);
-    z-index: 1;
-}
-
-#swipe button {
-    background-color: #888;
-    border: 2px solid;
-    width: 70px;
-    height: 70px;
-    border-radius: 50%;
-    font-size: 24px;
-    cursor: pointer;
-    transition: transform 0.2s, background-color 0.2s;
-    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
-}
-
-#swipe button:hover {
-    transform: scale(1.1);
-    background-color:   #ffffff;
-}
-
-#swipe button:first-child {
-    color: #f00;
-    background-color: #a87e7e;
-    border-color: #f00;
-}
-
-#swipe button:last-child {
-    color: #0f0;
-    background-color: #81af81;
-    border-color: #0f0;
-}
-
-#groundplan {          /*plattegrond van EHB omkadering*/
-    width: 100%;
-    height: 300px;
-    overflow: auto;
-    border: 1px solid #ccc;
-    background: #fff;
-    margin-top: auto;
-}
-
-#groundplan img {
-    width: 100%;
-}
-
-#message-list {          /*message lijst van bedrijven*/
-    display: flex;
-    flex-direction: column;
-}
-
-.message-item {             /*naam van bedrijf voor messages*/
+    align-items: center;
+    background-color: #3b3b70;
+    font-size: 1.2rem;
     padding: 1rem;
-    border: solid #fff;
-    border-radius: 6px;
 }
 
-#message-info {             /*als niks geselecteerd is op het messages scherm*/
-    text-align: center;
-}
-
-#message-info h3 {
-    margin-bottom: 0.3rem;
-    font-size: 2rem;
-    color: #e8e8e8;
-}
-
-#message-info p {
-    font-size: 1rem;
-    color: #ccc;
-}
-
-#times-list {          /*lijst van gereserveerde tijden*/
+.nav-links {
     display: flex;
-    flex-direction: column;
+    list-style: none;
+    gap: 2rem;
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    justify-content: center;
 }
 
-#calendar-table {           /* tabel van gereserveerde tijden*/
-    width: 100%;
-    border-collapse: collapse;
-    background: #2e2e2e;
-    margin: 0.5rem;
-    table-layout: fixed;
+.nav-links a {
+    text-decoration: none;
+    font-weight: 500;
+    padding: 0.5rem 1rem;
+    border-radius: 4px;
+    transition: background-color 0.3s;
 }
 
-#calendar-table td, th {        /*opmaak cellen van de tabel*/
-    border: 0.5px solid #ccc;
-    width: 50px;
-    height: 50px;
-    text-align: center;
+.nav-links a:hover,
+.nav-links a.active {
+    background-color: rgba(255, 255, 255, 0.1);
 }
 
-#calendar-table th:first-child{     /*fix voor probleem eerste rij van tabel*/
-    width: 0.5rem;
-}
-
-.pfp {       /*profielfoto in header*/
-    width: 48px;
-    height: 48px;
-    border-radius: 50%;
-    background: #ccc;
-    margin: 0 1rem;
-}
-
-.header {
+.nav-profile {
     display: flex;
     align-items: center;
+    gap: 1rem;
+}
+
+.profile-pic {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background-color: #ddd;
+}
+
+.profile-name {
+    font-weight: 500;
+}
+
+.nav-logo img {
+    height: 40px;
+}
+
+/* Main Container Styles */
+.container {
+    display: flex;
+    height: calc(100vh - 78px);
+    padding: 1rem;
+    gap: 1rem;
+}
+
+.section {
+    flex: 1;
+    border: 1px solid #aaa;
+    border-radius: 8px;
+    padding: 1rem;
 }

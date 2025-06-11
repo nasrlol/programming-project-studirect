@@ -16,7 +16,6 @@ public_html/storage
 public_html/hot
 
 storage/*.key
-.env
 Homestead.yaml
 Homestead.json
 /.vagrant
@@ -30,4 +29,6 @@ Homestead.json
 auth.json
 
 .idea
-source/package-lock.json
+# dit niet verwijderen :)
+.env
+.DS_Store

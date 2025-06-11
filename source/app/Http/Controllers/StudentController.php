@@ -10,7 +10,7 @@ use Illuminate\Support\Facades\Http;
 
 class StudentController extends Controller
 {
-    private string $apiUrl = 'http://127.0.0.1:8001/api/students';
+    private string $apiUrl = 'http://10.2.160.208/api/students';
 
     /**
      * Display a listing of the resource.
@@ -29,13 +29,13 @@ class StudentController extends Controller
 {
     try {
         $response = Http::get($this->apiUrl);
-        
+
         if (!$response->successful()) {
             return view('voorbeeld.index', ['error' => 'API niet beschikbaar', 'students' => []]);
         }
-        
+
         $students = $response->json('data');
-        return view('voorbeeld.index', ['students' => $students]);
+        return view('student.html.student', ['students' => $students]);
     } catch (\Exception $e) {
         return view('voorbeeld.index', ['error' => 'Er is een fout opgetreden', 'students' => []]);
     }

@@ -67,9 +67,12 @@ header nav ul li a {        /*navigatie knoppen*/
 }
 
 #screen-rectangle {          /*rechthoek voor matches scherm rechts*/
-    width: 400px;
+    width: 500px;
     height: 700px;
     background: #424242;
+    display: flex;
+    flex-direction: column;
+    position: relative;
 }
 
 #company-name {         /*naam van bedrijf*/
@@ -91,6 +94,9 @@ header nav ul li a {        /*navigatie knoppen*/
 
 #company-info {            /*informatie over bedrijf*/
     padding: 1rem;
+    flex: 1;
+    overflow-y: auto;
+    max-height: 100%;
 }
 
 #company-info h5 {
@@ -104,19 +110,44 @@ header nav ul li a {        /*navigatie knoppen*/
     list-style-type: circle;
 }
 
-#swipe {         /*swipe knoppen*/
+#swipe {            /*swipe knoppen*/
+    position: absolute;
     display: flex;
     justify-content: space-between;
+    width: 140%;
+    left: -20%;
+    bottom: 10%;
+    transform: translateY(50%);
+    z-index: 1;
 }
 
 #swipe button {
-      background-color: #aaa;
-      border: 2px solid #fff;
-      border-radius: 50%;
-      font-size: 24px;
-      width: 48px;
-      height: 48px;
-      cursor: pointer;
+    background-color: #888;
+    border: 2px solid;
+    width: 70px;
+    height: 70px;
+    border-radius: 50%;
+    font-size: 24px;
+    cursor: pointer;
+    transition: transform 0.2s, background-color 0.2s;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+}
+
+#swipe button:hover {
+    transform: scale(1.1);
+    background-color:   #ffffff;
+}
+
+#swipe button:first-child {
+    color: #f00;
+    background-color: #a87e7e;
+    border-color: #f00;
+}
+
+#swipe button:last-child {
+    color: #0f0;
+    background-color: #81af81;
+    border-color: #0f0;
 }
 
 #groundplan {          /*plattegrond van EHB omkadering*/
@@ -180,4 +211,17 @@ header nav ul li a {        /*navigatie knoppen*/
 
 #calendar-table th:first-child{     /*fix voor probleem eerste rij van tabel*/
     width: 0.5rem;
+}
+
+.pfp {       /*profielfoto in header*/
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    background: #ccc;
+    margin: 0 1rem;
+}
+
+.header {
+    display: flex;
+    align-items: center;
 }

@@ -36,11 +36,21 @@ section {
     margin-left:80%;
 }
 
+form {
+    display: flex;
+    flex-direction: column;
+}
+
+.addInput {
+    margin-bottom: 2%;
+}
+
 /*Table*/
 
 table {
     width:100%;
     border:solid;
+    border-width:1px;
 }
 .list {
     background-color: white;
@@ -158,7 +168,7 @@ h2 {
     font-size: large;
     background-color: #648EE3;
 
-    width:17.5%;
+    width:35%;
     height:100%;
 
     margin-right: 7.5%;
@@ -167,12 +177,17 @@ h2 {
     padding-top: 15%;
     padding-bottom: 15%;
 }
+/*Students and companies*/
 
+.studentId {
+    display: none;
+}
 .moreInfo {
     height:16px;
     width:16px;
 }
 /*LOGS*/
+
 li {
     padding-bottom:2%;
     display: flex;
@@ -182,4 +197,15 @@ li {
 
 .creationLogRes {
     width:80%;
+}
+
+select {
+    border:none;
+}
+
+#events {
+    border:none;
+}
+.eventSearch {
+    width:90%
 }

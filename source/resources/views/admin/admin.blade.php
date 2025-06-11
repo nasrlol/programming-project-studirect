@@ -7,12 +7,20 @@
     <title>document</title>
 </head>
 <body>
+    @if ( session('error'))
+        {{ session('error') }}
+    @endif
+
+    @if ( session('success'))
+        {{ session('success') }}
+    @endif
     <div id='main-container'>
         <nav id="navigation">
             <span class='info-nav nav-element'>Admin</span><br>
             <button class="btn-nav nav-element" id="nav-dashboard">Dashboard</button>
             <button class="btn-nav nav-element" id="nav-users">Gebruikers</button>
             <button class="btn-nav nav-element" id="nav-companies">Bedrijven</button>
+            <button class="btn-nav nav-element" id="nav-appointments">Afspraken</button>
             <button class="btn-nav nav-element" id="nav-logs">Logs</button>
         </nav>
 
@@ -30,6 +38,12 @@
                         <div class='section-inside'>
                             <span id='company-amount'></span><br>
                             <span>bedrijven</span>    
+                        </div>
+                    </div>
+                    <div class='amount-section'>
+                        <div class='section-inside'>
+                            <span id='apointment-amount'></span><br>
+                            <span>afspraken</span>    
                         </div>
                     </div>
                 </div>
@@ -52,7 +66,8 @@
                                     <span class='image-container'><img src='images/delete.png' class='image-container' alt='nee'></span> 
                                 @endif
                             </td>
-                            <td class='studentName'>{{ $student['first_name'] ?? 'Onbekend' }} {{ $student['last_name'] ?? 'onbekend' }}</td>
+                            <!--| is added at the end to make sure no accidents occur (like 2 and 21 while filtering)-->
+                            <td class='studentName' id="s{{$student['id']}}|">{{ $student['first_name'] ?? 'Onbekend' }} {{ $student['last_name'] ?? 'onbekend' }}</td>
                             <td class='studentMail'>{{ $student['email'] ?? 'Geen email' }}</td>
                             <td class='studentLogin'>03-06-2025</td>
                             <td>
@@ -77,7 +92,7 @@
                             <tr><th>naam</th><th>email</th><th>laatste login</th><th>Acties</th></tr>
                             @foreach ($companies as $company)
                             <tr>
-                                <td class='companyName'>{{ $company['name'] ?? 'Onbekend' }}</td>
+                                <td class='companyName' id="c{{$company['id']}}|">{{ $company['name'] ?? 'Onbekend' }}</td>
                                 <td class='companyMail'>{{ $company['email'] ?? 'Onbekend' }}</td>
                                 <td class='companyLogin'>02-04-2025</td>
                                 <td>
@@ -94,17 +109,28 @@
                 </div>
             </section>
 
+
             <section id='addCompany'>
                 <button id='backToCompanies' class='btn-nav'>Terug</button>
                 <h2>Bedrijf toevoegen</h2>
                 <div class='addCompany'>
                     <h2>Bedrijf gegevens</h2>
                     <!-- Action to add a company must be added-->
-                    <form>
-                        <input type='text' id='name' name='name' placeholder='Naam'><br>
-                        <input type='text' id='mail' name='mail' placeholder='E-mail'>
-                        <input type='password' id='password1' name='password1' placeholder='Wachtwoord'>
-                        <input type='password' id='password2' name='password2' placeholder='Bevestig wachtwoord'>
+                    <form method='post' action="{{ route('admin.companies.create') }}">
+                        @csrf <!-- CSRF token for security -->
+                        <input class='addInput' type='text' id='name' name='name' placeholder='Naam'>
+                        <input class='addInput' type='text' id='mail' name='email' placeholder='E-mail'>
+                        <div class='addInput' style='border: solid; border-width:1px'>
+                            <label for='plan_type'>Prijs plan</label>
+                            <select name='plan_type'>
+                                <option value='Basic'>Basic</option>
+                                <option value='Standard'>Standaard</option>
+                                <option value='Premium'>Premium</option>
+                            </select>
+                        </div>
+                        <input class='addInput' type='text' name='booth_location' placeholder='Locatie booth'>
+                        <input class='addInput' type='password' id='password1' name='password1' placeholder='Wachtwoord'>
+                        <input class='addInput' type='password' id='password2' name='password2' placeholder='Bevestig wachtwoord'>
                         <!--Responses for wrong inputs will be put here--> 
                         <div id='formResponse'></div>
                         <input type='submit' value='opslaan'>
@@ -121,15 +147,18 @@
                         <select id='dateSearch' style='border:none;'>
                             <!--Data will be based depending on logs data-->
                         </select>
+                        <select id='accountType'>
+                            <option value='s'>Studenten</option>
+                            <option value='c'>Bedrijven</option>
+                        </select>
                         <button>Exporteren</button>
                     </div>
                 </div>
                 <div class='list'>
-                    <ul>
-
+                    <ul id='companyLogs'>
                         @foreach ($companies as $company)
                         @php
-                            #php code added here as in the controller didn't work
+                            #php code for company
                             $year = substr($company['created_at'], 0, 4);
                             $month = substr($company['created_at'], 5, 2);
                             $day = substr($company['created_at'], 8, 2);
@@ -137,10 +166,37 @@
                             $time = substr($company['created_at'], 11, 5);
                             $date = $day . "/" . $month . "/" . $year;
                         @endphp
-                            <li><div class='creationLogRes'>{{$company['name']}} heeft een account aangemaakt</div><div class='creationLogDate'>{{$date}}, {{$time}}</div></li>
+                            <li><div class='creationLogRes'>Bedrijf {{$company['name']}} heeft een account aangemaakt</div><div class='creationLogDate'>{{$date}}, {{$time}}</div></li>
+                        @endforeach 
+
+                        @foreach ($students as $student)
+                        @php
+                            #php code for company
+                            $year = substr($student['created_at'], 0, 4);
+                            $month = substr($student['created_at'], 5, 2);
+                            $day = substr($student['created_at'], 8, 2);
+
+                            $time = substr($student['created_at'], 11, 5);
+                            $date = $day . "/" . $month . "/" . $year;
+                        @endphp
+                            <li><div class='creationLogRes'>Student {{$student['first_name']}} {{$student['last_name']}} heeft een account aangemaakt</div><div class='creationLogDate'>{{$date}}, {{$time}}</div></li>
                         @endforeach 
                     </ul>
                 </div>
+            </section>
+            <section id='appointments'> 
+                <table>
+                    <tr><th>Student</th><th>Bedrijf</th><th>Tijdslot</th></tr>
+                    @foreach ($appointments as $appointment)
+                        <tr>
+                            <td class='appointmentSId'>{{$appointment['student_id']}}</td>
+                            <td class='appointmentCId'>{{$appointment['company_id']}}</td>
+                            <td>
+                                {{$appointment['time_slot']}}
+                            </td>
+                        </tr>
+                    @endforeach
+                </table>
             </section>
         </div>
     </div>

@@ -13,4 +13,7 @@ Route::get('/company', function () {
     return view('company'); // zoekt 'resources/views/home.blade.php'
 });
 
-Route::get('/admin', [AdminController::class, 'showAllUsers']);
+Route::get('/admin', [AdminController::class, 'show']);
+
+//Route for admin to add a company
+Route::post('/admin/create', [AdminController::class, 'store'])->name('admin.companies.create');

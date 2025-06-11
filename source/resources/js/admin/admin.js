@@ -48,8 +48,10 @@ function switchDisplay(element) {
     const dashboard = document.getElementById("dashboard")
       , students = document.getElementById("students")
       , companies = document.getElementById("companies")
-      , addCompany = document.getElementById("addCompany")
+      , addCompany = document.getElementById("addCompany"),
+      appointments = document.getElementById('appointments')
       , logs = document.getElementById('logs');
+      appointments.style.display = 'none'
     dashboard.style.display = "none",
     students.style.display = "none",
     companies.style.display = "none",
@@ -101,8 +103,27 @@ function copyArray(array) {
         newArray.push(el);
     return newArray
 }
+//Appointment currently takes the ID instead of the name of the students and companies
+//This function fixes that
+function fixAppointment () {
+    //list of all studentId's in the apointment list
+    const appointmentSId = document.getElementsByClassName('appointmentSId')
+    //list of all companyId's in the apointment list
+    const appointmentCId = document.getElementsByClassName('appointmentCId')
 
-const result = document.getElementById("result-container");
+    for (let studentId of appointmentSId) {
+        console.log(studentId)
+        let name = document.getElementById(`s${studentId.innerHTML}|`).innerHTML
+        studentId.innerHTML = name
+    }
+    for (let companyId of appointmentCId) {
+        let name = document.getElementById(`c${companyId.innerHTML}|`).innerHTML
+        companyId.innerHTML = name
+    }
+}
+
+
+//events
 document.getElementById("nav-dashboard").addEventListener("click", () => {
     switchDisplay("dashboard")
 }
@@ -124,14 +145,17 @@ document.getElementById("toAddCompany").addEventListener("click", () => {
 );
 document.getElementById("backToCompanies").addEventListener("click", () => {
     switchDisplay("companies")
-}
-
-
-);
+});
+document.getElementById("nav-appointments").addEventListener("click", () => {
+    switchDisplay("appointments")
+});
+//For logs, let admin choose to look at student or admin logs
+document.getElementById('accountType').addEventListener('change', () => {
+})
 
 window.addEventListener("load", () => {
     dashboard(),
-    switchDisplay("dashboard");
+    switchDisplay("appointments");
     const filterElements = document.getElementsByClassName("filter");
     let count = 0;
     for (let element of filterElements)
@@ -173,10 +197,7 @@ window.addEventListener("load", () => {
             createTable(rest, filtered)
         }
         )
+        fixAppointment()
 }
 );
 
-//Add dates from student creation
-for (let student of data.student) {
-    console.log(student)
-}

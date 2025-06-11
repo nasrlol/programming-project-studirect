@@ -2,7 +2,8 @@
 function tableToObjects() {
     let objects = {
         company: new Array,
-        student: new Array
+        student: new Array,
+        appointments:new Array
     }
     let names = document.getElementsByClassName("studentName")
     let mails = document.getElementsByClassName("studentMail")
@@ -24,6 +25,19 @@ function tableToObjects() {
             mail: mails[i].innerHTML,
             login: logins[i].innerHTML
         });
+
+    let studentId = document.getElementsByClassName('appointmentSId')
+    let companyId = document.getElementsByClassName('appointmentCId')
+    let appointmentTime = document.getElementsByClassName('appointmentTime')
+
+    for (let i = 0; i < studentId.length; i++) {
+        objects.appointments.push({
+            studentId: studentId[i].innerHTML,
+            companyId: companyId[i].innerHTML,
+            appointmentTime: appointmentTime[i].innerHTML.trim()
+        });
+    }
+
     return objects
 }
 
@@ -35,6 +49,8 @@ function dashboard() {
     d.innerHTML = data.student.length;
     const t = document.getElementById("company-amount");
     t.innerHTML = data.company.length
+    const l = document.getElementById("appointment-amount");
+    l.innerHTML = data.appointments.length
 }
 //g
 function createSearch(d, t) {
@@ -112,7 +128,6 @@ function fixAppointment () {
     const appointmentCId = document.getElementsByClassName('appointmentCId')
 
     for (let studentId of appointmentSId) {
-        console.log(studentId)
         let name = document.getElementById(`s${studentId.innerHTML}|`).innerHTML
         studentId.innerHTML = name
     }
@@ -120,6 +135,33 @@ function fixAppointment () {
         let name = document.getElementById(`c${companyId.innerHTML}|`).innerHTML
         companyId.innerHTML = name
     }
+}
+//Appointments start of sorted by time instead of ID. This fixes that
+function sortAppointment () {
+    //Table where the appointments are stored
+    const appointmentsTemp = document.createElement('tbody')
+
+    const appointmentInfo = document.getElementById('appointmentInfo')
+    let times = new Array()
+    for (let time of document.getElementsByClassName('appointmentTime')) {
+        time = time.innerHTML
+        time = time.trim()
+        time = time.substring(0, 5)
+        time = time.replace(":", "-")
+        if (times.indexOf(time) < 0) times.push(time)
+    }
+    times.sort();
+    //We loop over all elements that keep times, keep it in a temporary row
+    // way of doing this aquired from https://stackoverflow.com/questions/15843581/how-to-correctly-iterate-through-getelementsbyclassname
+    appointmentsTemp.innerHTML = '<tr><th>Student</th><th>Bedrijf</th><th>Tijdslot</th></tr>'
+    for (let time of times) {
+        let timeElements = document.querySelectorAll('.t' +  time).forEach(element => {
+            let newElement = document.createElement('tr')
+            newElement.innerHTML = element.innerHTML
+            appointmentsTemp.appendChild(newElement)
+        })
+    }
+    appointmentInfo.innerHTML = appointmentsTemp.innerHTML
 }
 
 
@@ -198,6 +240,10 @@ window.addEventListener("load", () => {
         }
         )
         fixAppointment()
+        sortAppointment()
+        setTimeout(() => {
+            document.getElementById('serverResponse').innerHTML = ''
+        }, 5000)
 }
 );
 

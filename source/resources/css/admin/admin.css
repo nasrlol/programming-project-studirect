@@ -25,6 +25,10 @@ section {
     flex-direction: row;
 }
 
+/*For appointments*/
+.hidden {
+    display:none;
+}
 /*For adding to company*/
 .addCompany {
     width:40%;

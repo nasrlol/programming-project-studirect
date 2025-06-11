@@ -7,6 +7,7 @@
     <title>document</title>
 </head>
 <body>
+    <span id='serverResponse'>
     @if ( session('error'))
         {{ session('error') }}
     @endif
@@ -14,6 +15,7 @@
     @if ( session('success'))
         {{ session('success') }}
     @endif
+    </span>
     <div id='main-container'>
         <nav id="navigation">
             <span class='info-nav nav-element'>Admin</span><br>
@@ -42,7 +44,7 @@
                     </div>
                     <div class='amount-section'>
                         <div class='section-inside'>
-                            <span id='apointment-amount'></span><br>
+                            <span id='appointment-amount'></span><br>
                             <span>afspraken</span>    
                         </div>
                     </div>
@@ -185,17 +187,19 @@
                 </div>
             </section>
             <section id='appointments'> 
-                <table>
+                <table id='appointmentInfo'>
                     <tr><th>Student</th><th>Bedrijf</th><th>Tijdslot</th></tr>
                     @foreach ($appointments as $appointment)
-                        <tr>
+                        <tr class='apointmentList t{{substr(str_replace(':', '-',$appointment['time_slot']), 0, 5)}}'>
+                            <td class='hidden appointmentId'>{{$appointment['id']}}</td>
                             <td class='appointmentSId'>{{$appointment['student_id']}}</td>
                             <td class='appointmentCId'>{{$appointment['company_id']}}</td>
-                            <td>
+                            <td class='appointmentTime'>
                                 {{$appointment['time_slot']}}
                             </td>
                         </tr>
                     @endforeach
+                    </div>
                 </table>
             </section>
         </div>

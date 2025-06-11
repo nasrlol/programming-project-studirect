@@ -15,8 +15,8 @@ class AdminController extends Controller
     public function show(): View
 {
     try {
-        $apiStudents = $this->apiUrl . 'admin/students';
-        $apiCompanies = $this->apiUrl . 'admin/companies';
+        $apiStudents = $this->apiUrl . 'students';
+        $apiCompanies = $this->apiUrl . 'companies';
         $apiAppointments = $this->apiUrl . 'appointments';
 
         $response = Http::get($apiStudents);
@@ -72,13 +72,20 @@ public function store(Request $request)
     $data = [
         'name' => $validated['name'],
         'email' => $validated['email'],
-        'plan_type' => $validated['plan_type'],
-        'booth_location' => $validated['booth_location'],
         'password' => $validated['password1'],
+        'plan_type' => $validated['plan_type'],
+        'description' => '',
+        'job_types' => '',
+        'job_domain' => '',
+        'booth_location' => $validated['booth_location'],
+        'photo' => '',
+        'speeddate_duration' => '',
+        'created_at' => date('Y-m-d H:i:s'),
+        'updated_at' => date('Y-m-d H:i:s')
     ];
 
 try {
-    $response = Http::post($this->apiUrl . 'admin/companies', $data);
+    $response = Http::post($this->apiUrl . 'companies', $data);
 
     if ($response->successful()) {
         return redirect()->back()->with('success', 'Bedrijf succesvol toegevoegd!');

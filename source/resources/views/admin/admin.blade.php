@@ -53,10 +53,11 @@
 
             <section id='students' class='searchable'>
                 <h2>Gebruikers</h2>
+                <button class='.add' id='toAddStudent'>Student toevoegen</button>
                 <div class='filter' id='student'></div>
                 <div class='list'>
                     <table id='studentTable'>
-                        <tr><th class='th-short'>Actief</th><th>naam</th><th>email</th><th>laatste login</th><th>Acties</th></tr>
+                        <tr><th class='th-short'>Actief</th><th>Naam</th><th>Email</th><th>Laatste login</th><th>Acties</th></tr>
                         <!--API call-->
                         <!--Last log still needs to be added-->
                         @foreach ($students as $student)
@@ -69,15 +70,27 @@
                                 @endif
                             </td>
                             <!--| is added at the end to make sure no accidents occur (like 2 and 21 while filtering)-->
+                            <td class='studentId'>{{$student['id']}}</td>
                             <td class='studentName' id="s{{$student['id']}}|">{{ $student['first_name'] ?? 'Onbekend' }} {{ $student['last_name'] ?? 'onbekend' }}</td>
                             <td class='studentMail'>{{ $student['email'] ?? 'Geen email' }}</td>
                             <td class='studentLogin'>03-06-2025</td>
                             <td>
                                 <span>
-                                    <img class='moreInfo' src='./images/eyeball.png'>
+                                    <img class='moreInfo extraActions studentEye' id="eyeS{{$student['id']}}" src='./images/eyeball.png'>
                                 </span>  <span>
-                                    <img class='moreInfo' src='./images/delete.png'>
+                                    <img class='extraActions' src='./images/delete.png'>
                                 </span>
+                            </td>
+                            <!--Hidden info used by javascript-->
+                            <td class='hidden activated'>{{$student['profile_complete']}}</td>
+                            <td class='hidden study-direction'>
+                                {{$student['study_direction']}}
+                            </td>
+                            <td class='hidden interests'>
+                                {{$student['interests']}}
+                            </td>
+                            <td class='hidden job-preferences'>
+                                {{$student['job_preferences']}}
                             </td>
                         </tr>
                         @endforeach
@@ -85,25 +98,72 @@
                 </div>
             </section>
 
+            <section id='addStudent'>
+                <button id='backToStudent'>Terug</button>
+                <h2>Student toevoegen</h2>
+                <div class='addUser'>
+                    <h2>Student gegevens</h2>
+                    <!-- Action to add a company must be added-->
+                    <form method='post' action="{{ route('admin.students.create') }}">
+                        @csrf <!-- CSRF token for security -->
+                        <input class='addInput' type='text'name='name' placeholder='Naam'>
+                        <input class='addInput' type='text' name='email' placeholder='E-mail'>
+                        <div class='addInput' style='border: solid; border-width:1px'>
+                            <label for='study_direction'>Studie richting</label>
+                            <select name='study_direction'>
+                                <option value='Toegepaste_informatica'>Toegepaste Informatica</option>
+                                <option value='Multimedia'>Multimedia</option>
+                            </select>
+                        </div>
+                        <input class='addInput' type='text' name='booth_location' placeholder='Locatie booth'>
+                        <input class='addInput' type='password' name='password1' placeholder='Wachtwoord'>
+                        <input class='addInput' type='password' name='password2' placeholder='Bevestig wachtwoord'>
+                        <!--Responses for wrong inputs will be put here--> 
+                        <div id='formResponse'></div>
+                        <input type='submit' value='opslaan'>
+                    </form>
+                </div>
+            </section>
+
             <section id='companies' class='searchable'>
                 <h2>Bedrijven</h2>
-                <button id='toAddCompany'>Bedrijf toevoegen</button>
+                <button class='.add' id='toAddCompany'>Bedrijf toevoegen</button>
                 <div class='searchContainer list'>
                     <div class='filter' id='company'></div>
                         <table id='companyTable'> 
-                            <tr><th>naam</th><th>email</th><th>laatste login</th><th>Acties</th></tr>
+                            <tr><th>Naam</th><th>Email</th><th>Laatste login</th><th>Acties</th></tr>
                             @foreach ($companies as $company)
                             <tr>
+                                <td class='companyId'>{{$company['id']}}</td>
                                 <td class='companyName' id="c{{$company['id']}}|">{{ $company['name'] ?? 'Onbekend' }}</td>
                                 <td class='companyMail'>{{ $company['email'] ?? 'Onbekend' }}</td>
                                 <td class='companyLogin'>02-04-2025</td>
                                 <td>
                                 <span>
-                                    <img class='moreInfo' src='./images/eyeball.png'>
+                                    <img class='extraActions moreInfo' id="eyeC{{$company['id']}}" src='./images/eyeball.png'>
                                 </span>  
                                 <span>
-                                    <img class='moreInfo' src='./images/delete.png'>
+                                    <img class='extraActions' src='./images/delete.png'>
                                 </span>
+                                </td>
+                                <!--Hidden info used by javascript-->
+                                <td class='hidden plan-type'>
+                                    {{$company['plan_type']}}
+                                </td>
+                                <td class='hidden job-types'>
+                                    {{$company['job_types']}}
+                                </td>
+                                <td class='hidden job-domain'>
+                                    {{$company['job_domain']}}
+                                </td>
+                                <td class='hidden description'>
+                                    {{$company['description']}}
+                                </td>
+                                <td class='hidden booth-location'>
+                                    {{$company['booth_location']}}
+                                </td>
+                                <td class='hidden speeddate-duration'>
+                                    {{$company['speeddate_duration']}}
                                 </td>
                             </tr>
                             @endforeach
@@ -113,15 +173,15 @@
 
 
             <section id='addCompany'>
-                <button id='backToCompanies' class='btn-nav'>Terug</button>
+                <button id='backToCompanies'>Terug</button>
                 <h2>Bedrijf toevoegen</h2>
-                <div class='addCompany'>
+                <div class='addUser'>
                     <h2>Bedrijf gegevens</h2>
                     <!-- Action to add a company must be added-->
                     <form method='post' action="{{ route('admin.companies.create') }}">
                         @csrf <!-- CSRF token for security -->
-                        <input class='addInput' type='text' id='name' name='name' placeholder='Naam'>
-                        <input class='addInput' type='text' id='mail' name='email' placeholder='E-mail'>
+                        <input class='addInput' type='text' name='name' placeholder='Naam'>
+                        <input class='addInput' type='text' name='email' placeholder='E-mail'>
                         <div class='addInput' style='border: solid; border-width:1px'>
                             <label for='plan_type'>Prijs plan</label>
                             <select name='plan_type'>
@@ -131,8 +191,8 @@
                             </select>
                         </div>
                         <input class='addInput' type='text' name='booth_location' placeholder='Locatie booth'>
-                        <input class='addInput' type='password' id='password1' name='password1' placeholder='Wachtwoord'>
-                        <input class='addInput' type='password' id='password2' name='password2' placeholder='Bevestig wachtwoord'>
+                        <input class='addInput' type='password' name='password1' placeholder='Wachtwoord'>
+                        <input class='addInput' type='password' name='password2' placeholder='Bevestig wachtwoord'>
                         <!--Responses for wrong inputs will be put here--> 
                         <div id='formResponse'></div>
                         <input type='submit' value='opslaan'>
@@ -204,6 +264,14 @@
             </section>
         </div>
     </div>
+
+    <div id='extra-container'>
+        <div id='extra-message-container'>
+            <button id='removePopupButton'>&times;</button>
+            <div id='extra-message'>Found me!</div>
+        </div>
+    </div>
+
     @vite('resources/js/admin/admin.js')
 </body>
 </html>

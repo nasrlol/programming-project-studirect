@@ -5,27 +5,54 @@ function tableToObjects() {
         student: new Array,
         appointments:new Array
     }
+    let ids = document.getElementsByClassName('studentId')
+    const activated = document.getElementsByClassName('activated')
     let names = document.getElementsByClassName("studentName")
     let mails = document.getElementsByClassName("studentMail")
     let logins = document.getElementsByClassName("studentLogin");
+    const studys = document.getElementsByClassName('study-direction')
+    const interests = document.getElementsByClassName('interests')
+    const preferences = document.getElementsByClassName('job-preferences')
     for (let i = 0; i < names.length; i++)
     {
         objects.student.push({
+            id: ids[i].innerHTML,
+            activated: activated[i].innerHTML,
             name: names[i].innerHTML,
             mail: mails[i].innerHTML,
-            login: logins[i].innerHTML
+            login: logins[i].innerHTML,
+            studyDirection: studys[i].innerHTML.trim(),
+            interests: interests[i].innerHTML.trim(),
+            preferences: preferences[i].innerHTML.trim()
         });
     }
+    //Add companies
+    ids = document.getElementsByClassName('companyId')
     names = document.getElementsByClassName("companyName"),
     mails = document.getElementsByClassName("companyMail"),
     logins = document.getElementsByClassName("companyLogin");
+    const  planTypes = document.getElementsByClassName('plan-type')
+    const  jobTypes = document.getElementsByClassName('job-types')
+    const  jobDomain = document.getElementsByClassName('job-domain')
+    const  description = document.getElementsByClassName('description')
+    const  boothLocation = document.getElementsByClassName('booth-location')
+    const  speeddateDuration = document.getElementsByClassName('speeddate-duration')
+
     for (let i = 0; i < names.length; i++)
         objects.company.push({
+            id: ids[i].innerHTML,
             name: names[i].innerHTML,
             mail: mails[i].innerHTML,
-            login: logins[i].innerHTML
+            login: logins[i].innerHTML,
+            planType: planTypes[i].innerHTML.trim(),
+            jobTypes: jobTypes[i].innerHTML.trim(),
+            jobDomain: jobDomain[i].innerHTML.trim(),
+            description: description[i].innerHTML.trim(),
+            boothLocation: boothLocation[i].innerHTML.trim(),
+            speeddateDuration: speeddateDuration[i].innerHTML.trim()
         });
 
+    //Add apointments
     let studentId = document.getElementsByClassName('appointmentSId')
     let companyId = document.getElementsByClassName('appointmentCId')
     let appointmentTime = document.getElementsByClassName('appointmentTime')
@@ -42,6 +69,8 @@ function tableToObjects() {
 }
 
 const data = tableToObjects()
+
+console.log(data)
 
 //Sets the amount of students and companies based on the amount of rows in the table
 function dashboard() {
@@ -64,17 +93,31 @@ function switchDisplay(element) {
     const dashboard = document.getElementById("dashboard")
       , students = document.getElementById("students")
       , companies = document.getElementById("companies")
-      , addCompany = document.getElementById("addCompany"),
-      appointments = document.getElementById('appointments')
+      , addCompany = document.getElementById("addCompany")
+      , addStudent = document.getElementById("addStudent")
+      , appointments = document.getElementById('appointments')
       , logs = document.getElementById('logs');
       appointments.style.display = 'none'
     dashboard.style.display = "none",
     students.style.display = "none",
     companies.style.display = "none",
     addCompany.style.display = "none",
+    addStudent.style.display = "none"
     logs.style.display = "none"
     document.getElementById(element).style.display = "block"
 }
+
+//creates a popup, with text
+function popUp (text) {
+    document.getElementById('extra-container').style.display = 'block'
+    document.getElementById('extra-message').innerHTML = text;
+}
+
+function removePopUp () {
+    document.getElementById('extra-container').style.display = 'none';
+    document.getElementById('extra-message').innerHTML = ''
+}
+
 
 function filterArray(array, name) {
     return array.filter(obj => obj.name.toLocaleLowerCase().indexOf(name.toLocaleLowerCase()) > -1)
@@ -185,8 +228,15 @@ document.getElementById("toAddCompany").addEventListener("click", () => {
     switchDisplay("addCompany")
 }
 );
+document.getElementById("toAddStudent").addEventListener("click", () => {
+    switchDisplay("addStudent")
+}
+);
 document.getElementById("backToCompanies").addEventListener("click", () => {
     switchDisplay("companies")
+});
+document.getElementById("backToStudent").addEventListener("click", () => {
+    switchDisplay("students")
 });
 document.getElementById("nav-appointments").addEventListener("click", () => {
     switchDisplay("appointments")
@@ -194,10 +244,53 @@ document.getElementById("nav-appointments").addEventListener("click", () => {
 //For logs, let admin choose to look at student or admin logs
 document.getElementById('accountType').addEventListener('change', () => {
 })
+//Add a 'view more' option for students and companies
+for (let element of document.getElementsByClassName('moreInfo')) {
+    element.addEventListener('click', () => {
+        const id = element.id.substring(4);
+        console.log(id)
+        //Eye icon has class studentEye or companyEye to make sure right item is called
+        const isStudent = (Array.from(element.classList).includes('studentEye'))
+        //gets relevant list, based on if it's a student or a company
+        let list;
+        if (isStudent) list = data.student
+        else list = data.company
+
+        //use filter to find the user we want, based on ID 
+        const user =  list.filter(obj => obj.id == id)[0]
+        const response = document.createElement('div');
+        response.innerHTML = `Naam: ${user.name}<br>`
+        response.innerHTML += `Email: ${user.mail}<br>`
+        //Extra info if it's a student
+        if (isStudent) {
+            let geactiveerd = (user.activated == 1) ? 'Ja' : 'Nee'
+            
+            response.innerHTML += `Geactiveerd: ${geactiveerd}<br>`
+            response.innerHTML += `Job interesses: ${user.interests}<br>`
+            response.innerHTML += `Studierichting: ${user.studyDirection}<br>`
+            response.innerHTML += `Job voorkeuren: ${user.preferences}`
+        }
+        //Extra info if it's a company
+        else {
+            response.innerHTML += `Prijs plan: ${user.planType}<br>`
+            response.innerHTML += `Type job: ${user.jobTypes}<br>`
+            response.innerHTML += `Jobdomein: ${user.jobDomain}<br>`
+            response.innerHTML += `Beschrijving: ${user.description}<br>`
+            response.innerHTML += `Locatie booth: ${user.boothLocation}<br>`
+            response.innerHTML += `Duur speeddates: ${user.speeddateDuration}<br>`
+        }
+
+        popUp(response.innerHTML)
+    })
+}
+//For removing popups
+document.getElementById('removePopupButton').addEventListener('click', () => {
+    removePopUp()
+})
 
 window.addEventListener("load", () => {
     dashboard(),
-    switchDisplay("appointments");
+    switchDisplay("companies");
     const filterElements = document.getElementsByClassName("filter");
     let count = 0;
     for (let element of filterElements)

@@ -30,13 +30,13 @@ section {
     display:none;
 }
 /*For adding to company*/
-.addCompany {
+.addUser {
     width:40%;
     margin-left:30%;
     align-content:center;
 }
 
-#toAddCompany {
+.add {
     margin-left:80%;
 }
 
@@ -186,10 +186,15 @@ h2 {
 .studentId {
     display: none;
 }
-.moreInfo {
+.extraActions {
     height:16px;
     width:16px;
 }
+
+.extraActions:hover {
+    cursor: pointer;
+}
+
 /*LOGS*/
 
 li {
@@ -212,4 +217,46 @@ select {
 }
 .eventSearch {
     width:90%
+}
+/*Extra, when the admin wants to check extra info of a user*/
+#extra-container {
+    /*starts of undisplayed*/
+    display: none; 
+    position:fixed;
+    margin:0;
+    left: 0;
+    top: 0;
+    width:100%;
+    height:100%;
+    margin-left:0%;
+    z-index: 1;
+    background:rgb(0, 0, 0, 0.5)
+}
+
+/* Button for removing popups */
+#removePopupButton {
+    position: relative;
+    
+    width:5%;
+    font-size: large;
+    aspect-ratio:1 / 1;
+    left:95%;
+    background-color: inherit;
+    border-top:none;
+    border-right:none;
+}
+
+#extra-message-container {
+    margin-left: 35%;
+    margin-top: 10%;
+    width:30%;
+    height:40%;
+    background-color: white;
+    overflow:auto;
+    border:solid black;
+}
+#extra-message {
+    text-align: center;
+    margin-left:10%;
+    margin-right: 10%;
 }

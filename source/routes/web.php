@@ -16,4 +16,5 @@ Route::get('/company', function () {
 Route::get('/admin', [AdminController::class, 'show']);
 
 //Route for admin to add a company
-Route::post('/admin/create', [AdminController::class, 'store'])->name('admin.companies.create');
+Route::post('/admin/createC', [AdminController::class, 'storeC'])->name('admin.companies.create');
+Route::post('/admin/createS', [AdminController::class, 'storeS'])->name('admin.students.create');

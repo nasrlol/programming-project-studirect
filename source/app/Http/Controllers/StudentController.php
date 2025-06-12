@@ -10,7 +10,8 @@ use Illuminate\Support\Facades\Http;
 
 class StudentController extends Controller
 {
-    private string $apiUrl = 'http://10.2.160.208/api/students';
+    private string $studentsApiUrl = 'http://10.2.160.208/api/students';
+    private string $companiesApiUrl = 'http://10.2.160.208/api/companies';
 
     /**
      * Display a listing of the resource.
@@ -28,14 +29,32 @@ class StudentController extends Controller
     public function index(): View
 {
     try {
-        $response = Http::get($this->apiUrl);
-
+        // data studenten ophalen
+        $response = Http::get($this->studentsApiUrl);
         if (!$response->successful()) {
-            return view('voorbeeld.index', ['error' => 'API niet beschikbaar', 'students' => []]);
+            return view('student.html.student', [
+                'error' => 'Studenten API niet beschikbaar',
+                'students' => [],
+                'companies' => []
+            ]);
         }
-
         $students = $response->json('data');
-        return view('student.html.student', ['students' => $students]);
+
+        // data bedrijven ophalen
+        $response = Http::get($this->companiesApiUrl);
+        if (!$response->successful()) {
+            return view('student.html.student', [
+                'error' => 'Bedrijven API niet beschikbaar',
+                'students' => [],
+                'companies' => []
+            ]);
+        }
+        $companies = $response->json('data');
+
+        return view('student.html.student', [
+            'students' => $students,
+            'companies' => $companies
+        ]);
     } catch (\Exception $e) {
         return view('voorbeeld.index', ['error' => 'Er is een fout opgetreden', 'students' => []]);
     }
@@ -59,7 +78,7 @@ class StudentController extends Controller
             'profile_complete' => 'boolean',
         ]);
 
-        $response = Http::post($this->apiUrl, $validated);
+        $response = Http::post($this->studentsApiUrl, $validated);
 
         return response()->json($response->json(), $response->status());
     }
@@ -69,7 +88,7 @@ class StudentController extends Controller
      */
     public function show(string $id): JsonResponse
     {
-        $response = Http::get("{$this->apiUrl}/{$id}");
+        $response = Http::get("{$this->studentsApiUrl}/{$id}");
 
         if ($response->successful()) {
             return response()->json($response->json());
@@ -96,7 +115,7 @@ class StudentController extends Controller
             'profile_complete' => 'boolean',
         ]);
 
-        $response = Http::put("{$this->apiUrl}/{$id}", $validated);
+        $response = Http::put("{$this->studentsApiUrl}/{$id}", $validated);
 
         if ($response->successful()) {
             return response()->json($response->json());
@@ -110,7 +129,7 @@ class StudentController extends Controller
      */
     public function destroy(string $id): JsonResponse
     {
-        $response = Http::delete("{$this->apiUrl}/{$id}");
+        $response = Http::delete("{$this->studentsApiUrl}/{$id}");
 
         if ($response->successful()) {
             return response()->json($response->json());

@@ -20,7 +20,7 @@
             <button id="calendarBtn">calendar</button>
         </div>
         <div class="right">
-            <button>settings</button>
+            <button id="settingsBtn">settings</button>
         </div>
     </header>
 

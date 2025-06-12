@@ -1,16 +1,17 @@
 @extends('student.layouts.app')
 
 @section('content')
+<div id="home-content" class="container active">
     <section class="sectionType1">
-        @include('student.layouts.notification', [
-            'notification' => "<p> Je hebt 3 berichten ontvangen van Biteforge Solutions.</p>"
+            @include('student.layouts.notification', [
+            'notification' => "<p> Je hebt 3 berichten ontvangen van {$companies[0]['name']}.</p>"
         ])
     </section>
     <section class="sectionType1">
         @include('student.layouts.companyswipe', [
-            'company_name' => 'Biteforge Solutions',
+            'company_name' => $companies[0]['name'],
             'job_title' => 'IT Support Intern',
-            'company_logo' => ''
+            'company_logo' => $companies[0]['photo'] ?? ''
         ])
     </section>
     <section class="sectionType1">
@@ -41,4 +42,13 @@
                 <p>Als stagiair(e) word je vanaf dag één beschouwd als volwaardig teamlid en krijg je de kans om mee te werken aan uitdagende projecten voor echte klanten.</p>'
         ])
     </section>
+</div>
+
+<div id="matches-content" class="container">
+    <!-- Matches content will go here -->
+</div>
+
+<div id="calendar-content" class="container">
+    <!-- Calendar content will go here -->
+</div>
 @endsection

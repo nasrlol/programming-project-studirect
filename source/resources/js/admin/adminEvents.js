@@ -102,11 +102,10 @@ window.addEventListener("load", () => {
             }
             //create table, starting with highlighted names, then the rest
             createTable(rest, filtered)
-            
+            setViewFunctionality()
+            setDeleteFunctionality()
         }
         )
-        fixAppointment()
-        sortAppointment()
         setTimeout(() => {
             document.getElementById('serverResponse').innerHTML = ''
         }, 5000)

@@ -9,7 +9,9 @@ export default defineConfig({
                 'resources/js/admin/adminEvents.js',
                 'resources/js/admin/admin.js',
                 'resources/css/student/student.css',
-                'resources/js/student/student.js'
+                'resources/js/student/student.js',
+                'resources/bedrijf/css/company.css',
+                'resources/bedrijf/js/company.js'
             ],
             refresh: true,
         }),

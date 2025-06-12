@@ -97,7 +97,7 @@
                 <div class='addUser'>
                     <h2>Student gegevens</h2>
                     <!-- Action to add a company must be added-->
-                    <form method='post' action="{{ route('admin.students.create') }}">
+                    <form method='post'>
                         @csrf <!-- CSRF token for security -->
                         <input class='addInput' type='text'name='firstName' placeholder='Voornaam'>
                         <input class='addInput' type='text'name='lastName' placeholder='Achternaam'>
@@ -176,7 +176,7 @@
                 <div class='addUser'>
                     <h2>Bedrijf gegevens</h2>
                     <!-- Action to add a company must be added-->
-                    <form method='post' action="{{ route('admin.companies.create') }}">
+                    <form method='post' action="{{ route('companies.create') }}">
                         @csrf <!-- CSRF token for security -->
                         <input class='addInput' type='text' name='name' placeholder='Naam'>
                         <input class='addInput' type='text' name='email' placeholder='E-mail'>

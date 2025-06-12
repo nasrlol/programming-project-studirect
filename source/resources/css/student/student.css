@@ -1,227 +1,225 @@
-body {
+* {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
-    font-family: Verdana, sans-serif;
     color: #fff;
 }
 
-main {
+body {
+    font-family: 'EB Garamond', serif;
+    background-color: #3a3550;
+}
+
+/* navigation bar styles */
+.navbar {
     display: flex;
-    height: 100vh;
-}
-
-#sidebar {      /*sidebar links*/
-    width: 35%;
-    background: #252D3C;
-    display: flex;
-    flex-direction: column;
-    height: 100vh;
-}
-
-#sidebar-content {
-    margin: 1rem;
-    display: flex;
-    flex-direction: column;
-    flex: 1;
-}
-
-header {            /*header boven sidebar*/
-    background: #0046C9;
-    display: flex;
-    flex-direction: column;
-    margin-bottom: 1rem;
-}
-
-header h1 {         /*profielfoto en naam*/
-    margin: 1.5rem;
-}
-
-header nav {        /*navigatie balk*/
-    background: #000;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #3b3b70;
+    border-bottom: 1px solid #aaa;
+    font-size: 1.2rem;
     padding: 0.5rem;
 }
 
-header nav ul {     /*navigatie oplijsting*/
+/* nav buttons styles */
+.nav-links {
     display: flex;
-    gap: 1.5rem;
-    margin: 0;
-    list-style-type: none;
+    list-style: none;
+    gap: 2rem;
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    justify-content: center;
 }
 
-header nav ul li a {        /*navigatie knoppen*/
-    font-weight: bold;
-    cursor: pointer;
+.nav-links a {
+    text-decoration: none;
+    font-weight: 500;
+    padding: 0.5rem;
+    border-radius: 4px;
+    transition: background-color 0.3s;
 }
 
-#screen {            /*main scherm rechts*/
-    width: 65%;
-    background: #000000;
+.nav-links a:hover,
+.nav-links a.active {
+    background-color: #4a4a8c;
 }
 
-#screen-content {            /*positionering rechthoek*/
+.nav-links a.active {
+    text-decoration: underline;
+}
+
+/* nav profile styles */
+.nav-profile {
     display: flex;
     align-items: center;
-    justify-content: center;
+    gap: 1rem;
+}
+
+.profile-pic {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background-color: #ddd;
+}
+
+.profile-name {
+    font-weight: 500;
+}
+
+/* nav logo styles */
+.nav-logo img {
+    height: 40px;
+}
+
+/* main container and section styles */
+.container {
+    display: none;
+}
+
+.container.active {
+    display: flex;
+    height: calc(100vh - 78px);
+    padding: 1rem;
+    gap: 1rem;
+}
+
+.sectionType1 {
+    flex: 1;
+    border: 1px solid #aaa;
+    border-radius: 8px;
+    padding: 1rem;
+    background: #2a2a44;
+    max-width: 33%;
+    overflow: auto;
+}
+
+/* flex container to keep the map at the bottom */
+#map-fix {
+    display: flex;
+    flex-direction: column;
     height: 100%;
 }
 
-#screen-rectangle {          /*rechthoek voor matches scherm rechts*/
-    width: 500px;
-    height: 700px;
-    background: #424242;
-    display: flex;
-    flex-direction: column;
-    position: relative;
+/* notifications styles */
+#notifications {
+    margin-bottom: 1.5rem;
 }
 
-#company-name {         /*naam van bedrijf*/
-    font-weight: 900;
-    padding: 1rem 1rem 0 1rem;
-    margin: 0;
-}
-
-#company-title p {          /*positie binnen bedrijf*/
-    padding: 0.5rem 1rem 1rem 1.5rem;
-    margin: 0;
-}
-
-#logo-placeholder {         /*placeholder voor logo van bedrijf*/
-    background-color: #ccc;
-    width: 100%;
-    height: 100px;
-}
-
-#company-info {            /*informatie over bedrijf*/
+#notifications p {
+    background: #363656;
     padding: 1rem;
-    flex: 1;
-    overflow-y: auto;
-    max-height: 100%;
+    border-radius: 6px;
+    margin: 0.5rem 0;
 }
 
-#company-info h5 {
-    margin: 0;
-    font-size: 1rem;
-}
-
-#company-info ul, p {
-    padding-left: 1.5rem;
-    color: #eee;
-    list-style-type: circle;
-}
-
-#swipe {            /*swipe knoppen*/
-    position: absolute;
-    display: flex;
-    justify-content: space-between;
-    width: 140%;
-    left: -20%;
-    bottom: 10%;
-    transform: translateY(50%);
-    z-index: 1;
-}
-
-#swipe button {
-    background-color: #888;
-    border: 2px solid;
-    width: 70px;
-    height: 70px;
-    border-radius: 50%;
-    font-size: 24px;
-    cursor: pointer;
-    transition: transform 0.2s, background-color 0.2s;
-    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
-}
-
-#swipe button:hover {
-    transform: scale(1.1);
-    background-color:   #ffffff;
-}
-
-#swipe button:first-child {
-    color: #f00;
-    background-color: #a87e7e;
-    border-color: #f00;
-}
-
-#swipe button:last-child {
-    color: #0f0;
-    background-color: #81af81;
-    border-color: #0f0;
-}
-
-#groundplan {          /*plattegrond van EHB omkadering*/
-    width: 100%;
+/* map styles */
+#groundplan {
     height: 300px;
     overflow: auto;
-    border: 1px solid #ccc;
+    border: 1px solid #aaa;
     background: #fff;
+    border-radius: 6px;
     margin-top: auto;
 }
 
 #groundplan img {
     width: 100%;
+    height: auto;
 }
 
-#message-list {          /*message lijst van bedrijven*/
+/* company screen styles */
+#company-screen {
     display: flex;
     flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
+    height: 100%;
+    padding: 2rem;
+    overflow: hidden;
 }
 
-.message-item {             /*naam van bedrijf voor messages*/
-    padding: 1rem;
-    border: solid #fff;
-    border-radius: 6px;
-}
-
-#message-info {             /*als niks geselecteerd is op het messages scherm*/
+#company-title {
     text-align: center;
-}
-
-#message-info h3 {
+    font-size: 1.4rem;
     margin-bottom: 0.3rem;
-    font-size: 2rem;
-    color: #e8e8e8;
 }
 
-#message-info p {
-    font-size: 1rem;
-    color: #ccc;
+#company-title p {
+    color: #aaa;
+    font-size: 1.2rem;
 }
 
-#times-list {          /*lijst van gereserveerde tijden*/
-    display: flex;
-    flex-direction: column;
-}
-
-#calendar-table {           /* tabel van gereserveerde tijden*/
+#company-logo {
     width: 100%;
-    border-collapse: collapse;
-    background: #2e2e2e;
-    margin: 0.5rem;
-    table-layout: fixed;
-}
-
-#calendar-table td, th {        /*opmaak cellen van de tabel*/
-    border: 0.5px solid #ccc;
-    width: 50px;
-    height: 50px;
-    text-align: center;
-}
-
-#calendar-table th:first-child{     /*fix voor probleem eerste rij van tabel*/
-    width: 0.5rem;
-}
-
-.pfp {       /*profielfoto in header*/
-    width: 48px;
-    height: 48px;
-    border-radius: 50%;
-    background: #ccc;
-    margin: 0 1rem;
-}
-
-.header {
+    height: 200px;
+    background-color: #4d4157;
     display: flex;
     align-items: center;
+    justify-content: center;
+}
+
+#company-logo img {
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain;
+}
+
+/* swipe button styles */
+#swipe {
+    display: flex;
+    gap: 6rem;
+    margin-top: 2rem;
+}
+
+#swipe button {
+    background-color: #4e4268;
+    width: 60px;
+    height: 60px;
+    border: 2px solid #fff;
+    border-radius: 50%;
+    font-size: 1.5rem;
+    cursor: pointer;
+    transition: transform 0.2s ease, background-color 0.3s;
+}
+
+#dislike {
+    color: #ff4444;
+}
+
+#like {
+    color: #44ff44;
+}
+
+#swipe button:hover {
+    transform: scale(1.1);
+    background-color: #4d4157;
+}
+
+/* company info styles */
+#company-info {
+    padding: 0 1rem 2rem 1rem;
+    overflow-y: auto;
+    height: 100%;
+}
+
+#company-info h5 {
+    color: #fff;
+    margin: 1.5rem 0 1rem;
+    font-size: 1.2rem;
+}
+
+#company-info ul {
+    list-style-type: circle;
+    padding-left: 1rem;
+}
+
+#company-info li {
+    margin: 0.5rem 0;
+    color: #ddd;
+}
+
+#company-info p {
+    color: #ddd;
+    line-height: 1.6;
 }

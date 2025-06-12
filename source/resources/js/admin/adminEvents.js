@@ -1,4 +1,4 @@
-import { dashboard, switchDisplay, popUp, removePopUp, createSearch, createTable, fixAppointment, sortAppointment, data, copyArray, filterArray } from './admin.js'
+import { dashboard, switchDisplay, popUp, removePopUp, createSearch, createTable, fixAppointment, sortAppointment, data, copyArray, filterArray, setDeleteFunctionality, setViewFunctionality } from './admin.js'
 
 //events
 document.getElementById("nav-dashboard").addEventListener("click", () => {
@@ -34,73 +34,10 @@ document.getElementById("nav-appointments").addEventListener("click", () => {
     switchDisplay("appointments")
 });
 //Add a 'view more' option for students and companies
-for (let element of document.getElementsByClassName('moreInfo')) {
-    element.addEventListener('click', () => {
-        const id = element.id.substring(4);
-        //Eye icon has class studentEye or companyEye to make sure right item is called
-        const isStudent = (Array.from(element.classList).includes('studentEye'))
-        //gets relevant list, based on if it's a student or a company
-        let list;
-        if (isStudent) list = data.student
-        else list = data.company
-
-        //use filter to find the user we want, based on ID 
-        const user =  list.filter(obj => obj.id == id)[0]
-        const response = document.createElement('div');
-        response.innerHTML = `Naam: ${user.name}<br>`
-        response.innerHTML += `Email: ${user.mail}<br>`
-        //Extra info if it's a student
-        if (isStudent) {
-            let geactiveerd = (user.activated == 1) ? 'Ja' : 'Nee'
-            
-            response.innerHTML += `Geactiveerd: ${geactiveerd}<br>`
-            response.innerHTML += `Job interesses: ${user.interests}<br>`
-            response.innerHTML += `Studierichting: ${user.studyDirection}<br>`
-            response.innerHTML += `Job voorkeuren: ${user.preferences}`
-        }
-        //Extra info if it's a company
-        else {
-            response.innerHTML += `Prijs plan: ${user.planType}<br>`
-            response.innerHTML += `Type job: ${user.jobTypes}<br>`
-            response.innerHTML += `Jobdomein: ${user.jobDomain}<br>`
-            response.innerHTML += `Beschrijving: ${user.description}<br>`
-            response.innerHTML += `Locatie booth: ${user.boothLocation}<br>`
-            response.innerHTML += `Duur speeddates: ${user.speeddateDuration}<br>`
-        }
-
-        popUp(response.innerHTML)
-    })
-}
+setViewFunctionality()
 
 //Add a 'delete' option for students and companies
-for (let element of document.getElementsByClassName('delete')) {
-    element.addEventListener('click', () => {
-        const isStudent = (element.id.substring(3, 4) == "S")
-        const id = element.id.substring(4)
-        //Get user based on ID
-        let list
-        if (isStudent) list = data.student
-        else list = data.company
-        const user =  list.filter(obj => obj.id == id)[0]
-
-        const response  = `Ben je er zeker van dat je ${isStudent ? 'student' : 'bedrijf'} ${user.name} wil verwijderen?<br>Deze actie kan niet ongedaan gemaakt worden(klik op nee om te stoppen)`
-        document.getElementById('abortDelete').style.display = 'block'
-        const form = document.getElementById('deletionForm')
-        
-        //Set the request URL
-        if (!isStudent) {
-            form.action = '/companies/' + user.id;
-       }
-       else {
-            form.style.display = 'block'
-        }
-        form.style.display = 'block'
-        //Set popup
-        for (let element of document.getElementsByClassName('normalForm')) element.style.display = 'none'
-        console.log(form.action)
-        popUp(response)
-    })
-}
+setDeleteFunctionality()
 //To abort the delete process 
 document.getElementById('abortDelete').addEventListener('click', () => {
     const form = document.getElementById('deletionForm')
@@ -139,6 +76,8 @@ window.addEventListener("load", () => {
             //If no name was found, create the table without any extras
             if (nameInput == '') {
                 type == "student" ? createTable(data.student) : createTable(data.company)
+                setViewFunctionality()
+                setDeleteFunctionality()
                 return 0 ;
             }
             let filtered;
@@ -147,6 +86,8 @@ window.addEventListener("load", () => {
             //If no names were found, just create regular table
             if (filtered.length == 0) {
                 type == "student" ? createTable(data.student) : createTable(data.company);
+                setViewFunctionality()
+                setDeleteFunctionality()
                 return 0;
             }
             //remove found objects from the original array
@@ -161,6 +102,7 @@ window.addEventListener("load", () => {
             }
             //create table, starting with highlighted names, then the rest
             createTable(rest, filtered)
+            
         }
         )
         fixAppointment()

@@ -123,10 +123,12 @@ export function filterArray(array, name) {
 //m
 export function createTable(input, extra = null) {
     let table;
+    //If student table is displayed, it's safe to assume we're on student list
     document.getElementById("students").style.display != "none" ? table = document.getElementById("studentTable") : table = document.getElementById("companyTable"),
     table.innerHTML = "";
+    const type = document.getElementById("students").style.display != "none"  ? "S" : "C"
     const legend = document.createElement("tr");
-    legend.innerHTML = "<th>naam</th><th>email</th><th>laatste login</th><th>Acties</th>"
+    legend.innerHTML = "<th>Naam</th><th>Email</th><th>Laatste login</th><th>Acties</th>"
     table.appendChild(legend)
     if (extra) {
         for (let e of extra) {
@@ -135,11 +137,43 @@ export function createTable(input, extra = null) {
             a.innerHTML += `<td>${e.mail}</td>`,
             a.innerHTML += `<td>${e.login}</td>`,
             a.innerHTML += `<td><span>
-                                    <img class='moreInfo' src='./images/eyeball.png'>
+                                    <img class='extraActions moreInfo' id='eye${type}${e.id}' src='../images/eyeball.png'>
                                 </span>  
                                 <span>
-                                    <img class='moreInfo' src='./images/delete.png'>
-                                </span></td>`,
+                                    <img class='extraActions delete' id='eye${type}${e.id}' src='../images/delete.png'>
+                                </span></td>`;
+            if (type == 'S') {
+                a.innerHTML += `<td class='hidden activated'>${e.activated}</td>
+                            <td class='hidden study-direction'>
+                                ${e.studyDirection}
+                            </td>
+                            <td class='hidden interests'>
+                                ${e.interests}
+                            </td>
+                            <td class='hidden job-preferences'>
+                                ${e.preferences}
+                            </td>`
+            }
+            else {
+                a.innerHTML += `<td class='hidden plan-type'>
+                                    ${e.planTypes}
+                                </td>
+                                <td class='hidden job-types'>
+                                    ${e.jobTypes}
+                                </td>
+                                <td class='hidden job-domain'>
+                                    ${e.jobDomain}
+                                </td>
+                                <td class='hidden description'>
+                                    ${e.description}
+                                </td>
+                                <td class='hidden booth-location'>
+                                    ${e.boothLocation}
+                                </td>
+                                <td class='hidden speeddate-duration'>
+                                    ${e.speeddateDuration}
+                                </td>`
+            }
             table.appendChild(a)
         }
     }
@@ -148,7 +182,44 @@ export function createTable(input, extra = null) {
         a.innerHTML = `<td>${e.name}</td>`,
         a.innerHTML += `<td>${e.mail}</td>`,
         a.innerHTML += `<td>${e.login}</td>`,
-        a.innerHTML += "<td>eye||delete</td>",
+        a.innerHTML += `<td><span>
+                                    <img class='extraActions moreInfo' id='eye${type}${e.id}' src='../images/eyeball.png'>
+                                </span>  
+                                <span>
+                                    <img class='extraActions delete' id='eye${type}${e.id}' src='../images/delete.png'>
+                                </span></td>`;
+            if (type == 'S') {
+                a.innerHTML += `<td class='hidden activated'>${e.activated}</td>
+                            <td class='hidden study-direction'>
+                                ${e.studyDirection}
+                            </td>
+                            <td class='hidden interests'>
+                                ${e.interests}
+                            </td>
+                            <td class='hidden job-preferences'>
+                                ${e.preferences}
+                            </td>`
+            }
+            else {
+                a.innerHTML += `<td class='hidden plan-type'>
+                                    ${e.planTypes}
+                                </td>
+                                <td class='hidden job-types'>
+                                    ${e.jobTypes}
+                                </td>
+                                <td class='hidden job-domain'>
+                                    ${e.jobDomain}
+                                </td>
+                                <td class='hidden description'>
+                                    ${e.description}
+                                </td>
+                                <td class='hidden booth-location'>
+                                    ${e.boothLocation}
+                                </td>
+                                <td class='hidden speeddate-duration'>
+                                    ${e.speeddateDuration}
+                                </td>`
+            }
         table.appendChild(a)
     }
     return table
@@ -204,5 +275,76 @@ export function sortAppointment () {
     }
     appointmentInfo.innerHTML = appointmentsTemp.innerHTML
 }
+//Function to give the delete buttons their functionality
+export function setDeleteFunctionality () {
+for (let element of document.getElementsByClassName('delete')) {
+    element.addEventListener('click', () => {
+        const isStudent = (element.id.substring(3, 4) == "S")
+        const id = element.id.substring(4)
+        //Get user based on ID
+        let list
+        if (isStudent) list = data.student
+        else list = data.company
+        const user =  list.filter(obj => obj.id == id)[0]
 
+        const response  = `Ben je er zeker van dat je ${isStudent ? 'student' : 'bedrijf'} ${user.name} wil verwijderen?<br>Deze actie kan niet ongedaan gemaakt worden(klik op nee om te stoppen)`
+        document.getElementById('abortDelete').style.display = 'block'
+        const form = document.getElementById('deletionForm')
+        
+        //Set the request URL
+        if (!isStudent) {
+            form.action = '/companies/' + user.id;
+       }
+       else {
+            form.style.display = 'block'
+        }
+        form.style.display = 'block'
+        //Set popup
+        for (let element of document.getElementsByClassName('normalForm')) element.style.display = 'none'
+        popUp(response)
+    })
+}
+}
 
+export function setViewFunctionality () {
+    for (let element of document.getElementsByClassName('moreInfo')) {
+    element.addEventListener('click', () => {
+        console.log(element)
+        const id = element.id.substring(4);
+        console.log(id)
+        //Eye icon has class studentEye or companyEye to make sure right item is called
+        const isStudent = (Array.from(element.classList).includes('studentEye'))
+        //gets relevant list, based on if it's a student or a company
+        let list;
+        if (isStudent) list = data.student
+        else list = data.company
+
+        //use filter to find the user we want, based on ID 
+        const user =  list.filter(obj => obj.id == id)[0]
+        console.log(user)
+        const response = document.createElement('div');
+        response.innerHTML = `Naam: ${user.name}<br>`
+        response.innerHTML += `Email: ${user.mail}<br>`
+        //Extra info if it's a student
+        if (isStudent) {
+            let geactiveerd = (user.activated == 1) ? 'Ja' : 'Nee'
+            
+            response.innerHTML += `Geactiveerd: ${geactiveerd}<br>`
+            response.innerHTML += `Job interesses: ${user.interests}<br>`
+            response.innerHTML += `Studierichting: ${user.studyDirection}<br>`
+            response.innerHTML += `Job voorkeuren: ${user.preferences}`
+        }
+        //Extra info if it's a company
+        else {
+            response.innerHTML += `Prijs plan: ${user.planType}<br>`
+            response.innerHTML += `Type job: ${user.jobTypes}<br>`
+            response.innerHTML += `Jobdomein: ${user.jobDomain}<br>`
+            response.innerHTML += `Beschrijving: ${user.description}<br>`
+            response.innerHTML += `Locatie booth: ${user.boothLocation}<br>`
+            response.innerHTML += `Duur speeddates: ${user.speeddateDuration}<br>`
+        }
+
+        popUp(response.innerHTML)
+    })
+}
+}

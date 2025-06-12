@@ -98,7 +98,7 @@
                     <h2>Student gegevens</h2>
                     <!-- Action to add a company must be added-->
                     <form method='post' action="{{ route('students.create') }}">
-                        @csrf <!-- CSRF token for security -->
+                        @csrf <!-- CSRF token for security (concept genomen via Github Copilot)-->
                         <input class='addInput' type='text'name='firstName' placeholder='Voornaam'>
                         <input class='addInput' type='text'name='lastName' placeholder='Achternaam'>
                         <input class='addInput' type='text' name='email' placeholder='E-mail'>
@@ -132,7 +132,7 @@
                             <tr><th>Naam</th><th>Email</th><th>Laatste login</th><th>Acties</th></tr>
                             @foreach ($companies as $company)
                             <tr>
-                                <td class='companyId'>{{$company['id']}}</td>
+                                <td class='hidden companyId'>{{$company['id']}}</td>
                                 <td class='companyName' id="c{{$company['id']}}|">{{ $company['name'] ?? 'Onbekend' }}</td>
                                 <td class='companyMail'>{{ $company['email'] ?? 'Onbekend' }}</td>
                                 <td class='companyLogin'>02-04-2025</td>

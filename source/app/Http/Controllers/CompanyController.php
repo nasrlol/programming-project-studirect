@@ -135,7 +135,6 @@ try {
     {
         $response = Http::delete("{$this->apiUrl}{$id}");
 
-
         if ($response->successful()) {
             return redirect()->back()->with('success', 'Bedrijf succesvol verwijderd!');
         } else {

@@ -96,4 +96,6 @@ try {
     return redirect()->back()->with('error', 'Er is een fout opgetreden: ' . $e->getMessage());
 }
     }
+
+
 }

@@ -106,16 +106,21 @@
                     <!-- Action to add a company must be added-->
                     <form method='post' action="{{ route('admin.students.create') }}">
                         @csrf <!-- CSRF token for security -->
-                        <input class='addInput' type='text'name='name' placeholder='Naam'>
+                        <input class='addInput' type='text'name='firstName' placeholder='Voornaam'>
+                        <input class='addInput' type='text'name='lastName' placeholder='Achternaam'>
                         <input class='addInput' type='text' name='email' placeholder='E-mail'>
                         <div class='addInput' style='border: solid; border-width:1px'>
-                            <label for='study_direction'>Studie richting</label>
-                            <select name='study_direction'>
-                                <option value='Toegepaste_informatica'>Toegepaste Informatica</option>
-                                <option value='Multimedia'>Multimedia</option>
+                            <label for='graduation_track'>Type diploma</label>
+                            <select name='graduation_track' class='professional'>
+                                <option value='Associate'>Graduaat</option>
+                                <option value='Professional'>Professionele bachelor</option>
+                                <option value='Academic_bachelor'>Academische bachelor</option>
+                                <option value='Academic_master'>Academische Master</option>
                             </select>
                         </div>
-                        <input class='addInput' type='text' name='booth_location' placeholder='Locatie booth'>
+
+                        <input class='addInput' type='text' name='study_direction' placeholder='Studierichting'>
+
                         <input class='addInput' type='password' name='password1' placeholder='Wachtwoord'>
                         <input class='addInput' type='password' name='password2' placeholder='Bevestig wachtwoord'>
                         <!--Responses for wrong inputs will be put here--> 
@@ -209,10 +214,6 @@
                         <select id='dateSearch' style='border:none;'>
                             <!--Data will be based depending on logs data-->
                         </select>
-                        <select id='accountType'>
-                            <option value='s'>Studenten</option>
-                            <option value='c'>Bedrijven</option>
-                        </select>
                         <button>Exporteren</button>
                     </div>
                 </div>
@@ -271,7 +272,7 @@
             <div id='extra-message'>Found me!</div>
         </div>
     </div>
-
     @vite('resources/js/admin/admin.js')
+    @vite('resources/js/admin/adminEvents.js')
 </body>
 </html>

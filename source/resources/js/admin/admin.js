@@ -68,12 +68,10 @@ function tableToObjects() {
     return objects
 }
 
-const data = tableToObjects()
-
-console.log(data)
+export const data = tableToObjects()
 
 //Sets the amount of students and companies based on the amount of rows in the table
-function dashboard() {
+export function dashboard() {
     const d = document.getElementById("student-amount");
     d.innerHTML = data.student.length;
     const t = document.getElementById("company-amount");
@@ -81,15 +79,15 @@ function dashboard() {
     const l = document.getElementById("appointment-amount");
     l.innerHTML = data.appointments.length
 }
-//g
-function createSearch(d, t) {
+
+export function createSearch(d, t) {
     return t.innerHTML += '<div class="image-container"><img src="./images/magnifying glass.jpg" style="height: 20px;"></div>',
     d == 0 ? t.innerHTML += '<input type="text" id="nameSearchS">' : t.innerHTML += '<input type="text" id="nameSearchC">',
     t.innerHTML += `<input id="typeSearch" type="hidden" value="${d}">`,
     t.innerHTML += `<button id=search${d} class='filterAction'>Filter</button>`,
     t
 }
-function switchDisplay(element) {
+export function switchDisplay(element) {
     const dashboard = document.getElementById("dashboard")
       , students = document.getElementById("students")
       , companies = document.getElementById("companies")
@@ -108,22 +106,22 @@ function switchDisplay(element) {
 }
 
 //creates a popup, with text
-function popUp (text) {
+export function popUp (text) {
     document.getElementById('extra-container').style.display = 'block'
     document.getElementById('extra-message').innerHTML = text;
 }
 
-function removePopUp () {
+export function removePopUp () {
     document.getElementById('extra-container').style.display = 'none';
     document.getElementById('extra-message').innerHTML = ''
 }
 
 
-function filterArray(array, name) {
+export function filterArray(array, name) {
     return array.filter(obj => obj.name.toLocaleLowerCase().indexOf(name.toLocaleLowerCase()) > -1)
 }
 //m
-function createTable(input, extra = null) {
+export function createTable(input, extra = null) {
     let table;
     document.getElementById("students").style.display != "none" ? table = document.getElementById("studentTable") : table = document.getElementById("companyTable"),
     table.innerHTML = "";
@@ -156,7 +154,7 @@ function createTable(input, extra = null) {
     return table
 }
 //y
-function copyArray(array) {
+export function copyArray(array) {
     let newArray = new Array;
     for (let el of array)
         newArray.push(el);
@@ -164,7 +162,7 @@ function copyArray(array) {
 }
 //Appointment currently takes the ID instead of the name of the students and companies
 //This function fixes that
-function fixAppointment () {
+export function fixAppointment () {
     //list of all studentId's in the apointment list
     const appointmentSId = document.getElementsByClassName('appointmentSId')
     //list of all companyId's in the apointment list
@@ -180,7 +178,7 @@ function fixAppointment () {
     }
 }
 //Appointments start of sorted by time instead of ID. This fixes that
-function sortAppointment () {
+export function sortAppointment () {
     //Table where the appointments are stored
     const appointmentsTemp = document.createElement('tbody')
 
@@ -207,136 +205,4 @@ function sortAppointment () {
     appointmentInfo.innerHTML = appointmentsTemp.innerHTML
 }
 
-
-//events
-document.getElementById("nav-dashboard").addEventListener("click", () => {
-    switchDisplay("dashboard")
-}
-);
-document.getElementById("nav-users").addEventListener("click", () => {
-    switchDisplay("students")
-}
-);
-document.getElementById("nav-companies").addEventListener("click", () => {
-    switchDisplay("companies")
-})
-
-document.getElementById('nav-logs').addEventListener('click', () => {
-    switchDisplay('logs')
-})
-document.getElementById("toAddCompany").addEventListener("click", () => {
-    switchDisplay("addCompany")
-}
-);
-document.getElementById("toAddStudent").addEventListener("click", () => {
-    switchDisplay("addStudent")
-}
-);
-document.getElementById("backToCompanies").addEventListener("click", () => {
-    switchDisplay("companies")
-});
-document.getElementById("backToStudent").addEventListener("click", () => {
-    switchDisplay("students")
-});
-document.getElementById("nav-appointments").addEventListener("click", () => {
-    switchDisplay("appointments")
-});
-//For logs, let admin choose to look at student or admin logs
-document.getElementById('accountType').addEventListener('change', () => {
-})
-//Add a 'view more' option for students and companies
-for (let element of document.getElementsByClassName('moreInfo')) {
-    element.addEventListener('click', () => {
-        const id = element.id.substring(4);
-        console.log(id)
-        //Eye icon has class studentEye or companyEye to make sure right item is called
-        const isStudent = (Array.from(element.classList).includes('studentEye'))
-        //gets relevant list, based on if it's a student or a company
-        let list;
-        if (isStudent) list = data.student
-        else list = data.company
-
-        //use filter to find the user we want, based on ID 
-        const user =  list.filter(obj => obj.id == id)[0]
-        const response = document.createElement('div');
-        response.innerHTML = `Naam: ${user.name}<br>`
-        response.innerHTML += `Email: ${user.mail}<br>`
-        //Extra info if it's a student
-        if (isStudent) {
-            let geactiveerd = (user.activated == 1) ? 'Ja' : 'Nee'
-            
-            response.innerHTML += `Geactiveerd: ${geactiveerd}<br>`
-            response.innerHTML += `Job interesses: ${user.interests}<br>`
-            response.innerHTML += `Studierichting: ${user.studyDirection}<br>`
-            response.innerHTML += `Job voorkeuren: ${user.preferences}`
-        }
-        //Extra info if it's a company
-        else {
-            response.innerHTML += `Prijs plan: ${user.planType}<br>`
-            response.innerHTML += `Type job: ${user.jobTypes}<br>`
-            response.innerHTML += `Jobdomein: ${user.jobDomain}<br>`
-            response.innerHTML += `Beschrijving: ${user.description}<br>`
-            response.innerHTML += `Locatie booth: ${user.boothLocation}<br>`
-            response.innerHTML += `Duur speeddates: ${user.speeddateDuration}<br>`
-        }
-
-        popUp(response.innerHTML)
-    })
-}
-//For removing popups
-document.getElementById('removePopupButton').addEventListener('click', () => {
-    removePopUp()
-})
-
-window.addEventListener("load", () => {
-    dashboard(),
-    switchDisplay("companies");
-    const filterElements = document.getElementsByClassName("filter");
-    let count = 0;
-    for (let element of filterElements)
-        createSearch(count, element),
-        count++;
-    for (let filter of document.getElementsByClassName("filterAction"))
-        filter.addEventListener("click", () => {
-            //l, e
-            let nameInput, type;
-            //Checks if we're on the studentpage. Else, we can assume we're on the company page
-            if (document.getElementById("students").style.display != "none" ? (nameInput = document.getElementById("nameSearchS").value,
-            type = "student") : (nameInput = document.getElementById("nameSearchC").value,
-            type = "company"))
-
-            //If no name was found, create the table without any extras
-            if (nameInput == '') {
-                type == "student" ? createTable(data.student) : createTable(data.company)
-                return 0 ;
-            }
-            let filtered;
-            //Filter the name through the arrays, depending on wether it's a student or a company
-            type == "student" ? filtered = filterArray(data.student, nameInput) : filtered = filterArray(data.company, nameInput)
-            //If no names were found, just create regular table
-            if (filtered.length == 0) {
-                type == "student" ? createTable(data.student) : createTable(data.company);
-                return 0;
-            }
-            //remove found objects from the original array
-            let rest;
-            if (type == "student") {
-                rest = copyArray(data.student);
-                for (let el of filtered) rest = rest.filter(obj=> obj.name != el.name)
-            } 
-            else {
-                rest = copyArray(data.company);
-                for (let el of filtered) rest = rest.filter(obj => obj.name != el.name)
-            }
-            //create table, starting with highlighted names, then the rest
-            createTable(rest, filtered)
-        }
-        )
-        fixAppointment()
-        sortAppointment()
-        setTimeout(() => {
-            document.getElementById('serverResponse').innerHTML = ''
-        }, 5000)
-}
-);
 

@@ -80,7 +80,7 @@ public function storeC(Request $request)
         'job_domain' => 'verrtfv',
         'booth_location' => $validated['booth_location'],
         'photo' => 'index.png',
-        'speeddate_duration' => '10',
+        'speeddate_duration' => '5',
     ];
 
 try {
@@ -104,9 +104,11 @@ public function storeS(Request $request)
     {
         try {
             $validated = $request->validate([
-            'name' => 'required|string|max:255',
+            'firstName' => 'required|string|max:255',
+            'lastName' => 'required|string|max:255',
             'email' => 'required|email|max:255',
-            'booth_location' => 'required|string|max:255',
+            'graduation_track' => 'required|string|max:255',
+            'study_direction' => 'required|string|max:255',
             'password1' => 'required|string|min:8',
             'password2' => 'required|same:password1'
             ]);
@@ -115,30 +117,28 @@ public function storeS(Request $request)
         }
         
 
-    // Prepare data for API (use password1 as password)
+    // Prepare data for API (use password2 as password)
     $data = [
-        'name' => $validated['name'],
+        'firstName' => $validated['firstName'],
+        'lastName' => $validated['lastName'],
         'email' => $validated['email'],
-        'password' => $validated['password1'],
-        'plan_type' => $validated['plan_type'],
-        'description' => '',
-        'job_types' => '',
-        'job_domain' => '',
-        'booth_location' => $validated['booth_location'],
-        'photo' => '',
-        'speeddate_duration' => '',
-        'created_at' => date('Y-m-d H:i:s'),
-        'updated_at' => date('Y-m-d H:i:s')
+        'password' => $validated['password2'],
+        'graduation_track' => $validated['graduation_track'],
+        'study_direction' => $validated['study_direction'],
+        'interests' => 'Ik heb interesse in...',
+        'job_preferences' => 'Ik heb voorkeuren voor...',
+        'cv' => 'cv.pdf',
+        'profile_complete' => '0',
     ];
 
 try {
-    $response = Http::post($this->apiUrl . 'companies', $data);
+    $response = Http::post($this->apiUrl . 'students', $data);
 
     if ($response->successful()) {
-        return redirect()->back()->with('success', 'Bedrijf succesvol toegevoegd!');
+        return redirect()->back()->with('success', 'Student succesvol toegevoegd!');
     } else {
         // Voeg de response body toe aan de foutmelding voor debugging
-        return redirect()->back()->with('error', 'Fout bij toevoegen bedrijf: ' . $response->body());
+        return redirect()->back()->with('error', 'Fout bij toevoegen van Student: ' . $response->body());
     }
 } catch (\Exception $e) {
     return redirect()->back()->with('error', 'Er is een fout opgetreden: ' . $e->getMessage());

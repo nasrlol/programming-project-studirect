@@ -97,7 +97,7 @@
                 <div class='addUser'>
                     <h2>Student gegevens</h2>
                     <!-- Action to add a company must be added-->
-                    <form method='post'>
+                    <form method='post' action="{{ route('students.create') }}">
                         @csrf <!-- CSRF token for security -->
                         <input class='addInput' type='text'name='firstName' placeholder='Voornaam'>
                         <input class='addInput' type='text'name='lastName' placeholder='Achternaam'>
@@ -264,8 +264,9 @@
             <button id='removePopupButton' class='normalForm'>&times;</button>
             <div id='extra-message'>Found me!</div>
             <button id='abortDelete' class='deletionForm'>Nee</button>
-            <form id='deletionForm' class='deletionForm' action>
-                <input type='hidden' id='studentToDelete' value='id'>
+            <form id='deletionForm' class='deletionForm' method='POST'>
+                @csrf
+                @method('DELETE')
                 <input type='submit' value='Ja, ik ben zeker'>
             </form>
         </div>

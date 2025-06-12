@@ -9,7 +9,7 @@ use Illuminate\Support\Facades\Http;
 
 class CompanyController extends Controller
 {
-    private string $apiUrl = 'http://10.2.160.208/api/';
+    private string $apiUrl = 'http://10.2.160.208/api/companies/';
 
     public function show(): View
 {
@@ -130,15 +130,16 @@ try {
 
         /**
      * Remove the specified resource from storage.
-     */
-    public function destroy(string $id): JsonResponse
+     */ 
+    public function destroy(string $id)
     {
-        $response = Http::delete("{$this->apiUrl}/{$id}");
+        $response = Http::delete("{$this->apiUrl}{$id}");
+
 
         if ($response->successful()) {
-            return response()->json($response->json());
+            return redirect()->back()->with('success', 'Bedrijf succesvol verwijderd!');
         } else {
-            return response()->json(['message' => 'Student not found'], 404);
+            return redirect()->back()->with('error', 'Fout bij verwijderen bedrijf: ' . $response->body());
         }
     }
 }

@@ -75,6 +75,10 @@ for (let element of document.getElementsByClassName('moreInfo')) {
 document.getElementById('removePopupButton').addEventListener('click', () => {
     removePopUp()
 })
+//Popups can also be removed by pressing escape 
+document.addEventListener('keydown', e => {
+    if (e.key == "Escape") removePopUp()
+})
 
 window.addEventListener("load", () => {
     dashboard(),

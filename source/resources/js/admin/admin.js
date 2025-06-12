@@ -81,7 +81,7 @@ export function dashboard() {
 }
 
 export function createSearch(d, t) {
-    return t.innerHTML += '<div class="image-container"><img src="./images/magnifying glass.jpg" style="height: 20px;"></div>',
+    return t.innerHTML += '<div class="image-container"><img src="../images/magnifying glass.jpg" style="height: 20px;"></div>',
     d == 0 ? t.innerHTML += '<input type="text" id="nameSearchS">' : t.innerHTML += '<input type="text" id="nameSearchC">',
     t.innerHTML += `<input id="typeSearch" type="hidden" value="${d}">`,
     t.innerHTML += `<button id=search${d} class='filterAction'>Filter</button>`,

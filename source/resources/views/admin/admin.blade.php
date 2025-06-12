@@ -64,9 +64,9 @@
                         <tr>
                             <td class='studentActivated'>
                                 @if ($student['profile_complete']) 
-                                    <span class='image-container'><img src='images/check.png' class='image-container' alt='ja'></span>
+                                    <span class='image-container'><img src='../images/check.png' class='image-container' alt='ja'></span>
                                 @else 
-                                    <span class='image-container'><img src='images/delete.png' class='image-container' alt='nee'></span> 
+                                    <span class='image-container'><img src='../images/delete.png' class='image-container' alt='nee'></span> 
                                 @endif
                             </td>
                             <!--| is added at the end to make sure no accidents occur (like 2 and 21 while filtering)-->
@@ -76,9 +76,9 @@
                             <td class='studentLogin'>03-06-2025</td>
                             <td>
                                 <span>
-                                    <img class='moreInfo extraActions studentEye' id="eyeS{{$student['id']}}" src='./images/eyeball.png'>
+                                    <img class='moreInfo extraActions studentEye' id="eyeS{{$student['id']}}" src='../images/eyeball.png'>
                                 </span>  <span>
-                                    <img class='extraActions' src='./images/delete.png'>
+                                    <img class='extraActions' src='../images/delete.png'>
                                 </span>
                             </td>
                             <!--Hidden info used by javascript-->
@@ -145,10 +145,10 @@
                                 <td class='companyLogin'>02-04-2025</td>
                                 <td>
                                 <span>
-                                    <img class='extraActions moreInfo' id="eyeC{{$company['id']}}" src='./images/eyeball.png'>
+                                    <img class='extraActions moreInfo' id="eyeC{{$company['id']}}" src='../images/eyeball.png'>
                                 </span>  
                                 <span>
-                                    <img class='extraActions' src='./images/delete.png'>
+                                    <img class='extraActions' src='../images/delete.png'>
                                 </span>
                                 </td>
                                 <!--Hidden info used by javascript-->

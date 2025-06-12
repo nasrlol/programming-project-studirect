@@ -71,6 +71,34 @@ for (let element of document.getElementsByClassName('moreInfo')) {
         popUp(response.innerHTML)
     })
 }
+
+//Add a 'delete' option for students and companies
+for (let element of document.getElementsByClassName('delete')) {
+    element.addEventListener('click', () => {
+        const isStudent = (element.id.substring(3, 4) == "S")
+        const id = element.id.substring(4)
+        //Get user based on ID
+        let list
+        if (isStudent) list = data.student
+        else list = data.company
+        const user =  list.filter(obj => obj.id == id)[0]
+
+        const response  = `Ben je er zeker van dat je ${isStudent ? 'student' : 'bedrijf'} ${user.name} wil verwijderen?<br>Deze actie kan niet ongedaan gemaakt worden(klik op nee om te stoppen)`
+        //Set student to delete
+        document.getElementById('studentToDelete').value = id;
+        //Set popup
+        for (let element of document.getElementsByClassName('deletionForm')) element.style.display = 'block'
+        for (let element of document.getElementsByClassName('normalForm')) element.style.display = 'none'
+        popUp(response)
+    })
+}
+//To abort the delete process 
+document.getElementById('abortDelete').addEventListener('click', () => {
+    for (let element of document.getElementsByClassName('deletionForm')) element.style.display = 'none'
+    for (let element of document.getElementsByClassName('normalForm')) element.style.display = 'block'
+    removePopUp();
+})
+
 //For removing popups
 document.getElementById('removePopupButton').addEventListener('click', () => {
     removePopUp()

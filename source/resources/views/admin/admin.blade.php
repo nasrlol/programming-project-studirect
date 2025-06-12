@@ -57,18 +57,11 @@
                 <div class='filter' id='student'></div>
                 <div class='list'>
                     <table id='studentTable'>
-                        <tr><th class='th-short'>Actief</th><th>Naam</th><th>Email</th><th>Laatste login</th><th>Acties</th></tr>
+                        <tr><th>Naam</th><th>Email</th><th>Laatste login</th><th>Acties</th></tr>
                         <!--API call-->
                         <!--Last log still needs to be added-->
                         @foreach ($students as $student)
                         <tr>
-                            <td class='studentActivated'>
-                                @if ($student['profile_complete']) 
-                                    <span class='image-container'><img src='../images/check.png' class='image-container' alt='ja'></span>
-                                @else 
-                                    <span class='image-container'><img src='../images/delete.png' class='image-container' alt='nee'></span> 
-                                @endif
-                            </td>
                             <!--| is added at the end to make sure no accidents occur (like 2 and 21 while filtering)-->
                             <td class='studentId'>{{$student['id']}}</td>
                             <td class='studentName' id="s{{$student['id']}}|">{{ $student['first_name'] ?? 'Onbekend' }} {{ $student['last_name'] ?? 'onbekend' }}</td>
@@ -78,7 +71,7 @@
                                 <span>
                                     <img class='moreInfo extraActions studentEye' id="eyeS{{$student['id']}}" src='../images/eyeball.png'>
                                 </span>  <span>
-                                    <img class='extraActions' src='../images/delete.png'>
+                                    <img class='extraActions delete' id="delS{{$student['id']}}" src='../images/delete.png'>
                                 </span>
                             </td>
                             <!--Hidden info used by javascript-->
@@ -148,7 +141,7 @@
                                     <img class='extraActions moreInfo' id="eyeC{{$company['id']}}" src='../images/eyeball.png'>
                                 </span>  
                                 <span>
-                                    <img class='extraActions' src='../images/delete.png'>
+                                    <img class='extraActions delete' id="delC{{$company['id']}}" src='../images/delete.png'>
                                 </span>
                                 </td>
                                 <!--Hidden info used by javascript-->
@@ -268,8 +261,13 @@
 
     <div id='extra-container'>
         <div id='extra-message-container'>
-            <button id='removePopupButton'>&times;</button>
+            <button id='removePopupButton' class='normalForm'>&times;</button>
             <div id='extra-message'>Found me!</div>
+            <button id='abortDelete' class='deletionForm'>Nee</button>
+            <form id='deletionForm' class='deletionForm' action>
+                <input type='hidden' id='studentToDelete' value='id'>
+                <input type='submit' value='Ja, ik ben zeker'>
+            </form>
         </div>
     </div>
     @vite('resources/js/admin/admin.js')

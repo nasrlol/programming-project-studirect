@@ -2,6 +2,10 @@ body {
     margin:0;
 }
 
+.image-container {
+    height:20px;
+}
+
 h2 {
     margin:0;
 }
@@ -9,34 +13,71 @@ h2 {
 section {
     /*Sections are already hidden to prevent funny bussiness when loading page*/
     display: none;
+    background-color: white;
+    margin-left: 3.5%;
+    margin-top: 1%;
 }
+/*Companies and students*/
+
 
 .filter {
     display: flex;
     flex-direction: row;
 }
-.addCompany {
+
+/*For appointments*/
+.hidden {
+    display:none;
+}
+/*For adding to company*/
+.addUser {
     width:40%;
     margin-left:30%;
     align-content:center;
 }
 
+.add {
+    margin-left:80%;
+}
+
+form {
+    display: flex;
+    flex-direction: column;
+}
+
+.addInput {
+    margin-bottom: 2%;
+}
+
+/*Table*/
+
 table {
     width:100%;
+    border:solid;
+    border-width:1px;
 }
-.table {
+.list {
     background-color: white;
     overflow: auto;
     height:100%;
 }
 
-.searchable {
-    height:80%;
-}
-
 th {
     text-align: left;
     width:20%;
+}
+
+.th-short {
+    width:5%;
+    background-color: white;
+}
+
+.studentActivated {
+    width:min-content;
+}
+
+.searchable {
+    height:80%;
 }
 
 #main-container 
@@ -118,8 +159,6 @@ h2 {
     background-color: white;
     height: 50%;
     width:95%;
-    margin-left: 4%;
-    margin-top: 1%;
 }
 
 .member-amount {
@@ -133,7 +172,7 @@ h2 {
     font-size: large;
     background-color: #648EE3;
 
-    width:17.5%;
+    width:35%;
     height:100%;
 
     margin-right: 7.5%;
@@ -142,9 +181,86 @@ h2 {
     padding-top: 15%;
     padding-bottom: 15%;
 }
+/*Students and companies*/
 
-.moreInfo {
+.studentId {
+    display: none;
+}
+.extraActions {
     height:16px;
     width:16px;
 }
 
+.extraActions:hover {
+    cursor: pointer;
+}
+
+/*LOGS*/
+
+li {
+    padding-bottom:2%;
+    display: flex;
+    flex-direction: row;
+    justify-content: right;
+}
+
+.creationLogRes {
+    width:80%;
+}
+
+select {
+    border:none;
+}
+
+#events {
+    border:none;
+}
+.eventSearch {
+    width:90%
+}
+/*Extra, when the admin wants to check extra info of a user*/
+#extra-container {
+    /*starts of undisplayed*/
+    display: none; 
+    position:fixed;
+    margin:0;
+    left: 0;
+    top: 0;
+    width:100%;
+    height:100%;
+    margin-left:0%;
+    z-index: 1;
+    background:rgb(0, 0, 0, 0.5)
+}
+
+/* Button for removing popups */
+#removePopupButton {
+    position: relative;
+    
+    width:5%;
+    font-size: large;
+    aspect-ratio:1 / 1;
+    left:95%;
+    background-color: inherit;
+    border-top:none;
+    border-right:none;
+}
+
+#extra-message-container {
+    margin-left: 35%;
+    margin-top: 10%;
+    width:30%;
+    height:40%;
+    background-color: white;
+    overflow:auto;
+    border:solid black;
+}
+#extra-message {
+    text-align: center;
+    margin-left:10%;
+    margin-right: 10%;
+}
+
+.deletionForm {
+    display: none;
+}

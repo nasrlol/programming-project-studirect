@@ -6,6 +6,7 @@ export default defineConfig({
     plugins: [
         laravel({
             input: ['resources/css/admin/admin.css',
+                'resources/js/admin/adminEvents.js',
                 'resources/js/admin/admin.js',
                 'resources/css/student/student.css',
                 'resources/js/student/student.js',

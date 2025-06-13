@@ -4,7 +4,8 @@ function tableToObjects() {
     let objects = {
         company: new Array,
         student: new Array,
-        appointments:new Array
+        appointments:new Array,
+        logs: new Array
     }
     let ids = document.getElementsByClassName('studentId')
     const activated = document.getElementsByClassName('activated')
@@ -65,6 +66,8 @@ function tableToObjects() {
             appointmentTime: appointmentTime[i].innerHTML.trim()
         });
     }
+
+    //add logs
 
     return objects
 }

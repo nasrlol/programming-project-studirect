@@ -51,7 +51,7 @@ class AdminController extends Controller
         foreach ($logs as &$log) {
             $id = $log['target_id'];
             if ($log['target_type'] === 'Student') {
-                $student = collect($students)->firstWhere('target_id', $id);
+                $student = collect($students)->firstWhere('id', $id);
                 $log['target_id'] = $student ? $student['first_name'] . ' ' . $student['last_name'] : 'Onbekende student';
             } elseif ($log['target_type'] === 'Company') {
                 $company = collect($companies)->firstWhere('id', $id);

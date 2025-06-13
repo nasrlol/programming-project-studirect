@@ -10,7 +10,7 @@ Route::get('/students', [StudentController::class, 'index']);
 //Route::post('/students', [StudentController::class, 'store']);
 
 Route::get('/company', function () {
-    return view('company.company'); // zoekt 'resources/views/home.blade.php'
+    return view('company.company'); // zoekt 'resources/views/company/company.blade.php'
 });
 
 Route::get('/admin', [AdminController::class, 'showAllUsers']);

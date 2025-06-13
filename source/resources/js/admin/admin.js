@@ -292,7 +292,7 @@ for (let element of document.getElementsByClassName('delete')) {
         const user =  list.filter(obj => obj.id == id)[0]
 
         const response  = `Ben je er zeker van dat je ${isStudent ? 'student' : 'bedrijf'} ${user.name} wil verwijderen?<br>Deze actie kan niet ongedaan gemaakt worden(klik op nee om te stoppen)`
-        document.getElementById('abortDelete').style.display = 'block'
+        document.getElementById('abortAction').style.display = 'block'
         const form = document.getElementById('deletionForm')
         
         //Set the request URL

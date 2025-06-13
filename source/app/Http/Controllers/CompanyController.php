@@ -77,16 +77,16 @@ class CompanyController extends Controller
         'email' => $validated['email'],
         'password' => $validated['password1'],
         'plan_type' => $validated['plan_type'],
-        'description' => 'Onze missie als bedrijf is...',
-        'job_types' => 'full-time',
-        'job_domain' => 'Software-engineering ',
+        'description' => 'Vul dit in',
+        'job_types' => 'Vul dit in',
+        'job_domain' => 'Vul dit in ',
         'booth_location' => $validated['booth_location'],
-        'photo' => 'index.png',
+        'photo' => 'Aan te passen',
         'speeddate_duration' => '5',
     ];
 
 try {
-    $response = Http::post($this->apiUrl . 'companies', $data);
+    $response = Http::post($this->apiUrl, $data);
 
     if ($response->successful()) {
         return redirect()->back()->with('success', 'Bedrijf succesvol toegevoegd!');

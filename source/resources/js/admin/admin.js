@@ -1,3 +1,4 @@
+'use strict'
 //changes contents of table to arrays for the js functions
 function tableToObjects() {
     let objects = {
@@ -347,4 +348,11 @@ export function setViewFunctionality () {
         popUp(response.innerHTML)
     })
 }
+}
+
+//remove forms from popup
+export function removeForms () {
+    document.getElementById('deletionForm').action = ''
+    for (let element of document.getElementsByClassName('tempForm')) element.style.display = 'none'
+    for (let element of document.getElementsByClassName('normalForm')) element.style.display = 'block'
 }

@@ -207,7 +207,7 @@
                         <select id='dateSearch' style='border:none;'>
                             <!--Data will be based depending on logs data-->
                         </select>
-                        <button>Exporteren</button>
+                        <button id='exportLog'>Exporteren</button>
                     </div>
                 </div>
                 <div class='list'>
@@ -263,11 +263,14 @@
         <div id='extra-message-container'>
             <button id='removePopupButton' class='normalForm'>&times;</button>
             <div id='extra-message'>Found me!</div>
-            <button id='abortDelete' class='deletionForm'>Nee</button>
-            <form id='deletionForm' class='deletionForm' method='POST'>
+            <button id='abortAction' class='deletionForm tempForm'>Nee</button>
+            <form id='deletionForm' class='deletionForm tempForm' method='POST'>
                 @csrf
                 @method('DELETE')
                 <input type='submit' value='Ja, ik ben zeker'>
+            </form>
+            <form id='exportData' class='tempForm'>
+                <input type='submit' value='Ja, exporteer als CSV'>
             </form>
         </div>
     </div>

@@ -1,4 +1,5 @@
-import { dashboard, switchDisplay, popUp, removePopUp, createSearch, createTable, fixAppointment, sortAppointment, data, copyArray, filterArray, setDeleteFunctionality, setViewFunctionality } from './admin.js'
+'use strict'
+import { dashboard, switchDisplay, popUp, removePopUp, createSearch, createTable, fixAppointment, sortAppointment, data, copyArray, filterArray, setDeleteFunctionality, setViewFunctionality, removeForms } from './admin.js'
 
 //events
 document.getElementById("nav-dashboard").addEventListener("click", () => {
@@ -33,17 +34,21 @@ document.getElementById("backToStudent").addEventListener("click", () => {
 document.getElementById("nav-appointments").addEventListener("click", () => {
     switchDisplay("appointments")
 });
+
+document.getElementById('exportLog').addEventListener("click", () => {
+    popUp("Wil je de gegevens van de logs exporteren naar een csv file?")
+    document.getElementById('exportData').style.display = 'block'
+    document.getElementById('abortAction').style.display = 'block'
+})
+
 //Add a 'view more' option for students and companies
 setViewFunctionality()
 
 //Add a 'delete' option for students and companies
 setDeleteFunctionality()
 //To abort the delete process 
-document.getElementById('abortDelete').addEventListener('click', () => {
-    const form = document.getElementById('deletionForm')
-    for (let element of document.getElementsByClassName('deletionForm')) element.style.display = 'none'
-    for (let element of document.getElementsByClassName('normalForm')) element.style.display = 'block'
-    form.action = '';
+document.getElementById('abortAction').addEventListener('click', () => {
+    removeForms()
     removePopUp();
 })
 
@@ -53,12 +58,15 @@ document.getElementById('removePopupButton').addEventListener('click', () => {
 })
 //Popups can also be removed by pressing escape 
 document.addEventListener('keydown', e => {
-    if (e.key == "Escape") removePopUp()
+    if (e.key == "Escape") {
+        removePopUp()
+        removeForms()
+    }
 })
 
 window.addEventListener("load", () => {
-    dashboard(),
-    switchDisplay("addStudent");
+    dashboard();
+    switchDisplay("dashboard");
     const filterElements = document.getElementsByClassName("filter");
     let count = 0;
     for (let element of filterElements)

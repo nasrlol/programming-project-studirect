@@ -19,6 +19,7 @@ Route::get('/company', function () {
 Route::post('/companies', [CompanyController::class, 'store'])->name('companies.create');
 
 Route::delete('/companies/{id}', [CompanyController::class, 'destroy'])->name('companies.delete');
+Route::delete('/students/{id}', [StudentController::class, 'destroy'])->name('students.delete');
 
 
 Route::get('/admin', [AdminController::class, 'show']);

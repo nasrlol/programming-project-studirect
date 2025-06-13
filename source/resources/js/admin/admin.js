@@ -1,9 +1,11 @@
+'use strict'
 //changes contents of table to arrays for the js functions
 function tableToObjects() {
     let objects = {
         company: new Array,
         student: new Array,
-        appointments:new Array
+        appointments:new Array,
+        logs: new Array
     }
     let ids = document.getElementsByClassName('studentId')
     const activated = document.getElementsByClassName('activated')
@@ -64,6 +66,8 @@ function tableToObjects() {
             appointmentTime: appointmentTime[i].innerHTML.trim()
         });
     }
+
+    //add logs
 
     return objects
 }
@@ -288,7 +292,7 @@ for (let element of document.getElementsByClassName('delete')) {
         const user =  list.filter(obj => obj.id == id)[0]
 
         const response  = `Ben je er zeker van dat je ${isStudent ? 'student' : 'bedrijf'} ${user.name} wil verwijderen?<br>Deze actie kan niet ongedaan gemaakt worden(klik op nee om te stoppen)`
-        document.getElementById('abortDelete').style.display = 'block'
+        document.getElementById('abortAction').style.display = 'block'
         const form = document.getElementById('deletionForm')
         
         //Set the request URL
@@ -296,6 +300,7 @@ for (let element of document.getElementsByClassName('delete')) {
             form.action = '/companies/' + user.id;
        }
        else {
+            form.action = '/students/' + user.id;
             form.style.display = 'block'
         }
         form.style.display = 'block'
@@ -309,9 +314,7 @@ for (let element of document.getElementsByClassName('delete')) {
 export function setViewFunctionality () {
     for (let element of document.getElementsByClassName('moreInfo')) {
     element.addEventListener('click', () => {
-        console.log(element)
         const id = element.id.substring(4);
-        console.log(id)
         //Eye icon has class studentEye or companyEye to make sure right item is called
         const isStudent = (Array.from(element.classList).includes('studentEye'))
         //gets relevant list, based on if it's a student or a company
@@ -321,7 +324,6 @@ export function setViewFunctionality () {
 
         //use filter to find the user we want, based on ID 
         const user =  list.filter(obj => obj.id == id)[0]
-        console.log(user)
         const response = document.createElement('div');
         response.innerHTML = `Naam: ${user.name}<br>`
         response.innerHTML += `Email: ${user.mail}<br>`
@@ -347,4 +349,11 @@ export function setViewFunctionality () {
         popUp(response.innerHTML)
     })
 }
+}
+
+//remove forms from popup
+export function removeForms () {
+    document.getElementById('deletionForm').action = ''
+    for (let element of document.getElementsByClassName('tempForm')) element.style.display = 'none'
+    for (let element of document.getElementsByClassName('normalForm')) element.style.display = 'block'
 }

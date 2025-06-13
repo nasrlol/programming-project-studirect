@@ -57,98 +57,133 @@ document.addEventListener("DOMContentLoaded", () => {
     });
 
     /*message page */
-messageBtn.addEventListener("click", () => {
-    console.log("Clicked message button");
-    setActiveButton("messageBtn");
-    content.innerHTML = "";
+    messageBtn.addEventListener("click", () => {
+        console.log("Clicked message button");
+        setActiveButton("messageBtn");
+        content.innerHTML = "";
 
-    const messageContainer = document.createElement("div");
-    messageContainer.classList.add("message-container");
+        const messageContainer = document.createElement("div");
+        messageContainer.classList.add("message-container");
 
-    const chatList = document.createElement("div");
-    chatList.classList.add("chat-list");
+        const chatList = document.createElement("div");
+        chatList.classList.add("chat-list");
 
-    const chatTitle = document.createElement("h3");
-    chatTitle.textContent = "messages:";
-    chatList.appendChild(chatTitle);
+        const chatTitle = document.createElement("h3");
+        chatTitle.textContent = "messages:";
+        chatList.appendChild(chatTitle);
 
-    const chatWindow = document.createElement("div");
-    chatWindow.classList.add("chat-window");
+        const chatWindow = document.createElement("div");
+        chatWindow.classList.add("chat-window");
 
-    function loadChat(user) {
-        chatWindow.innerHTML = "";
+        function loadChat(user) {
+            chatWindow.innerHTML = "";
 
-        const name = document.createElement("div");
-        name.classList.add("chat-name");
-        name.innerHTML = `<img src="${user.photo}" class="avatar"> ${user.name}`;
-        chatWindow.appendChild(name);
+            const name = document.createElement("div");
+            name.classList.add("chat-name");
+            name.innerHTML = `<img src="${user.photo}" class="avatar"> ${user.name}`;
+            chatWindow.appendChild(name);
 
-        user.messages.forEach(msg => {
-            const bubble = document.createElement("div");
-            bubble.classList.add("chat-bubble");
-            bubble.textContent = msg;
-            chatWindow.appendChild(bubble);
-        });
-
-        const input = document.createElement("input");
-        input.type = "text";
-        input.placeholder = "type a message";
-        input.classList.add("chat-input");
-
-        input.addEventListener("keydown", e => {
-            if (e.key === "Enter" && input.value.trim() !== "") {
-                const newMessage = input.value;
-                user.messages.push(newMessage);
-                loadChat(user);
-            }
-        });
-
-        chatWindow.appendChild(input);
-    }
-
-    // Hier gebeurt de fetch correct
-    fetch("http://10.2.160.208/api/students")
-        .then(response => response.json())
-       .then(apiResponse => {
-    console.log("API response:", apiResponse);
-
-    const students = Array.isArray(apiResponse.data)
-        ? apiResponse.data
-        : [];
-            if (students.length === 0) {
-                chatWindow.innerHTML = "<p>No users found.</p>";
-            }
-
-            const users = students.map((student, index) => ({
-                name: `${student.first_name} ${student.last_name}`.trim() || `Student ${index + 1}`,
-                photo: `https://i.pravatar.cc/40?img=${(index % 70) + 1}`,
-                messages: [`Hi! I'm ${student.name || "a student"}`]
-            }));
-
-            users.forEach(user => {
-                const button = document.createElement("div");
-                button.classList.add("user");
-                button.innerHTML = `<img src="${user.photo}" class="avatar"> ${user.name}`;
-                button.addEventListener("click", () => loadChat(user));
-                chatList.appendChild(button);
+            user.messages.forEach(msg => {
+                const bubble = document.createElement("div");
+                bubble.classList.add("chat-bubble");
+                bubble.textContent = msg;
+                chatWindow.appendChild(bubble);
             });
 
-            messageContainer.appendChild(chatList);
-            messageContainer.appendChild(chatWindow);
-            content.appendChild(messageContainer);
+            const form = document.createElement("form");
+            form.method = "POST";
+            form.action = "/messages/send"; // je controller route
 
-            if (users.length > 0) {
-                loadChat(users[0]);
-            }
-        })
-        .catch(error => {
-            console.error("Fout bij ophalen studenten:", error);
-            chatList.innerHTML += `<p>Kon gebruikers niet laden.<br>${error.message}</p>`;
-            messageContainer.appendChild(chatList);
-            messageContainer.appendChild(chatWindow);
-            content.appendChild(messageContainer);
-        });
-});
+            const input = document.createElement("input");
+            input.type = "text";
+            input.name = "message";
+            input.placeholder = "type a message";
+            input.classList.add("chat-input");
+
+            const studentIdInput = document.createElement("input");
+            studentIdInput.type = "hidden";
+            studentIdInput.name = "student_id";
+            studentIdInput.value = user.id; // Pas aan indien nodig
+
+            const companyIdInput = document.createElement("input");
+            companyIdInput.type = "hidden";
+            companyIdInput.name = "company_id";
+            companyIdInput.value = 3; // Pas eventueel aan of maak dynamisch
+
+            form.appendChild(input);
+            form.appendChild(studentIdInput);
+            form.appendChild(companyIdInput);
+
+            form.addEventListener("submit", function (e) {
+                e.preventDefault();
+
+                const formData = new FormData(form);
+
+                fetch("/messages/send", {
+                    method: "POST",
+                    body: formData
+                })
+                    .then(response => {
+                        if (!response.ok) throw new Error("Verzending mislukt");
+                        return response.json();
+                    })
+                    .then(data => {
+                        console.log("Bericht verzonden:", data);
+                        user.messages.push(formData.get("message"));
+                        loadChat(user); // opnieuw laden om het nieuwe bericht te tonen
+                    })
+                    .catch(error => {
+                        console.error("Fout bij verzenden van bericht:", error);
+                        alert("Bericht kon niet verzonden worden.");
+                    });
+            });
+
+            chatWindow.appendChild(form);
+        }
+
+        // Hier gebeurt de fetch correct
+        fetch("http://10.2.160.208/api/students")
+            .then(response => response.json())
+            .then(apiResponse => {
+                console.log("API response:", apiResponse);
+
+                const students = Array.isArray(apiResponse.data)
+                    ? apiResponse.data
+                    : [];
+                if (students.length === 0) {
+                    chatWindow.innerHTML = "<p>No users found.</p>";
+                }
+
+                const users = students.map((student, index) => ({
+                    name: `${student.first_name} ${student.last_name}`.trim() || `Student ${index + 1}`,
+                    photo: `https://i.pravatar.cc/40?img=${(index % 70) + 1}`,
+                    messages: [`Hi! I'm ${student.first_name}`]
+                }));
+
+                users.forEach(user => {
+                    const button = document.createElement("div");
+                    button.classList.add("user");
+                    button.innerHTML = `<img src="${user.photo}" class="avatar"> ${user.name}`;
+                    button.addEventListener("click", () => loadChat(user));
+                    chatList.appendChild(button);
+                });
+
+                messageContainer.appendChild(chatList);
+                messageContainer.appendChild(chatWindow);
+                content.appendChild(messageContainer);
+
+                if (users.length > 0) {
+                    loadChat(users[0]);
+                }
+            })
+            .catch(error => {
+                console.error("Fout bij ophalen studenten:", error);
+                chatList.innerHTML += `<p>Kon gebruikers niet laden.<br>${error.message}</p>`;
+                messageContainer.appendChild(chatList);
+                messageContainer.appendChild(chatWindow);
+                content.appendChild(messageContainer);
+            });
+    });
 
 
     /* calendar page */
@@ -251,7 +286,7 @@ settingsBtn.addEventListener("click", () => {
         navButton.addEventListener("click", () => {
             activeSettingsTab = item.id;
             loadSettingsContent(item.id, settingsContent);
-            
+
             // Update active nav item
             document.querySelectorAll(".settings-nav-item").forEach(nav => {
                 nav.classList.remove("active");
@@ -459,7 +494,7 @@ function showNotification(message, type = 'info') {
     const notification = document.createElement('div');
     notification.classList.add('notification', type);
     notification.textContent = message;
-    
+
     // Style the notification
     notification.style.cssText = `
         position: fixed;
@@ -472,7 +507,7 @@ function showNotification(message, type = 'info') {
         z-index: 1000;
         animation: slideIn 0.3s ease-out;
     `;
-    
+
     if (type === 'success') {
         notification.style.backgroundColor = '#22c55e';
     } else if (type === 'danger') {
@@ -480,9 +515,9 @@ function showNotification(message, type = 'info') {
     } else {
         notification.style.backgroundColor = '#3b82f6';
     }
-    
+
     document.body.appendChild(notification);
-    
+
     setTimeout(() => {
         notification.style.animation = 'slideOut 0.3s ease-in';
         setTimeout(() => notification.remove(), 300);

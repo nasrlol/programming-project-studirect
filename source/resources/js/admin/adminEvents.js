@@ -117,5 +117,7 @@ window.addEventListener("load", () => {
         setTimeout(() => {
             document.getElementById('serverResponse').innerHTML = ''
         }, 5000)
+    fixAppointment()
+    sortAppointment()
 }
 );

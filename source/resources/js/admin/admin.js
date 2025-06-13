@@ -310,9 +310,7 @@ for (let element of document.getElementsByClassName('delete')) {
 export function setViewFunctionality () {
     for (let element of document.getElementsByClassName('moreInfo')) {
     element.addEventListener('click', () => {
-        console.log(element)
         const id = element.id.substring(4);
-        console.log(id)
         //Eye icon has class studentEye or companyEye to make sure right item is called
         const isStudent = (Array.from(element.classList).includes('studentEye'))
         //gets relevant list, based on if it's a student or a company
@@ -322,7 +320,6 @@ export function setViewFunctionality () {
 
         //use filter to find the user we want, based on ID 
         const user =  list.filter(obj => obj.id == id)[0]
-        console.log(user)
         const response = document.createElement('div');
         response.innerHTML = `Naam: ${user.name}<br>`
         response.innerHTML += `Email: ${user.mail}<br>`

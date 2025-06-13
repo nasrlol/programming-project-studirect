@@ -300,6 +300,7 @@ for (let element of document.getElementsByClassName('delete')) {
             form.action = '/companies/' + user.id;
        }
        else {
+            form.action = '/students/' + user.id;
             form.style.display = 'block'
         }
         form.style.display = 'block'

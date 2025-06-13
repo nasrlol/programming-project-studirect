@@ -159,14 +159,14 @@ class StudentController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id): JsonResponse
+    public function destroy(string $id)
     {
         $response = Http::delete("{$this->studentsApiUrl}/{$id}");
 
         if ($response->successful()) {
-            return response()->json($response->json());
+            return redirect()->back()->with('success', 'Account succesvol verwijderd!');
         } else {
-            return response()->json(['message' => 'Student not found'], 404);
+            return redirect()->back()->with('error', 'Fout bij verwijderen account. Contacteer de beheerder.');
         }
     }
 }

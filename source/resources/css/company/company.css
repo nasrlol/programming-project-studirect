@@ -118,6 +118,7 @@ header {
   width: 25%;
   border-right: 2px solid #333;
   padding: 10px;
+  overflow: auto;
 }
 
 .chat-list h3 {

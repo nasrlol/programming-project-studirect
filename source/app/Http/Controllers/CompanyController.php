@@ -66,7 +66,7 @@ class CompanyController extends Controller
             'password2' => 'required|same:password1'
             ]);
         } catch (\Exception $e) {
-            return redirect()->back()->with('error', 'Validatie mislukt: ' . $e->getMessage());
+            return redirect()->back()->with('error', 'Validatie mislukt');
         }
         
 
@@ -92,10 +92,10 @@ try {
         return redirect()->back()->with('success', 'Bedrijf succesvol toegevoegd!');
     } else {
         // Voeg de response body toe aan de foutmelding voor debugging
-        return redirect()->back()->with('error', 'Fout bij toevoegen bedrijf: ' . $response->body());
+        return redirect()->back()->with('error', 'aanmaken account mislukt, contacteer de beheerder');
     }
 } catch (\Exception $e) {
-    return redirect()->back()->with('error', 'Er is een fout opgetreden: ' . $e->getMessage());
+    return redirect()->back()->with('error', 'Er is een fout opgetreden');
 }
     }
 

@@ -10,10 +10,9 @@
     <span id='serverResponse'>
     @if ( session('error'))
         {{ session('error') }}
-    @endif
-
-    @if ( session('success'))
+    @elseif ( session('success'))
         {{ session('success') }}
+    
     @endif
     </span>
     <div id='main-container'>
@@ -99,8 +98,8 @@
                     <!-- Action to add a company must be added-->
                     <form method='post' action="{{ route('students.create') }}">
                         @csrf <!-- CSRF token for security (concept genomen via Github Copilot)-->
-                        <input class='addInput' type='text'name='firstName' placeholder='Voornaam'>
-                        <input class='addInput' type='text'name='lastName' placeholder='Achternaam'>
+                        <input class='addInput' type='text'name='first_name' placeholder='Voornaam'>
+                        <input class='addInput' type='text'name='last_name' placeholder='Achternaam'>
                         <input class='addInput' type='text' name='email' placeholder='E-mail'>
                         <div class='addInput' style='border: solid; border-width:1px'>
                             <label for='graduation_track'>Type diploma</label>

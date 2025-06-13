@@ -9,6 +9,7 @@ Route::get('/', [StudentController::class, 'index']);
 
 Route::get('/students', [StudentController::class, 'index']);
 //Route::post('/students', [StudentController::class, 'store']);
+Route::post('/students', [StudentController::class, 'store'])->name('students.create');
 
 Route::get('/company', function () {
     return view('company.company'); // zoekt 'resources/views/home.blade.php'
@@ -21,5 +22,3 @@ Route::delete('/companies/{id}', [CompanyController::class, 'destroy'])->name('c
 
 
 Route::get('/admin', [AdminController::class, 'show']);
-//route for admin to add a student
-Route::post('/admin', [AdminController::class, 'storeS'])->name('students.create');

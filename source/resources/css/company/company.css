@@ -20,8 +20,12 @@ header {
   align-items: center;
 }
 
+.center{
+  gap: 1.5rem
+}
+
 .left img {
-  height: 150px;
+  height: 80px;
   margin-right: 8px;
 }
 .center button,
@@ -29,9 +33,9 @@ header {
   background-color: transparent;
   text-decoration: none;
   font-weight: 500;
-  font-size: x-large;
+  font-size: 1.2rem;
   color: white;
-  padding: 1rem;
+  
   border-radius: 4px;
   cursor: pointer;
   display: flex;

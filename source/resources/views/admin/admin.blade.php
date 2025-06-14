@@ -7,12 +7,14 @@
     <title>document</title>
 </head>
 <body>
-
-    <form method='POST' action='../students/3'>
+    <!--Form for testing purposes, will be removed later-->
+    <form method='POST' action='../students/19'>
         @csrf
         @method('PUT')
-        <input type='text' name='first_name'>
-        <input type='text' name='last_name'>
+        <lavbel for='first_name'>Voornaam</label>
+        <input type='text' name='first_name'><br>
+        <label for='last_name'>Achternaam</label>
+        <input type='text' name='last_name'><br>
         <input type='submit'>
     </form>
 

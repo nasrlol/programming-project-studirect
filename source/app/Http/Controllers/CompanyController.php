@@ -11,6 +11,36 @@ class CompanyController extends Controller
 {
     private string $apiUrl = 'http://10.2.160.208/api/companies/';
 
+    //Index function to shown on the company page, takes the ID and shows the company 
+    public function index(string $id): View
+    {
+        $response = Http::get("{$this->apiUrl}/{$id}");
+        if (!$response->successful()) {
+            return view('notfound', ['message' => 'Dit bedrijf lijkt niet te bestaan (error code 404). Contacteer de beheerder van de site voor meer informatie']);
+        } 
+
+        $company = $response->json('data');
+
+        return view('company.company', [
+            'company' => $company
+        ]);
+    }
+    //Test Function to show a company, this will be replaced by the index function.
+    public function indexTest(): View
+    {
+        $response = Http::get("{$this->apiUrl}3");
+        if (!$response->successful()) {
+            return view('notfound', ['message' => 'Dit bedrijf lijkt niet te bestaan (error code 404). Contacteer de beheerder van de site voor meer informatie']);
+        } 
+
+        $company = $response->json('data');
+
+
+        return view('company.company', [
+            'company' => $company
+        ]);
+    }
+
     public function show(): View
 {
     try {

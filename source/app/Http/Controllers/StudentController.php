@@ -14,7 +14,7 @@ class StudentController extends Controller
     private string $companiesApiUrl = 'http://10.2.160.208/api/companies';
 
     //Function that shows only one specific student, and all of the companies. To be used by the students page
-    public function show(string $id)
+    public function index(string $id)
     {
         $response = Http::get("{$this->studentsApiUrl}/{$id}");
         //If the student is not found, user can go back to welcome page
@@ -30,6 +30,35 @@ class StudentController extends Controller
         }
 
         $companies = $response->json('data');
+
+        return view('student.html.student', [
+            'student' => $student,
+            'companies' => $companies
+        ]);
+
+    }
+
+     public function indexTest()
+    {
+        $response = Http::get("{$this->studentsApiUrl}/3");
+        //If the student is not found, user can go back to welcome page
+        if (!$response->successful()) {
+            return view('notfound', ['message' => 'Deze student lijkt niet te bestaan (error code 404). Contacteer de beheerder van de site voor meer informatie']);
+        } 
+        //One student exists, so Array just consists of all the keys and their values
+        $student = $response->json('data');
+
+        $response = Http::get($this->companiesApiUrl);
+        if (!$response->successful()) {
+            return view('notfound', ['message' => 'Technisch probleem bij ophalen server (error code 404). Contacteer de beheerder van de site voor meer informatie']);
+        }
+
+        $companies = $response->json('data');
+
+        return view('student.html.student', [
+            'student' => $student,
+            'companies' => $companies
+        ]);
 
     }
 
@@ -114,10 +143,7 @@ class StudentController extends Controller
 
             if ($response->successful()) {
                 return redirect()->back()->with('success', 'Account succesvol aangemaakt!');
-            } else {
-        // Voeg de response body toe aan de foutmelding voor debugging
-        return redirect()->back()->with('error', 'Fout bij aanmaken account: ' . $response->body());
-    }
+    } 
 } catch (\Exception $e) {
     return redirect()->back()->with('error', 'Er is een fout opgetreden: ' . $e->getMessage());
 }
@@ -150,11 +176,9 @@ class StudentController extends Controller
 
         $data = array_merge($current, $validated);
 
-        // Prevent sending the (already hashed) password if not updating
-        if (!isset($validated['password'])) {
-            unset($data['password']);
-        }
+        //Password hashing issue, please fix
 
+        $response = Http::put("{$this->studentsApiUrl}/{$id}", $data);
         $response = Http::put("{$this->studentsApiUrl}/{$id}", $data);
 
         return redirect()->back()->with('success', 'Account succesvol aangepast');

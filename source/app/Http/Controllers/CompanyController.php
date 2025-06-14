@@ -26,6 +26,16 @@ class CompanyController extends Controller
         $appointments = $response->json('data');
         $appointments = collect($appointments)->where('company_id', $id)->all();
 
+        //Gives names to the ID's
+        foreach ($appointments as &$appointment) {
+            //translate student and company id to names
+            $appointment['student_name'] = $this->translateStudent($appointment['student_id']);
+
+            
+            $appointment['company_name'] = $this->translateCompany($appointment['company_id']);
+        }
+
+
         return view('company.company', [
             'company' => $company,
             'appointments' => $appointments
@@ -46,6 +56,16 @@ class CompanyController extends Controller
         $response = Http::get("{$this->appointmentApiUrl}");
         $appointments = $response->json('data');
         $appointments = collect($appointments)->where('company_id', $id)->all();
+
+        //Gives names to the ID's
+        foreach ($appointments as &$appointment) {
+            //translate student and company id to names
+            $appointment['student_name'] = $this->translateStudent($appointment['student_id']);
+
+            
+            $appointment['company_name'] = $this->translateCompany($appointment['company_id']);
+        }
+
 
         return view('company.company', [
             'company' => $company,
@@ -75,6 +95,8 @@ class CompanyController extends Controller
             return view('voorbeeld.index', ['error' => 'API niet beschikbaar', 'students' => []]);
         }
         $appointments = $response->json('data');
+        
+        dd($appointments);
 
         return view('/admin/admin', [
             'students' => $students, 
@@ -82,7 +104,7 @@ class CompanyController extends Controller
             'appointments' => $appointments
     ]);
     } catch (\Exception $e) {
-        dd('failure');
+        dd('failure: ' . $e->getMessage());
         return view('voorbeeld.index', ['error' => 'Er is een fout opgetreden', 'students' => []]);
     }
 }

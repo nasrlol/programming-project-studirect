@@ -36,6 +36,16 @@ class StudentController extends Controller
         //Checks which appointments belong to the student
         $appointments = collect($appointments)->where('student_id', $id)->all();
 
+        //Gives names to the ID's
+        foreach ($appointments as &$appointment) {
+            //translate student and company id to names
+            $appointment['student_name'] = $this->translateStudent($appointment['student_id']);
+
+            
+            $appointment['company_name'] = $this->translateCompany($appointment['company_id']);
+        }
+
+
         return view('student.html.student', [
             'student' => $student,
             'companies' => $companies,
@@ -67,6 +77,15 @@ class StudentController extends Controller
         $appointments = $response->json('data');
         //Checks which appointments belong to the student
         $appointments = collect($appointments)->where('student_id', $id)->all();
+
+        //Gives names to the ID's
+        foreach ($appointments as &$appointment) {
+            //translate student and company id to names
+            $appointment['student_name'] = $this->translateStudent($appointment['student_id']);
+
+            
+            $appointment['company_name'] = $this->translateCompany($appointment['company_id']);
+        }
 
         return view('student.html.student', [
             'student' => $student,

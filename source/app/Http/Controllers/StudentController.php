@@ -10,8 +10,7 @@ use Illuminate\Support\Facades\Http;
 
 class StudentController extends Controller
 {
-    private string $studentsApiUrl = 'http://10.2.160.208/api/students';
-    private string $companiesApiUrl = 'http://10.2.160.208/api/companies';
+    
 
     //Function that shows only one specific student, and all of the companies. To be used by the students page
     public function index(string $id)
@@ -31,16 +30,34 @@ class StudentController extends Controller
 
         $companies = $response->json('data');
 
+        $response = Http::get("{$this->appointmentApiUrl}");
+        //get all appointments where the student is involved
+        $appointments = $response->json('data');
+        //Checks which appointments belong to the student
+        $appointments = collect($appointments)->where('student_id', $id)->all();
+
+        //Gives names to the ID's
+        foreach ($appointments as &$appointment) {
+            //translate student and company id to names
+            $appointment['student_name'] = $this->translateStudent($appointment['student_id']);
+
+            
+            $appointment['company_name'] = $this->translateCompany($appointment['company_id']);
+        }
+
+
         return view('student.html.student', [
             'student' => $student,
-            'companies' => $companies
+            'companies' => $companies,
+            'appointments' => $appointments
         ]);
 
     }
 
      public function indexTest()
     {
-        $response = Http::get("{$this->studentsApiUrl}/3");
+        $id = 3;
+        $response = Http::get("{$this->studentsApiUrl}/{$id}");
         //If the student is not found, user can go back to welcome page
         if (!$response->successful()) {
             return view('notfound', ['message' => 'Deze student lijkt niet te bestaan (error code 404). Contacteer de beheerder van de site voor meer informatie']);
@@ -54,15 +71,31 @@ class StudentController extends Controller
         }
 
         $companies = $response->json('data');
+        //get all appointments where the student is involved
+        $response = Http::get("{$this->appointmentApiUrl}");
+
+        $appointments = $response->json('data');
+        //Checks which appointments belong to the student
+        $appointments = collect($appointments)->where('student_id', $id)->all();
+
+        //Gives names to the ID's
+        foreach ($appointments as &$appointment) {
+            //translate student and company id to names
+            $appointment['student_name'] = $this->translateStudent($appointment['student_id']);
+
+            
+            $appointment['company_name'] = $this->translateCompany($appointment['company_id']);
+        }
 
         return view('student.html.student', [
             'student' => $student,
-            'companies' => $companies
+            'companies' => $companies,
+            'appointments' => $appointments
         ]);
 
     }
 
-    //Function that shows all students
+    //Function that shows all students. To be used by the admin page
     public function showAll()
 {
     try {

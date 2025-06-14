@@ -1,5 +1,5 @@
 'use strict'
-import { dashboard, switchDisplay, popUp, removePopUp, createSearch, createTable, fixAppointment, sortAppointment, data, copyArray, filterArray, setDeleteFunctionality, setViewFunctionality, removeForms } from './admin.js'
+import { dashboard, switchDisplay, popUp, removePopUp, createSearch, createTable, sortAppointment, data, copyArray, filterArray, setDeleteFunctionality, setViewFunctionality, removeForms } from './admin.js'
 
 //events
 document.getElementById("nav-dashboard").addEventListener("click", () => {
@@ -117,7 +117,6 @@ window.addEventListener("load", () => {
         setTimeout(() => {
             document.getElementById('serverResponse').innerHTML = ''
         }, 5000)
-    fixAppointment()
     sortAppointment()
 }
 );

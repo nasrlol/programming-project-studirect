@@ -9,64 +9,94 @@ use Illuminate\Support\Facades\Http;
 
 class CompanyController extends Controller
 {
-    private string $apiUrl = 'http://10.2.160.208/api/companies/';
+    //companiesApiUrls in parent class
 
     //Index function to shown on the company page, takes the ID and shows the company 
     public function index(string $id): View
     {
-        $response = Http::get("{$this->apiUrl}/{$id}");
+        $response = Http::get("{$this->companiesApiUrl}/{$id}");
         if (!$response->successful()) {
             return view('notfound', ['message' => 'Dit bedrijf lijkt niet te bestaan (error code 404). Contacteer de beheerder van de site voor meer informatie']);
         } 
 
         $company = $response->json('data');
 
+        //get all appointments where the company is involved
+        $response = Http::get("{$this->appointmentApiUrl}");
+        $appointments = $response->json('data');
+        $appointments = collect($appointments)->where('company_id', $id)->all();
+
+        //Gives names to the ID's
+        foreach ($appointments as &$appointment) {
+            //translate student and company id to names
+            $appointment['student_name'] = $this->translateStudent($appointment['student_id']);
+
+            
+            $appointment['company_name'] = $this->translateCompany($appointment['company_id']);
+        }
+
+
         return view('company.company', [
-            'company' => $company
+            'company' => $company,
+            'appointments' => $appointments
         ]);
     }
     //Test Function to show a company, this will be replaced by the index function.
     public function indexTest(): View
     {
-        $response = Http::get("{$this->apiUrl}3");
+        $id = 3; //This is a test company, will be replaced by the index function
+        $response = Http::get("{$this->companiesApiUrl}/{$id}");
         if (!$response->successful()) {
             return view('notfound', ['message' => 'Dit bedrijf lijkt niet te bestaan (error code 404). Contacteer de beheerder van de site voor meer informatie']);
         } 
 
         $company = $response->json('data');
 
+        //get all appointments where the company is involved
+        $response = Http::get("{$this->appointmentApiUrl}");
+        $appointments = $response->json('data');
+        $appointments = collect($appointments)->where('company_id', $id)->all();
+
+        //Gives names to the ID's
+        foreach ($appointments as &$appointment) {
+            //translate student and company id to names
+            $appointment['student_name'] = $this->translateStudent($appointment['student_id']);
+
+            
+            $appointment['company_name'] = $this->translateCompany($appointment['company_id']);
+        }
+
 
         return view('company.company', [
-            'company' => $company
+            'company' => $company,
+            'appointments' => $appointments
         ]);
     }
 
     public function show(): View
 {
     try {
-        $apiStudents = $this->apiUrl . 'students';
-        $apiCompanies = $this->apiUrl . 'companies';
-        $apiAppointments = $this->apiUrl . 'appointments';
-
-        $response = Http::get($apiStudents);
+        $response = Http::get($studentsApiUrl);
         if (!$response->successful()) {
             return view('voorbeeld.index', ['error' => 'API niet beschikbaar', 'students' => []]);
         }
         $students = $response->json('data');
 
         //Second response for companies
-        $response = Http::get($apiCompanies);
+        $response = Http::get($companiesApiUrl);
         if (!$response->successful()) {
             return view('voorbeeld.index', ['error' => 'API niet beschikbaar', 'students' => []]);
         }
         $companies = $response->json('data');
 
         //Final response for apointments
-        $response = Http::get($apiAppointments);
+        $response = Http::get($appointmentApiUrl);
         if (!$response->successful()) {
             return view('voorbeeld.index', ['error' => 'API niet beschikbaar', 'students' => []]);
         }
         $appointments = $response->json('data');
+        
+        dd($appointments);
 
         return view('/admin/admin', [
             'students' => $students, 
@@ -74,7 +104,7 @@ class CompanyController extends Controller
             'appointments' => $appointments
     ]);
     } catch (\Exception $e) {
-        dd('failure');
+        dd('failure: ' . $e->getMessage());
         return view('voorbeeld.index', ['error' => 'Er is een fout opgetreden', 'students' => []]);
     }
 }
@@ -126,7 +156,7 @@ class CompanyController extends Controller
         unset($validated['password1']);
     
 try {
-    $response = Http::post($this->apiUrl, $validated);
+    $response = Http::post($this->companiesApiUrl, $validated);
 
     return redirect()->back()->with('success', 'Bedrijf succesvol toegevoegd!');
 
@@ -162,7 +192,7 @@ try {
             return redirect()->back()->with('error', 'Validatie mislukt: ' . $e->getMessage());
         }
         //Current data is taken and merged with the validated data
-        $current = Http::get("{$this->apiUrl}/{$id}");
+        $current = Http::get("{$this->companiesApiUrl}/{$id}");
         $current = $current->json('data');
 
         $data = array_merge($current, $validated);
@@ -172,7 +202,7 @@ try {
 
         //Password hashing issue, please fix
 
-        $response = Http::patch("{$this->apiUrl}/{$id}", $data);
+        $response = Http::patch("{$this->companiesApiUrl}/{$id}", $data);
 
         if (!$response->successful()) {
             return redirect()->back()->with('error', 'Er is een fout opgetreden bij het bijwerken van het account.');
@@ -190,7 +220,7 @@ try {
      */ 
     public function destroy(string $id)
     {
-        $response = Http::delete("{$this->apiUrl}{$id}");
+        $response = Http::delete("{$this->companiesApiUrl}{$id}");
 
 
         return redirect()->back()->with('success', 'Bedrijf succesvol verwijderd!');

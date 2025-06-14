@@ -7,12 +7,20 @@
     <title>document</title>
 </head>
 <body>
+
+    <form method='POST' action='../students/3'>
+        @csrf
+        @method('PUT')
+        <input type='text' name='first_name'>
+        <input type='text' name='last_name'>
+        <input type='submit'>
+    </form>
+
     <span id='serverResponse'>
     @if ( session('error'))
-        {{ session('error') }}
+        {{session('error') }}
     @elseif ( session('success'))
         {{ session('success') }}
-    
     @endif
     </span>
     <div id='main-container'>

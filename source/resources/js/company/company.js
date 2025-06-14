@@ -1,4 +1,19 @@
 console.log('test');
+
+function getTimeRowIndex(time) {
+    const times = ["09:00", "09:15", "09:30", "10:00", "10:30", "12:30", "12:45"];
+    return times.indexOf(time) + 1; // +1 omdat row 0 headers zijn
+}
+
+function setAppointment(rowIndex, colIndex, text) {
+    const table = document.getElementById("calendar-table");
+    if (!table) return;
+    const row = table.rows[rowIndex];
+    if (row && row.cells[colIndex]) {
+        row.cells[colIndex].innerText = text;
+    }
+}
+
 function loadHomeContent() {
     content.innerHTML = "";
     const mainContainer = document.createElement("div");
@@ -12,10 +27,7 @@ function loadHomeContent() {
     notificationSection.appendChild(title);
 
     const notifications = [
-        "Steven scheduled a speeddate",
-        "Arda swiped you",
-        "Dries has an appointment in 5 minutes",
-        "..."
+        "momenteel geen meldingen"
     ];
 
     notifications.forEach(notification => {
@@ -28,7 +40,7 @@ function loadHomeContent() {
     mapSection.classList.add("map");
 
     const img = document.createElement("img");
-    img.src = "/src/plattegrondvb.png";
+    img.src = "/source/resources/public/plattegrondvb.png";
     img.alt = "venue map";
     mapSection.appendChild(img);
 
@@ -157,49 +169,86 @@ messageBtn.addEventListener("click", () => {
         setActiveButton("calendarBtn");
         content.innerHTML = "";
 
-        const calendarContainer = document.createElement("div");
-        calendarContainer.classList.add("calendar-container");
+        
+    const calendarContainer = document.createElement("div");
+    calendarContainer.classList.add("calendar-container");
 
-        const appointmentList = document.createElement("div");
-        appointmentList.classList.add("appointment-list");
+    const appointmentList = document.createElement("div");
+    appointmentList.classList.add("appointment-list");
+    calendarContainer.appendChild(appointmentList);
 
-        appointmentList.innerHTML = `
-            <h3>appointments:</h3>
-            <p>12:30</p>
-            <ul><li>Alexandra</li></ul>
-            <p>12:45</p>
-            <ul><li>Steven</li></ul>
-        `;
+    const calendarTable = document.createElement("div");
+    calendarTable.classList.add("calendar-table");
+    calendarTable.innerHTML = `
+        <table id="calendar-table">
+            <tr><th>Time slot</th><th>Monday</th><th>Tuesday</th><th>Wednesday</th><th>Thursday</th><th>Friday</th></tr>
+            <tr><td>09:00</td><td>–</td><td>–</td><td>–</td><td>–</td><td>–</td></tr>
+            <tr><td>09:15</td><td>–</td><td>–</td><td>–</td><td>–</td><td>–</td></tr>
+            <tr><td>09:30</td><td>–</td><td>–</td><td>–</td><td>–</td><td>–</td></tr>
+            <tr><td>10:00</td><td>–</td><td>–</td><td>–</td><td>–</td><td>–</td></tr>
+            <tr><td>10:30</td><td>–</td><td>–</td><td>–</td><td>–</td><td>–</td></tr>
+            <tr><td>12:30</td><td>–</td><td>–</td><td>–</td><td>–</td><td>–</td></tr>
+            <tr><td>12:45</td><td>–</td><td>–</td><td>–</td><td>–</td><td>–</td></tr>
+        </table>
+    `;
+    calendarContainer.appendChild(calendarTable);
+    content.appendChild(calendarContainer);
 
-        const tableHTML = `
-            <table id="calendar-table">
-                <tr><th>Time slot</th><th>Monday</th><th>Tuesday</th><th>Wednesday</th><th>Thursday</th><th>Friday</th></tr>
-                <tr><td>09:00</td><td>–</td><td>–</td><td>–</td><td>–</td><td>–</td></tr>
-                <tr><td>09:15</td><td>–</td><td>–</td><td>–</td><td>–</td><td>–</td></tr>
-                <tr><td>09:30</td><td>–</td><td>–</td><td>–</td><td>–</td><td>–</td></tr>
-                <tr><td>12:30</td><td>–</td><td>–</td><td>–</td><td>–</td><td>–</td></tr>
-                <tr><td>12:45</td><td>–</td><td>–</td><td>–</td><td>–</td><td>–</td></tr>
-            </table>
-        `;
+fetch("http://10.2.160.208/api/appointments")
+    .then(response => response.json())
+    .then(async (response) => {
+        const appointments = response.data;
+        appointmentList.innerHTML = "<h3>appointments:</h3>";
 
-        const calendarTable = document.createElement("div");
-        calendarTable.classList.add("calendar-table");
-        calendarTable.innerHTML = tableHTML;
+        for (const appointment of appointments) {
+            const time = appointment.time_slot.split(" - ")[0]; // "09:00"
+            const studentId = appointment.student_id;
 
-        calendarContainer.appendChild(appointmentList);
-        calendarContainer.appendChild(calendarTable);
-        content.appendChild(calendarContainer);
+            let studentName = `Student ${studentId}`;
+
+            // Probeer student op te halen
+            try {
+                const studentRes = await fetch(`http://10.2.160.208/api/students/${studentId}`);
+                const studentJson = await studentRes.json();
+
+                if (studentJson.data) {
+                    const s = studentJson.data;
+                    studentName = `${s.first_name ?? ""} ${s.last_name ?? ""}`.trim();
+                }
+            } catch (error) {
+                console.warn(`Kon student ${studentId} niet ophalen`);
+            }
+
+            // Voeg toe aan linker lijst
+            let group = appointmentList.querySelector(`p[data-time='${time}']`);
+            if (!group) {
+                group = document.createElement("p");
+                group.dataset.time = time;
+                group.textContent = time;
+                appointmentList.appendChild(group);
+
+                const ul = document.createElement("ul");
+                ul.dataset.time = time;
+                appointmentList.appendChild(ul);
+            }
+
+            const ul = appointmentList.querySelector(`ul[data-time='${time}']`);
+            const li = document.createElement("li");
+            li.textContent = studentName;
+            ul.appendChild(li);
+
+            // Zet in de tabel
+            const rowIndex = getTimeRowIndex(time);
+            const colIndex = 1; // Maandag
+            setAppointment(rowIndex, colIndex, studentName);
+        }
+    })
+    .catch(error => {
+        console.error("Fout bij ophalen van afspraken:", error);
+        appointmentList.innerHTML += "<p>Kon afspraken niet laden.</p>";
     });
-});
-
-function setAppointment(rowIndex, colIndex, text) {
-    const table = document.getElementById("calendar-table");
-    if (!table) return;
-    const row = table.rows[rowIndex];
-    if (row && row.cells[colIndex]) {
-        row.cells[colIndex].innerText = text;
-    }
-}
+    });
+    });
 
 function setActiveButton(activeId) {
     const buttons = document.querySelectorAll(".center button, .right button");
@@ -302,10 +351,7 @@ settingsBtn.addEventListener("click", () => {
                     Email:
                     <input type="email" id="email" value="" placeholder="Enter your email">
                 </label>
-                <label>
-                    Phone:
-                    <input type="tel" id="phone" value="" placeholder="Enter your phone number">
-                </label>
+                
                 <label>
                     LinkedIn:
                     <input type="url" id="linkedin" value="" placeholder="Enter your LinkedIn URL">
@@ -340,20 +386,8 @@ settingsBtn.addEventListener("click", () => {
                     <span class="slider"></span>
                 </label>
             </div>
-            <div class="toggle-row">
-                <span>Push Notifications</span>
-                <label class="toggle-switch">
-                    <input type="checkbox" id="pushNotif">
-                    <span class="slider"></span>
-                </label>
-            </div>
-            <div class="toggle-row">
-                <span>SMS Notifications</span>
-                <label class="toggle-switch">
-                    <input type="checkbox" id="smsNotif" checked>
-                    <span class="slider"></span>
-                </label>
-            </div>
+            
+            
             <div class="toggle-row">
                 <span>Meeting Reminders</span>
                 <label class="toggle-switch">
@@ -380,20 +414,8 @@ settingsBtn.addEventListener("click", () => {
                     <span class="slider"></span>
                 </label>
             </div>
-            <div class="toggle-row">
-                <span>Allow Contact Info Sharing</span>
-                <label class="toggle-switch">
-                    <input type="checkbox" id="contactSharing" checked>
-                    <span class="slider"></span>
-                </label>
-            </div>
-            <div class="toggle-row">
-                <span>Data Analytics</span>
-                <label class="toggle-switch">
-                    <input type="checkbox" id="analytics">
-                    <span class="slider"></span>
-                </label>
-            </div>
+            
+            
             <button class="btn primary" onclick="showNotification('Privacy settings updated!', 'success')">Save Settings</button>
         `;
 
@@ -440,8 +462,7 @@ settingsBtn.addEventListener("click", () => {
             </div>
             <button class="btn secondary" onclick="showNotification('Password reset link sent to your email!', 'info')">Change Password</button>
             <button class="btn secondary" onclick="downloadAccountData()">Download My Data</button>
-            <button class="btn danger" onclick="confirmDeleteAccount()">Delete Account</button>
-        `;
+        `;/* <button class="btn danger" onclick="confirmDeleteAccount()">Delete Account</button> disable account hiervan maken*/
 
         container.appendChild(settingsCard);
     }

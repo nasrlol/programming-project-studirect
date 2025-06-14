@@ -5,12 +5,22 @@ function getTimeRowIndex(time) {
     return times.indexOf(time) + 1; // +1 omdat row 0 headers zijn
 }
 
+function getDayColumnIndexFromDateString(dateString) {
+    const day = new Date(dateString).getDay(); // 0 = zondag
+    return day >= 1 && day <= 5 ? day : 1; // Beperk tot ma-vr, fallback = maandag
+}
+
 function setAppointment(rowIndex, colIndex, text) {
     const table = document.getElementById("calendar-table");
     if (!table) return;
     const row = table.rows[rowIndex];
     if (row && row.cells[colIndex]) {
-        row.cells[colIndex].innerText = text;
+        const current = row.cells[colIndex].innerText.trim();
+        if (current === "–" || current === "") {
+            row.cells[colIndex].innerText = text;
+        } else {
+            row.cells[colIndex].innerText += "\n" + text;
+        }
     }
 }
 
@@ -69,98 +79,98 @@ document.addEventListener("DOMContentLoaded", () => {
     });
 
     /*message page */
-messageBtn.addEventListener("click", () => {
-    console.log("Clicked message button");
-    setActiveButton("messageBtn");
-    content.innerHTML = "";
+    messageBtn.addEventListener("click", () => {
+        console.log("Clicked message button");
+        setActiveButton("messageBtn");
+        content.innerHTML = "";
 
-    const messageContainer = document.createElement("div");
-    messageContainer.classList.add("message-container");
+        const messageContainer = document.createElement("div");
+        messageContainer.classList.add("message-container");
 
-    const chatList = document.createElement("div");
-    chatList.classList.add("chat-list");
+        const chatList = document.createElement("div");
+        chatList.classList.add("chat-list");
 
-    const chatTitle = document.createElement("h3");
-    chatTitle.textContent = "messages:";
-    chatList.appendChild(chatTitle);
+        const chatTitle = document.createElement("h3");
+        chatTitle.textContent = "messages:";
+        chatList.appendChild(chatTitle);
 
-    const chatWindow = document.createElement("div");
-    chatWindow.classList.add("chat-window");
+        const chatWindow = document.createElement("div");
+        chatWindow.classList.add("chat-window");
 
-    function loadChat(user) {
-        chatWindow.innerHTML = "";
+        function loadChat(user) {
+            chatWindow.innerHTML = "";
 
-        const name = document.createElement("div");
-        name.classList.add("chat-name");
-        name.innerHTML = `<img src="${user.photo}" class="avatar"> ${user.name}`;
-        chatWindow.appendChild(name);
+            const name = document.createElement("div");
+            name.classList.add("chat-name");
+            name.innerHTML = `<img src="${user.photo}" class="avatar"> ${user.name}`;
+            chatWindow.appendChild(name);
 
-        user.messages.forEach(msg => {
-            const bubble = document.createElement("div");
-            bubble.classList.add("chat-bubble");
-            bubble.textContent = msg;
-            chatWindow.appendChild(bubble);
-        });
-
-        const input = document.createElement("input");
-        input.type = "text";
-        input.placeholder = "type a message";
-        input.classList.add("chat-input");
-
-        input.addEventListener("keydown", e => {
-            if (e.key === "Enter" && input.value.trim() !== "") {
-                const newMessage = input.value;
-                user.messages.push(newMessage);
-                loadChat(user);
-            }
-        });
-
-        chatWindow.appendChild(input);
-    }
-
-    // Hier gebeurt de fetch correct
-    fetch("http://10.2.160.208/api/students")
-        .then(response => response.json())
-       .then(apiResponse => {
-    console.log("API response:", apiResponse);
-
-    const students = Array.isArray(apiResponse.data)
-        ? apiResponse.data
-        : [];
-            if (students.length === 0) {
-                chatWindow.innerHTML = "<p>No users found.</p>";
-            }
-
-            const users = students.map((student, index) => ({
-                name: `${student.first_name} ${student.last_name}`.trim() || `Student ${index + 1}`,
-                photo: `https://i.pravatar.cc/40?img=${(index % 70) + 1}`,
-                messages: [`Hi! I'm ${student.name || "a student"}`]
-            }));
-
-            users.forEach(user => {
-                const button = document.createElement("div");
-                button.classList.add("user");
-                button.innerHTML = `<img src="${user.photo}" class="avatar"> ${user.name}`;
-                button.addEventListener("click", () => loadChat(user));
-                chatList.appendChild(button);
+            user.messages.forEach(msg => {
+                const bubble = document.createElement("div");
+                bubble.classList.add("chat-bubble");
+                bubble.textContent = msg;
+                chatWindow.appendChild(bubble);
             });
 
-            messageContainer.appendChild(chatList);
-            messageContainer.appendChild(chatWindow);
-            content.appendChild(messageContainer);
+            const input = document.createElement("input");
+            input.type = "text";
+            input.placeholder = "type a message";
+            input.classList.add("chat-input");
 
-            if (users.length > 0) {
-                loadChat(users[0]);
-            }
-        })
-        .catch(error => {
-            console.error("Fout bij ophalen studenten:", error);
-            chatList.innerHTML += `<p>Kon gebruikers niet laden.<br>${error.message}</p>`;
-            messageContainer.appendChild(chatList);
-            messageContainer.appendChild(chatWindow);
-            content.appendChild(messageContainer);
-        });
-});
+            input.addEventListener("keydown", e => {
+                if (e.key === "Enter" && input.value.trim() !== "") {
+                    const newMessage = input.value;
+                    user.messages.push(newMessage);
+                    loadChat(user);
+                }
+            });
+
+            chatWindow.appendChild(input);
+        }
+
+        // Hier gebeurt de fetch correct
+        fetch("http://10.2.160.208/api/students")
+            .then(response => response.json())
+            .then(apiResponse => {
+                console.log("API response:", apiResponse);
+
+                const students = Array.isArray(apiResponse.data)
+                    ? apiResponse.data
+                    : [];
+                if (students.length === 0) {
+                    chatWindow.innerHTML = "<p>No users found.</p>";
+                }
+
+                const users = students.map((student, index) => ({
+                    name: `${student.first_name} ${student.last_name}`.trim() || `Student ${index + 1}`,
+                    photo: `https://i.pravatar.cc/40?img=${(index % 70) + 1}`,
+                    messages: [`Hi! I'm ${student.name || "a student"}`]
+                }));
+
+                users.forEach(user => {
+                    const button = document.createElement("div");
+                    button.classList.add("user");
+                    button.innerHTML = `<img src="${user.photo}" class="avatar"> ${user.name}`;
+                    button.addEventListener("click", () => loadChat(user));
+                    chatList.appendChild(button);
+                });
+
+                messageContainer.appendChild(chatList);
+                messageContainer.appendChild(chatWindow);
+                content.appendChild(messageContainer);
+
+                if (users.length > 0) {
+                    loadChat(users[0]);
+                }
+            })
+            .catch(error => {
+                console.error("Fout bij ophalen studenten:", error);
+                chatList.innerHTML += `<p>Kon gebruikers niet laden.<br>${error.message}</p>`;
+                messageContainer.appendChild(chatList);
+                messageContainer.appendChild(chatWindow);
+                content.appendChild(messageContainer);
+            });
+    });
 
 
     /* calendar page */
@@ -169,17 +179,17 @@ messageBtn.addEventListener("click", () => {
         setActiveButton("calendarBtn");
         content.innerHTML = "";
 
-        
-    const calendarContainer = document.createElement("div");
-    calendarContainer.classList.add("calendar-container");
 
-    const appointmentList = document.createElement("div");
-    appointmentList.classList.add("appointment-list");
-    calendarContainer.appendChild(appointmentList);
+        const calendarContainer = document.createElement("div");
+        calendarContainer.classList.add("calendar-container");
 
-    const calendarTable = document.createElement("div");
-    calendarTable.classList.add("calendar-table");
-    calendarTable.innerHTML = `
+        const appointmentList = document.createElement("div");
+        appointmentList.classList.add("appointment-list");
+        calendarContainer.appendChild(appointmentList);
+
+        const calendarTable = document.createElement("div");
+        calendarTable.classList.add("calendar-table");
+        calendarTable.innerHTML = `
         <table id="calendar-table">
             <tr><th>Time slot</th><th>Monday</th><th>Tuesday</th><th>Wednesday</th><th>Thursday</th><th>Friday</th></tr>
             <tr><td>09:00</td><td>–</td><td>–</td><td>–</td><td>–</td><td>–</td></tr>
@@ -191,64 +201,75 @@ messageBtn.addEventListener("click", () => {
             <tr><td>12:45</td><td>–</td><td>–</td><td>–</td><td>–</td><td>–</td></tr>
         </table>
     `;
-    calendarContainer.appendChild(calendarTable);
-    content.appendChild(calendarContainer);
+        calendarContainer.appendChild(calendarTable);
+        content.appendChild(calendarContainer);
 
-fetch("http://10.2.160.208/api/appointments")
-    .then(response => response.json())
-    .then(async (response) => {
-        const appointments = response.data;
-        appointmentList.innerHTML = "<h3>appointments:</h3>";
+        fetch("http://10.2.160.208/api/appointments")
+            .then(response => response.json())
+            .then(async (response) => {
+                const appointments = response.data;
+                appointmentList.innerHTML = "<h3>appointments:</h3>";
 
-        for (const appointment of appointments) {
-            const time = appointment.time_slot.split(" - ")[0]; // "09:00"
-            const studentId = appointment.student_id;
+                for (const appointment of appointments) {
+                    const time = appointment.time_slot.split(" - ")[0]; // "09:00"
+                    const studentId = appointment.student_id;
 
-            let studentName = `Student ${studentId}`;
+                    let studentName = `Student ${studentId}`;
 
-            // Probeer student op te halen
-            try {
-                const studentRes = await fetch(`http://10.2.160.208/api/students/${studentId}`);
-                const studentJson = await studentRes.json();
+                    // Probeer student op te halen
+                    try {
+                        const studentRes = await fetch(`http://10.2.160.208/api/students/${studentId}`);
+                        const studentJson = await studentRes.json();
 
-                if (studentJson.data) {
-                    const s = studentJson.data;
-                    studentName = `${s.first_name ?? ""} ${s.last_name ?? ""}`.trim();
+                        if (studentJson.data) {
+                            const s = studentJson.data;
+                            studentName = `${s.first_name ?? ""} ${s.last_name ?? ""}`.trim();
+                        }
+                    } catch (error) {
+                        console.warn(`Kon student ${studentId} niet ophalen`);
+                    }
+
+                    // Voeg toe aan linker lijst
+                    let group = appointmentList.querySelector(`p[data-time='${time}']`);
+                    if (!group) {
+                        group = document.createElement("p");
+                        group.dataset.time = time;
+                        group.textContent = time;
+                        appointmentList.appendChild(group);
+
+                        const ul = document.createElement("ul");
+                        ul.dataset.time = time;
+                        appointmentList.appendChild(ul);
+                    }
+
+                    const ul = appointmentList.querySelector(`ul[data-time='${time}']`);
+                    const li = document.createElement("li");
+                    li.textContent = studentName;
+                    ul.appendChild(li);
+
+                    // Zet in de tabel
+                    const rowIndex = getTimeRowIndex(time);
+                    const colIndex = getDayColumnIndexFromDateString(appointment.created_at);
+
+// ✅ check of cel al bezet is
+const table = document.getElementById("calendar-table");
+const row = table.rows[rowIndex];
+const cell = row?.cells?.[colIndex];
+
+if (cell && (cell.innerText.trim() === "–" || cell.innerText.trim() === "")) {
+    setAppointment(rowIndex, colIndex, studentName);
+} else {
+    console.log(`Slot al bezet op ${rowIndex}, kolom ${colIndex}`);
+}
+                    
                 }
-            } catch (error) {
-                console.warn(`Kon student ${studentId} niet ophalen`);
-            }
-
-            // Voeg toe aan linker lijst
-            let group = appointmentList.querySelector(`p[data-time='${time}']`);
-            if (!group) {
-                group = document.createElement("p");
-                group.dataset.time = time;
-                group.textContent = time;
-                appointmentList.appendChild(group);
-
-                const ul = document.createElement("ul");
-                ul.dataset.time = time;
-                appointmentList.appendChild(ul);
-            }
-
-            const ul = appointmentList.querySelector(`ul[data-time='${time}']`);
-            const li = document.createElement("li");
-            li.textContent = studentName;
-            ul.appendChild(li);
-
-            // Zet in de tabel
-            const rowIndex = getTimeRowIndex(time);
-            const colIndex = 1; // Maandag
-            setAppointment(rowIndex, colIndex, studentName);
-        }
-    })
-    .catch(error => {
-        console.error("Fout bij ophalen van afspraken:", error);
-        appointmentList.innerHTML += "<p>Kon afspraken niet laden.</p>";
+            })
+            .catch(error => {
+                console.error("Fout bij ophalen van afspraken:", error);
+                appointmentList.innerHTML += "<p>Kon afspraken niet laden.</p>";
+            });
     });
-    });
-    });
+});
 
 function setActiveButton(activeId) {
     const buttons = document.querySelectorAll(".center button, .right button");
@@ -300,7 +321,7 @@ settingsBtn.addEventListener("click", () => {
         navButton.addEventListener("click", () => {
             activeSettingsTab = item.id;
             loadSettingsContent(item.id, settingsContent);
-            
+
             // Update active nav item
             document.querySelectorAll(".settings-nav-item").forEach(nav => {
                 nav.classList.remove("active");
@@ -480,7 +501,7 @@ function showNotification(message, type = 'info') {
     const notification = document.createElement('div');
     notification.classList.add('notification', type);
     notification.textContent = message;
-    
+
     // Style the notification
     notification.style.cssText = `
         position: fixed;
@@ -493,7 +514,7 @@ function showNotification(message, type = 'info') {
         z-index: 1000;
         animation: slideIn 0.3s ease-out;
     `;
-    
+
     if (type === 'success') {
         notification.style.backgroundColor = '#22c55e';
     } else if (type === 'danger') {
@@ -501,9 +522,9 @@ function showNotification(message, type = 'info') {
     } else {
         notification.style.backgroundColor = '#3b82f6';
     }
-    
+
     document.body.appendChild(notification);
-    
+
     setTimeout(() => {
         notification.style.animation = 'slideOut 0.3s ease-in';
         setTimeout(() => notification.remove(), 300);

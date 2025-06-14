@@ -156,8 +156,8 @@ class StudentController extends Controller
     {
         try {
             $validated = $request->validate([
-            'first_name' => 'sometimes|required|string|max:255',
-            'last_name' => 'sometimes|required|string|max:255',
+            'first_name' => 'sometimes|string|max:255',
+            'last_name' => 'sometimes|string|max:255',
             'email' => 'sometimes|required|email',
             'password' => 'sometimes|required|string|min:8',
             'study_direction' => 'sometimes|required|string|max:255',
@@ -165,7 +165,7 @@ class StudentController extends Controller
             'interests' => 'sometimes|required|string',
             'job_preferences' => 'sometimes|required|string',
             'cv' => 'nullable|string',
-            'profile_complete' => 'boolean',
+            'profile_complete' => 'nullable|boolean',
         ]);
         } catch (\Exception $e) {
             return redirect()->back()->with('error', 'Validatie mislukt: ' . $e->getMessage());
@@ -175,11 +175,15 @@ class StudentController extends Controller
         $current = $current->json('data');
 
         $data = array_merge($current, $validated);
+        unset($data['password']); // Remove password field if it is not set in the request
 
         //Password hashing issue, please fix
 
-        $response = Http::put("{$this->studentsApiUrl}/{$id}", $data);
-        $response = Http::put("{$this->studentsApiUrl}/{$id}", $data);
+        $response = Http::patch("{$this->studentsApiUrl}/{$id}", $data);
+
+        if (!$response->successful()) {
+            return redirect()->back()->with('error', 'Er is een fout opgetreden bij het bijwerken van het account.');
+        }
 
         return redirect()->back()->with('success', 'Account succesvol aangepast');
     }
@@ -191,10 +195,6 @@ class StudentController extends Controller
     {
         $response = Http::delete("{$this->studentsApiUrl}/{$id}");
 
-        if ($response->successful()) {
-            return redirect()->back()->with('success', 'Account succesvol verwijderd!');
-        } else {
-            return redirect()->back()->with('error', 'Fout bij verwijderen account. Contacteer de beheerder.');
-        }
+        return redirect()->back()->with('success', 'Account succesvol verwijderd!');
     }
 }

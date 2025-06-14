@@ -11,6 +11,36 @@ class CompanyController extends Controller
 {
     private string $apiUrl = 'http://10.2.160.208/api/companies/';
 
+    //Index function to shown on the company page, takes the ID and shows the company 
+    public function index(string $id): View
+    {
+        $response = Http::get("{$this->apiUrl}/{$id}");
+        if (!$response->successful()) {
+            return view('notfound', ['message' => 'Dit bedrijf lijkt niet te bestaan (error code 404). Contacteer de beheerder van de site voor meer informatie']);
+        } 
+
+        $company = $response->json('data');
+
+        return view('company.company', [
+            'company' => $company
+        ]);
+    }
+    //Test Function to show a company, this will be replaced by the index function.
+    public function indexTest(): View
+    {
+        $response = Http::get("{$this->apiUrl}3");
+        if (!$response->successful()) {
+            return view('notfound', ['message' => 'Dit bedrijf lijkt niet te bestaan (error code 404). Contacteer de beheerder van de site voor meer informatie']);
+        } 
+
+        $company = $response->json('data');
+
+
+        return view('company.company', [
+            'company' => $company
+        ]);
+    }
+
     public function show(): View
 {
     try {
@@ -34,7 +64,6 @@ class CompanyController extends Controller
         //Final response for apointments
         $response = Http::get($apiAppointments);
         if (!$response->successful()) {
-            dd($apiAppointments);
             return view('voorbeeld.index', ['error' => 'API niet beschikbaar', 'students' => []]);
         }
         $appointments = $response->json('data');
@@ -63,39 +92,46 @@ class CompanyController extends Controller
             'plan_type' => 'required|string',
             'booth_location' => 'required|string|max:255',
             'password1' => 'required|string|min:8',
-            'password2' => 'required|same:password1'
+            'password2' => 'required|same:password1',
+            // Optional fields
+            'description' => 'nullable|string|max:1000',
+            'job_types' => 'nullable|string|max:255',
+            'job_domain' => 'nullable|string|max:255',
+            'photo' => 'nullable|image', 
+            'speeddate_duration' => 'nullable|integer',
             ]);
         } catch (\Exception $e) {
-            return redirect()->back()->with('error', 'Validatie mislukt');
+            return redirect()->back()->with('error', 'Validatie mislukt: ' . $e->getMessage());
+        }
+
+        if (isset($validated['description'])) {
+            $validated['description'] = 'Vul dit in';
+        }
+        if (isset($validated['job_types'])) {
+            $validated['job_types'] = 'Vul dit in';
+        }
+        if (isset($validated['job_domain'])) {
+            $validated['job_domain'] = 'Vul dit in';
+        }
+        if (isset($validated['photo'])) {
+            $validated['photo'] = 'Aan te passen';
+        }
+        if (isset($validated['speeddate_duration'])) {
+            $validated['speeddate_duration'] = '1'; // Default value
         }
         
-
-    // Prepare data for API (use password1 as password)
-    $data = [
-        //some values are standard
-        'name' => $validated['name'],
-        'email' => $validated['email'],
-        'password' => $validated['password1'],
-        'plan_type' => $validated['plan_type'],
-        'description' => 'Vul dit in',
-        'job_types' => 'Vul dit in',
-        'job_domain' => 'Vul dit in ',
-        'booth_location' => $validated['booth_location'],
-        'photo' => 'Aan te passen',
-        'speeddate_duration' => '5',
-    ];
-
+        //Take password 1 for value
+        unset($validated['password2']);
+        $validated['password'] = $validated['password1'];
+        unset($validated['password1']);
+    
 try {
-    $response = Http::post($this->apiUrl, $data);
+    $response = Http::post($this->apiUrl, $validated);
 
-    if ($response->successful()) {
-        return redirect()->back()->with('success', 'Bedrijf succesvol toegevoegd!');
-    } else {
-        // Voeg de response body toe aan de foutmelding voor debugging
-        return redirect()->back()->with('error', 'aanmaken account mislukt, contacteer de beheerder');
-    }
+    return redirect()->back()->with('success', 'Bedrijf succesvol toegevoegd!');
+
 } catch (\Exception $e) {
-    return redirect()->back()->with('error', 'Er is een fout opgetreden');
+    return redirect()->back()->with('error', 'Er is een fout opgetreden: ' . $e->getMessage());
 }
     }
 
@@ -104,24 +140,45 @@ try {
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id): JsonResponse
+    public function update(Request $request, string $id)
     {
-        $validated = $request->validate([
-            'name' => 'required|string|max:255',
-            'email' => 'required|unique|email|max:255',
-            'plan_type' => 'required|string',
-            'booth_location' => 'required|string|max:255',
-            'password1' => 'required|string|min:8',
-            'password2' => 'required|same:password1'
-        ]);
-
-        $response = Http::put("{$this->apiUrl}/{$id}", $validated);
-
-        if ($response->successful()) {
-            return response()->json($response->json());
-        } else {
-            return response()->json(['message' => 'Student not found'], 404);
+        try {
+            $validated = $request->validate([
+            'name' => 'sometimes|string|max:255',
+            'email' => 'sometimes|email|max:255',
+            // unique email must be fixed
+            'plan_type' => 'sometimes|string',
+            'booth_location' => 'sometimes|string|max:255',
+            'password1' => 'sometimes|string|min:8',
+            'password2' => 'sometimes|same:password1',
+            // Optional fields
+            'description' => 'nullable|string|max:1000',
+            'job_types' => 'nullable|string|max:255',
+            'job_domain' => 'nullable|string|max:255',
+            'photo' => 'nullable|image', 
+            'speeddate_duration' => 'nullable|integer',
+            ]);
+        } catch (\Exception $e) {
+            return redirect()->back()->with('error', 'Validatie mislukt: ' . $e->getMessage());
         }
+        //Current data is taken and merged with the validated data
+        $current = Http::get("{$this->apiUrl}/{$id}");
+        $current = $current->json('data');
+
+        $data = array_merge($current, $validated);
+        
+        unset($data['password1']); // Remove password field if it is not set in the request
+        unset($data['password2']); // Remove password field if it is not set in the request
+
+        //Password hashing issue, please fix
+
+        $response = Http::patch("{$this->apiUrl}/{$id}", $data);
+
+        if (!$response->successful()) {
+            return redirect()->back()->with('error', 'Er is een fout opgetreden bij het bijwerken van het account.');
+        }
+
+        return redirect()->back()->with('success', 'Account succesvol aangepast');
     }
 
 
@@ -135,10 +192,7 @@ try {
     {
         $response = Http::delete("{$this->apiUrl}{$id}");
 
-        if ($response->successful()) {
-            return redirect()->back()->with('success', 'Bedrijf succesvol verwijderd!');
-        } else {
-            return redirect()->back()->with('error', 'Fout bij verwijderen bedrijf: ' . $response->body());
-        }
+
+        return redirect()->back()->with('success', 'Bedrijf succesvol verwijderd!');
     }
 }

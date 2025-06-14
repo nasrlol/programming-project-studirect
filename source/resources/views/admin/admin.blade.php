@@ -7,12 +7,12 @@
     <title>document</title>
 </head>
 <body>
+
     <span id='serverResponse'>
     @if ( session('error'))
-        {{ session('error') }}
+        {{session('error') }}
     @elseif ( session('success'))
         {{ session('success') }}
-    
     @endif
     </span>
     <div id='main-container'>

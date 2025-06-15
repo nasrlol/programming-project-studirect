@@ -235,23 +235,7 @@ export function copyArray(array) {
         newArray.push(el);
     return newArray
 }
-//Appointment currently takes the ID instead of the name of the students and companies
-//This function fixes that
-export function fixAppointment () {
-    //list of all studentId's in the apointment list
-    const appointmentSId = document.getElementsByClassName('appointmentSId')
-    //list of all companyId's in the apointment list
-    const appointmentCId = document.getElementsByClassName('appointmentCId')
 
-    for (let studentId of appointmentSId) {
-        let name = document.getElementById(`s${studentId.innerHTML}|`).innerHTML
-        studentId.innerHTML = name
-    }
-    for (let companyId of appointmentCId) {
-        let name = document.getElementById(`c${companyId.innerHTML}|`).innerHTML
-        companyId.innerHTML = name
-    }
-}
 //Appointments start of sorted by time instead of ID. This fixes that
 export function sortAppointment () {
     //Table where the appointments are stored

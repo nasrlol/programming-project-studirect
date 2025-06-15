@@ -12,10 +12,7 @@ function loadHomeContent() {
     notificationSection.appendChild(title);
 
     const notifications = [
-        "Steven scheduled a speeddate",
-        "Arda swiped you",
-        "Dries has an appointment in 5 minutes",
-        "..."
+        "momenteel geen meldingen"
     ];
 
     notifications.forEach(notification => {
@@ -61,6 +58,9 @@ messageBtn.addEventListener("click", () => {
     console.log("Clicked message button");
     setActiveButton("messageBtn");
     content.innerHTML = "";
+    const loggedInCompanyId = 5; // <-- Vervang met de juiste ID van jouw bedrijf
+    const loggedInCompanyType = "App//Models/Company";
+
 
     const messageContainer = document.createElement("div");
     messageContainer.classList.add("message-container");
@@ -76,35 +76,69 @@ messageBtn.addEventListener("click", () => {
     chatWindow.classList.add("chat-window");
 
     function loadChat(user) {
-        chatWindow.innerHTML = "";
+    const receiverId = user.id;
+    const receiverType = user.type;
 
-        const name = document.createElement("div");
-        name.classList.add("chat-name");
-        name.innerHTML = `<img src="${user.photo}" class="avatar"> ${user.name}`;
-        chatWindow.appendChild(name);
+    const chatWindow = document.querySelector(".chat-window");
+    chatWindow.innerHTML = "";
 
-        user.messages.forEach(msg => {
-            const bubble = document.createElement("div");
-            bubble.classList.add("chat-bubble");
-            bubble.textContent = msg;
-            chatWindow.appendChild(bubble);
+    const name = document.createElement("div");
+    name.classList.add("chat-name");
+    name.innerHTML = `<img src="${user.photo}" class="avatar"> ${user.name}`;
+    chatWindow.appendChild(name);
+
+    // Berichten ophalen
+    fetch(`http://10.2.160.208/api/messages/conversation?user1_id=${loggedInCompanyId}&user1_type=${loggedInCompanyType}&user2_id=${receiverId}&user2_type=${receiverType}`)
+        .then(response => response.json())
+        .then(data => {
+            const messages = data.conversation || [];
+            messages.forEach(msg => {
+                const bubble = document.createElement("div");
+                bubble.classList.add("chat-bubble");
+                bubble.textContent = msg.content;
+                if (msg.sender_id === loggedInCompanyId && msg.sender_type === loggedInCompanyType) {
+                    bubble.classList.add("me");
+                }
+                chatWindow.appendChild(bubble);
+            });
+
+            // Input veld
+            const input = document.createElement("input");
+            input.type = "text";
+            input.placeholder = "Type a message";
+            input.classList.add("chat-input");
+
+            input.addEventListener("keydown", e => {
+                if (e.key === "Enter" && input.value.trim() !== "") {
+                    const content = input.value.trim();
+
+                    fetch("http://10.2.160.208/api/messages/send", {
+                        method: "POST",
+                        headers: {
+                            "Content-Type": "application/json",
+                        },
+                        body: JSON.stringify({
+                            sender_id: loggedInCompanyId,
+                            sender_type: loggedInCompanyType,
+                            receiver_id: receiverId,
+                            receiver_type: receiverType,
+                            content: content
+                        })
+                    })
+                    .then(response => response.json())
+                    .then(sent => {
+                        console.log("Bericht verzonden:", sent);
+                        loadChat(user); // herlaad chat
+                    })
+                    .catch(err => {
+                        console.error("Fout bij verzenden:", err);
+                    });
+                }
+            });
+
+            chatWindow.appendChild(input);
         });
-
-        const input = document.createElement("input");
-        input.type = "text";
-        input.placeholder = "type a message";
-        input.classList.add("chat-input");
-
-        input.addEventListener("keydown", e => {
-            if (e.key === "Enter" && input.value.trim() !== "") {
-                const newMessage = input.value;
-                user.messages.push(newMessage);
-                loadChat(user);
-            }
-        });
-
-        chatWindow.appendChild(input);
-    }
+}
 
     // Hier gebeurt de fetch correct
     fetch("http://10.2.160.208/api/students")
@@ -119,11 +153,12 @@ messageBtn.addEventListener("click", () => {
                 chatWindow.innerHTML = "<p>No users found.</p>";
             }
 
-            const users = students.map((student, index) => ({
-                name: `${student.first_name} ${student.last_name}`.trim() || `Student ${index + 1}`,
-                photo: `https://i.pravatar.cc/40?img=${(index % 70) + 1}`,
-                messages: [`Hi! I'm ${student.name || "a student"}`]
-            }));
+           const users = students.map((student, index) => ({
+    id: student.id,
+    name: `${student.first_name} ${student.last_name}`.trim() || `Student ${index + 1}`,
+    type: "App/Models/Student",
+    photo: `https://i.pravatar.cc/40?img=${(index % 70) + 1}`
+}));
 
             users.forEach(user => {
                 const button = document.createElement("div");

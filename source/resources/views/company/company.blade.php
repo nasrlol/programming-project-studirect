@@ -13,7 +13,7 @@
 
     <header id="header">
         <div class="left">
-            <img id="logo" src="public/images/studirect.png" alt="studirect logo">
+            <img id="logo" src='../images/studirect.png' alt="studirect logo">
         </div>
         <div class="center"> <button id="homeBtn">home page</button>
             <button id="messageBtn">messages</button>

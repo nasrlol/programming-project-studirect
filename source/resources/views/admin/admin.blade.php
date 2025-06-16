@@ -7,8 +7,6 @@
     <title>document</title>
 </head>
 <body>
-
-
     <span id='serverResponse'>
     @if ( session('error'))
         {{session('error') }}
@@ -19,43 +17,41 @@
     <div id='main-container'>
         <nav id="navigation" class='nav-container'>
             <span class='info-nav nav-element'>Admin</span><br>
-            <button class="btn-nav nav-element" id="nav-users">Gebruikers</button>
+            <button class="btn-nav nav-element" id="nav-users">Studenten</button>
             <button class="btn-nav nav-element" id="nav-companies">Bedrijven</button>
             <button class="btn-nav nav-element" id="nav-appointments">Afspraken</button>
             <button class="btn-nav nav-element" id="nav-logs">Logs</button>
 
-            <div class='info-nav'>Dashboard</div>
-                <div class='member-amount'>
-                    <div class='amount-section'>
-                        <div class='section-inside'>
-                            <span id='student-amount'></span><br>
-                            <span>students</span>
-                        </div>
+            <div class='info-nav nav-element'>Dashboard</div>
+            <div class='amount-section nav-element'>
+                <div class='section-inside'>
+                    <span id='student-amount'></span><br>
+                    <span>studenten</span>
+                </div>
                     </div>
-                    <div class='amount-section'>
+                    <div class='amount-section nav-element'>
                         <div class='section-inside'>
                             <span id='company-amount'></span><br>
                             <span>bedrijven</span>    
                         </div>
                     </div>
-                    <div class='amount-section'>
+                    <div class='amount-section nav-element'>
                         <div class='section-inside'>
                             <span id='appointment-amount'></span><br>
                             <span>afspraken</span>    
                         </div>
                     </div>
-                </div>
         </nav>
 
         <div id='result-container'>
 
             <section id='students' class='searchable'>
-                <h2>Gebruikers</h2>
+                <h2>Studenten</h2>
                 <button class='.add' id='toAddStudent'>Student toevoegen</button>
                 <div class='filter' id='student'></div>
                 <div class='list'>
                     <table id='studentTable'>
-                        <tr><th>Naam</th><th>Email</th><th>Laatste login</th><th>Acties</th></tr>
+                        <tr><th class='nameTh'>Naam</th><th class='nameTh'>Email</th><th class='loginTh'>Laatste login</th><th class='extraTh'>Acties</th></tr>
                         <!--API call-->
                         <!--Last log still needs to be added-->
                         @foreach ($students as $student)
@@ -64,8 +60,8 @@
                             <td class='studentId'>{{$student['id']}}</td>
                             <td class='studentName' id="s{{$student['id']}}|">{{ $student['first_name'] ?? 'Onbekend' }} {{ $student['last_name'] ?? 'onbekend' }}</td>
                             <td class='studentMail'>{{ $student['email'] ?? 'Geen email' }}</td>
-                            <td class='studentLogin'>03-06-2025</td>
-                            <td>
+                            <td class='studentLogin extraTd'>03-06-2025</td>
+                            <td class='extraTd'>
                                 <span>
                                     <img class='moreInfo extraActions studentEye' id="eyeS{{$student['id']}}" src='../images/eyeball.png'>
                                 </span>  <span>
@@ -127,14 +123,14 @@
                 <div class='searchContainer list'>
                     <div class='filter' id='company'></div>
                         <table id='companyTable'> 
-                            <tr><th>Naam</th><th>Email</th><th>Laatste login</th><th>Acties</th></tr>
+                            <tr><th>Naam</th><th>Email</th><th class='loginTh'>Laatste login</th><th class='extraTh'>Acties</th></tr>
                             @foreach ($companies as $company)
                             <tr>
                                 <td class='hidden companyId'>{{$company['id']}}</td>
                                 <td class='companyName' id="c{{$company['id']}}|">{{ $company['name'] ?? 'Onbekend' }}</td>
                                 <td class='companyMail'>{{ $company['email'] ?? 'Onbekend' }}</td>
-                                <td class='companyLogin'>02-04-2025</td>
-                                <td>
+                                <td class='companyLogin extraTd'>02-04-2025</td>
+                                <td class='extraTd'>
                                 <span>
                                     <img class='extraActions moreInfo' id="eyeC{{$company['id']}}" src='../images/eyeball.png'>
                                 </span>  
@@ -232,6 +228,7 @@
                                 <div class='hidden logId'></div>
                                 <div class='logItem'>{{$log['target_type']}} {{$log['action']}}</div>
                                 <div>{{$log['date']}} om {{$log['time']}}</div>
+                                <div class='hidden severity'>{{$log['severity']}}</div>
                             </li>
                         @endforeach 
                     </ul>

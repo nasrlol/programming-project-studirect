@@ -53,7 +53,7 @@ form {
 
 table {
     width:100%;
-    border:solid;
+    border-collapse: collapse; 
     border-width:1px;
 }
 .list {
@@ -63,13 +63,35 @@ table {
 }
 
 th {
-    text-align: left;
+    font-style: normal;
+    text-align: center;
+    margin-right:0px;
+    margin:0px;
     width:20%;
 }
 
 .th-short {
     width:5%;
     background-color: white;
+}
+/*Here to change the size of some headers*/
+.extraTh {
+    width:5%;
+}
+
+.loginTh {
+    width:7.5%;
+}
+
+
+.extraTd {
+    text-align: center;
+}
+
+td {
+    border: solid;
+    border-width: 1px;
+    border-color: rgb(235, 235, 235);
 }
 
 .studentActivated {
@@ -138,17 +160,17 @@ th {
 /*right navigation elements*/
 .amount-section {
     border: none;
-    height:7%;
+    height:15%;
     width:80%;
     margin-bottom: 10%;
-    background-color: inherit;
-    color: inherit;
+    background-color: white;
+    color: black;
     font-size: 120%;
     border-radius: 5px;
-    background-color: #365B93;
 }
 
 .section-inside {
+    height:100%;
     text-align: center  ;
 }
 /*RESULT ELEMENTS---------------------*/

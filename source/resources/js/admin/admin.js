@@ -130,15 +130,15 @@ export function createTable(input, extra = null) {
     table.innerHTML = "";
     const type = document.getElementById("students").style.display != "none"  ? "S" : "C"
     const legend = document.createElement("tr");
-    legend.innerHTML = "<th>Naam</th><th>Email</th><th>Laatste login</th><th>Acties</th>"
+    legend.innerHTML = "<th>Naam</th><th>Email</th><th class='loginTh'>Laatste login</th><th class='extraTh'>Acties</th>"
     table.appendChild(legend)
     if (extra) {
         for (let e of extra) {
             const a = document.createElement("tr");
             a.innerHTML = `<td>|${e.name}</td>`,
             a.innerHTML += `<td>${e.mail}</td>`,
-            a.innerHTML += `<td>${e.login}</td>`,
-            a.innerHTML += `<td><span>
+            a.innerHTML += `<td class='extraTd'>${e.login}</td>`,
+            a.innerHTML += `<td class='extraTd'><span>
                                     <img class='extraActions moreInfo' id='eye${type}${e.id}' src='../images/eyeball.png'>
                                 </span>  
                                 <span>
@@ -183,8 +183,8 @@ export function createTable(input, extra = null) {
         const a = document.createElement("tr");
         a.innerHTML = `<td>${e.name}</td>`,
         a.innerHTML += `<td>${e.mail}</td>`,
-        a.innerHTML += `<td>${e.login}</td>`,
-        a.innerHTML += `<td><span>
+        a.innerHTML += `<td class='extraTd'>${e.login}</td>`,
+        a.innerHTML += `<td class='extraTd'><span>
                                     <img class='extraActions moreInfo' id='eye${type}${e.id}' src='../images/eyeball.png'>
                                 </span>  
                                 <span>

@@ -61,7 +61,7 @@ document.addEventListener('keydown', e => {
 
 window.addEventListener("load", () => {
     dashboard();
-    switchDisplay("dashboard");
+    switchDisplay("logs");
     const filterElements = document.getElementsByClassName("filter");
     let count = 0;
     for (let element of filterElements)

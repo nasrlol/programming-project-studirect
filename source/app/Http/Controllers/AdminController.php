@@ -13,17 +13,15 @@ class AdminController extends Controller
     public function show(): View
 {
     try {
-        $apiStudents = $this->apiUrl . 'students';
-        $apiCompanies = $this->apiUrl . 'companies';
         $apiLogs = $this->apiUrl . 'admin/logs';
 
-        $response = Http::get($apiStudents);
+        $response = Http::get($this->studentsApiUrl);
         
         $students = $response->json('data');
         $students = $students['data'];
 
         //Second response for companies
-        $response = Http::get($apiCompanies);
+        $response = Http::get($this->companiesApiUrl);
         
         $companies = $response->json('data');
         $companies = $companies['data'];
@@ -67,13 +65,22 @@ class AdminController extends Controller
                 $log['target_type'] = 'Onbekend type';
             }
         }
+
+        $degreesObject = Http::get($this->apiUrl . 'diplomas')->json('data');
+
+        $degrees = array();
+
+        foreach ($degreesObject as $object) {
+            array_push($degrees, $object['type']);
+        }
         
         return view('/admin/admin', [
             'students' => $students, 
             'companies' => $companies,
             'appointments' => $appointments,
             'connections' => $connections,
-            'logs' => $logs
+            'logs' => $logs,
+            'degrees' => $degrees
     ]);
     } catch (\Exception $e) {
         dd('failure: ' . $e->getMessage());

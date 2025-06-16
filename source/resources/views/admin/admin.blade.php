@@ -99,10 +99,9 @@
                         <div class='addInput' style='border: solid; border-width:1px'>
                             <label for='graduation_track'>Type diploma</label>
                             <select name='graduation_track' class='professional'>
-                                <option value='Associate'>Graduaat</option>
-                                <option value='Professional'>Professionele bachelor</option>
-                                <option value='Academic_bachelor'>Academische bachelor</option>
-                                <option value='Academic_master'>Academische Master</option>
+                                @foreach ($degrees as $degree)
+                                    <option value="{{ $degree }}">{{ $degree }}</option>
+                                @endforeach
                             </select>
                         </div>
 

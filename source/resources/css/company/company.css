@@ -68,7 +68,7 @@ header {
 
 .notifications {
   flex: 1;
-  max-width: 100%;
+  max-width: 50%;
   width: fit-content;
   color: white;
   font-size: clamp(1rem, 2.5vw, 1.5rem);
@@ -91,14 +91,16 @@ header {
 
 .map {
   flex: 1;
-  max-width: 100%;
+  max-width: 50%;
 }
 
 .map img {
-  width: fit-content;
+   width: 100%;
   height: auto;
+  max-width: 100%;
   border: 2px solid #444;
   border-radius: 10px;
+  display: block;
 }
 
 /* message */

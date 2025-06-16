@@ -73,7 +73,10 @@
                 </div>
             </div>
             <div class="chat-container">
-                @include('student.layouts.chat')
+                @include('student.layouts.chat', [
+                    'student_id' => $student['id'],
+                    'company_id' => $companies[0]['id'],
+                ])
             </div>
         </section>
     </div>

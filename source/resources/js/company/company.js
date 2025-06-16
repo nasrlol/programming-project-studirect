@@ -79,10 +79,20 @@ document.addEventListener("DOMContentLoaded", () => {
     });
 
     /*message page */
+
+messageBtn.addEventListener("click", () => {
+    console.log("Clicked message button");
+    setActiveButton("messageBtn");
+    content.innerHTML = "";
+    const loggedInCompanyId = 5; // <-- Vervang met de juiste ID van jouw bedrijf
+    const loggedInCompanyType = "App//Models/Company";
+
+
     messageBtn.addEventListener("click", () => {
         console.log("Clicked message button");
         setActiveButton("messageBtn");
         content.innerHTML = "";
+
 
         const messageContainer = document.createElement("div");
         messageContainer.classList.add("message-container");
@@ -96,6 +106,99 @@ document.addEventListener("DOMContentLoaded", () => {
 
         const chatWindow = document.createElement("div");
         chatWindow.classList.add("chat-window");
+
+
+    function loadChat(user) {
+    const receiverId = user.id;
+    const receiverType = user.type;
+
+    const chatWindow = document.querySelector(".chat-window");
+    chatWindow.innerHTML = "";
+
+    const name = document.createElement("div");
+    name.classList.add("chat-name");
+    name.innerHTML = `<img src="${user.photo}" class="avatar"> ${user.name}`;
+    chatWindow.appendChild(name);
+
+    // Berichten ophalen
+    fetch(`http://10.2.160.208/api/messages/conversation?user1_id=${loggedInCompanyId}&user1_type=${loggedInCompanyType}&user2_id=${receiverId}&user2_type=${receiverType}`)
+        .then(response => response.json())
+        .then(data => {
+            const messages = data.conversation || [];
+            messages.forEach(msg => {
+                const bubble = document.createElement("div");
+                bubble.classList.add("chat-bubble");
+                bubble.textContent = msg.content;
+                if (msg.sender_id === loggedInCompanyId && msg.sender_type === loggedInCompanyType) {
+                    bubble.classList.add("me");
+                }
+                chatWindow.appendChild(bubble);
+            });
+
+            // Input veld
+            const input = document.createElement("input");
+            input.type = "text";
+            input.placeholder = "Type a message";
+            input.classList.add("chat-input");
+
+            input.addEventListener("keydown", e => {
+                if (e.key === "Enter" && input.value.trim() !== "") {
+                    const content = input.value.trim();
+
+                    fetch("http://10.2.160.208/api/messages/send", {
+                        method: "POST",
+                        headers: {
+                            "Content-Type": "application/json",
+                        },
+                        body: JSON.stringify({
+                            sender_id: loggedInCompanyId,
+                            sender_type: loggedInCompanyType,
+                            receiver_id: receiverId,
+                            receiver_type: receiverType,
+                            content: content
+                        })
+                    })
+                    .then(response => response.json())
+                    .then(sent => {
+                        console.log("Bericht verzonden:", sent);
+                        loadChat(user); // herlaad chat
+                    })
+                    .catch(err => {
+                        console.error("Fout bij verzenden:", err);
+                    });
+                }
+            });
+
+            chatWindow.appendChild(input);
+        });
+}
+
+    // Hier gebeurt de fetch correct
+    fetch("http://10.2.160.208/api/students")
+        .then(response => response.json())
+       .then(apiResponse => {
+    console.log("API response:", apiResponse);
+
+    const students = Array.isArray(apiResponse.data)
+        ? apiResponse.data
+        : [];
+            if (students.length === 0) {
+                chatWindow.innerHTML = "<p>No users found.</p>";
+            }
+
+           const users = students.map((student, index) => ({
+    id: student.id,
+    name: `${student.first_name} ${student.last_name}`.trim() || `Student ${index + 1}`,
+    type: "App/Models/Student",
+    photo: `https://i.pravatar.cc/40?img=${(index % 70) + 1}`
+}));
+
+            users.forEach(user => {
+                const button = document.createElement("div");
+                button.classList.add("user");
+                button.innerHTML = `<img src="${user.photo}" class="avatar"> ${user.name}`;
+                button.addEventListener("click", () => loadChat(user));
+                chatList.appendChild(button);
 
         function loadChat(user) {
             chatWindow.innerHTML = "";
@@ -169,6 +272,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 messageContainer.appendChild(chatList);
                 messageContainer.appendChild(chatWindow);
                 content.appendChild(messageContainer);
+
             });
     });
 

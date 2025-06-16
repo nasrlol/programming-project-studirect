@@ -4,6 +4,8 @@ use App\Http\Controllers\StudentController;
 use App\Http\Controllers\CompanyController;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\AppointmentController;
+use App\Http\Controllers\ConnectionController;
+use App\Http\Controllers\MessageController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {return view('welcome');});
@@ -42,3 +44,13 @@ Route::post('/appointments', [AppointmentController::class, 'store']);
 Route::put('/appointments/{id}', [AppointmentController::class, 'update']);
 //route for deleting appointments
 Route::delete('/appointments/{id}', [AppointmentController::class, 'destroy']);
+
+
+//Route for making a connection between student and company
+Route::post('/connections', [ConnectionController::class, 'makeConnection']);
+Route::patch('/connections/{id}', [ConnectionController::class, 'removeConnection']);
+
+//Routes for messages
+//Link code chatGPT: https://chatgpt.com/share/684fd09e-f0c0-8005-90e4-9f3e6d9cbdee
+Route::post('/messages/send', [MessageController::class, 'sendMessage']);
+Route::post('/messages/conversation', [MessageController::class, 'getConversation']);

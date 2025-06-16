@@ -81,6 +81,8 @@ document.addEventListener("DOMContentLoaded", () => {
         setActiveButton("homeBtn");
     });
 
+    /*messages page*/
+
     messageBtn.addEventListener("click", () => {
         console.log("Clicked message button");
         setActiveButton("messageBtn");
@@ -184,9 +186,15 @@ document.addEventListener("DOMContentLoaded", () => {
         fetch("http://10.2.160.208/api/students")
             .then(response => response.json())
             .then(apiResponse => {
-                const students = Array.isArray(apiResponse.data) ? apiResponse.data : [];
+                const students = Array.isArray(apiResponse.data?.data) ? apiResponse.data.data : [];
+                console.log("Gevonden studenten:", students);
+
                 if (students.length === 0) {
-                    chatWindow.innerHTML = "<p>No users found.</p>";
+                    chatList.innerHTML += `<p>No users found.</p>`;
+                    messageContainer.appendChild(chatList);
+                    messageContainer.appendChild(chatWindow);
+                    content.appendChild(messageContainer);
+                    return;
                 }
 
                 const users = students.map((student, index) => ({
@@ -278,37 +286,36 @@ document.addEventListener("DOMContentLoaded", () => {
                         console.warn(`Kon student ${studentId} niet ophalen`);
                     }
 
-                    // Voeg toe aan linker lijst
-                    let group = appointmentList.querySelector(`p[data-time='${time}']`);
-                    if (!group) {
-                        group = document.createElement("p");
-                        group.dataset.time = time;
-                        group.textContent = time;
-                        appointmentList.appendChild(group);
-
-                        const ul = document.createElement("ul");
-                        ul.dataset.time = time;
-                        appointmentList.appendChild(ul);
-                    }
-
-                    const ul = appointmentList.querySelector(`ul[data-time='${time}']`);
-                    const li = document.createElement("li");
-                    li.textContent = studentName;
-                    ul.appendChild(li);
-
-                    // Zet in de tabel
                     const rowIndex = getTimeRowIndex(time);
                     const colIndex = getDayColumnIndexFromDateString(appointment.created_at);
-
-                    // ✅ check of cel al bezet is
                     const table = document.getElementById("calendar-table");
                     const row = table.rows[rowIndex];
                     const cell = row?.cells?.[colIndex];
 
+                    // ✅ Alleen verdergaan als de cel leeg is
                     if (cell && (cell.innerText.trim() === "–" || cell.innerText.trim() === "")) {
+                        // Voeg toe aan linker lijst
+                        let group = appointmentList.querySelector(`p[data-time='${time}']`);
+                        if (!group) {
+                            group = document.createElement("p");
+                            group.dataset.time = time;
+                            group.textContent = time;
+                            appointmentList.appendChild(group);
+
+                            const ul = document.createElement("ul");
+                            ul.dataset.time = time;
+                            appointmentList.appendChild(ul);
+                        }
+
+                        const ul = appointmentList.querySelector(`ul[data-time='${time}']`);
+                        const li = document.createElement("li");
+                        li.textContent = studentName;
+                        ul.appendChild(li);
+
+                        // Zet in de tabel
                         setAppointment(rowIndex, colIndex, studentName);
                     } else {
-                        console.log(`Slot al bezet op ${rowIndex}, kolom ${colIndex}`);
+                        console.log(`⛔ Slot al bezet op ${time} (${rowIndex}, ${colIndex}) – overslaan ${studentName}`);
                     }
 
                 }

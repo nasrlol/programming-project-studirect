@@ -45,18 +45,21 @@ class StudentController extends Controller
             $appointment['company_name'] = $this->translateCompany($appointment['company_id']);
         }
 
+        $connections = get_connections($id, 'student');
+
 
         return view('student.html.student', [
             'student' => $student,
             'companies' => $companies,
-            'appointments' => $appointments
+            'appointments' => $appointments,
+            'connections' => $connections
         ]);
 
     }
 
      public function indexTest()
     {
-        $id = 3;
+        $id = 13;
         $response = Http::get("{$this->studentsApiUrl}/{$id}");
         //If the student is not found, user can go back to welcome page
         if (!$response->successful()) {
@@ -87,10 +90,13 @@ class StudentController extends Controller
             $appointment['company_name'] = $this->translateCompany($appointment['company_id']);
         }
 
+        $connections = $this->get_connections($id, 'student');
+
         return view('student.html.student', [
             'student' => $student,
             'companies' => $companies,
-            'appointments' => $appointments
+            'appointments' => $appointments,
+            'connections' => $connections
         ]);
 
     }
@@ -177,6 +183,9 @@ class StudentController extends Controller
             if ($response->successful()) {
                 return redirect()->back()->with('success', 'Account succesvol aangemaakt!');
     } 
+    else {
+        return redirect()->back()->with('error', 'Er is een fout opgetreden bij het aanmaken van het account.');
+    }
 } catch (\Exception $e) {
     return redirect()->back()->with('error', 'Er is een fout opgetreden: ' . $e->getMessage());
 }
@@ -191,7 +200,7 @@ class StudentController extends Controller
             $validated = $request->validate([
             'first_name' => 'sometimes|string|max:255',
             'last_name' => 'sometimes|string|max:255',
-            'email' => 'sometimes|required|email',
+            'email' => 'sometimes|required|email|unique:students,email',
             'password' => 'sometimes|required|string|min:8',
             'study_direction' => 'sometimes|required|string|max:255',
             'graduation_track' => 'sometimes|required|string|max:255',

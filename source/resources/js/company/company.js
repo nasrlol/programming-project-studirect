@@ -26,7 +26,7 @@ function setAppointment(rowIndex, colIndex, text) {
         }
     }
 }
-
+/*home page*/
 function loadHomeContent() {
     content.innerHTML = "";
     const mainContainer = document.createElement("div");
@@ -36,24 +36,19 @@ function loadHomeContent() {
     notificationSection.classList.add("notifications");
 
     const title = document.createElement("h2");
-    title.textContent = "recent notifications:";
+    title.textContent = "Welkom op de careerlaunch!";
     notificationSection.appendChild(title);
 
-    const notifications = [
-        "momenteel geen meldingen"
-    ];
-
-    notifications.forEach(notification => {
-        const p = document.createElement("p");
-        p.textContent = notification;
-        notificationSection.appendChild(p);
-    });
+    const notifications = document.createElement("p");
+        notifications.textContent =  "Wij zijn verheugd om u te verwelkomen als partner in het begeleiden van de professionals van morgen. Via CareerLaunch krijgt u de kans om uw bedrijf in de kijker te zetten, vacatures te delen en rechtstreeks in contact te komen met gemotiveerde studenten. Samen bouwen we aan de toekomst. Start vandaag nog met het ontdekken van talent!";
+        notificationSection.appendChild(notifications);
+   
 
     const mapSection = document.createElement("section");
     mapSection.classList.add("map");
 
     const img = document.createElement("img");
-    img.src = "/source/resources/public/plattegrondvb.png";
+    img.src = "/images/plattegrondvb.png";
     img.alt = "venue map";
     mapSection.appendChild(img);
 
@@ -359,7 +354,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
         const navItems = [
             { id: "profile", label: "profile", icon: "👤" },
-            { id: "notifications", label: "notifications", icon: "🔔" },
             { id: "privacy", label: "privacy", icon: "🔒" },
             { id: "appearance", label: "appearance", icon: "🎨" },
             { id: "account", label: "account", icon: "⚙️" }
@@ -397,9 +391,6 @@ document.addEventListener("DOMContentLoaded", () => {
             switch (tabId) {
                 case "profile":
                     loadProfileSettings(contentContainer);
-                    break;
-                case "notifications":
-                    loadNotificationSettings(contentContainer);
                     break;
                 case "privacy":
                     loadPrivacySettings(contentContainer);
@@ -450,33 +441,6 @@ document.addEventListener("DOMContentLoaded", () => {
             container.appendChild(profileCard);
         }
 
-        function loadNotificationSettings(container) {
-            const settingsCard = document.createElement("div");
-            settingsCard.classList.add("settings-card");
-
-            settingsCard.innerHTML = `
-            <h2>Notification Settings</h2>
-            <div class="toggle-row">
-                <span>Email Notifications</span>
-                <label class="toggle-switch">
-                    <input type="checkbox" id="emailNotif" checked>
-                    <span class="slider"></span>
-                </label>
-            </div>
-            
-            
-            <div class="toggle-row">
-                <span>Meeting Reminders</span>
-                <label class="toggle-switch">
-                    <input type="checkbox" id="meetingReminders" checked>
-                    <span class="slider"></span>
-                </label>
-            </div>
-            <button class="btn primary" onclick="showNotification('Notification settings saved!', 'success')">Save Settings</button>
-        `;
-
-            container.appendChild(settingsCard);
-        }
 
         function loadPrivacySettings(container) {
             const settingsCard = document.createElement("div");

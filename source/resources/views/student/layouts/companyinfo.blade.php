@@ -2,19 +2,21 @@
     <div>
         <h5>Omschrijving</h5>
         <div>
-            {!! $company_description ?? '<p>Geen omschrijving beschikbaar.</p>' !!}
+            {!! $job_domain ?? '<li>Geen jobdomein opgegeven.</li>' !!}
+            {!! $job_type ?? '<li>Geen functietype opgegeven.</li>' !!}
+            {!! $job_description ?? '<li>Geen omschrijving beschikbaar.</li>' !!}
         </div>
     </div>
     <div>
         <h5>Vereisten</h5>
         <div>
-            {!! $company_requirements ?? '<p>Geen vereisten opgegeven.</p>' !!}
+            {!! $job_requirements ?? '<li>Geen vereisten opgegeven.</li>' !!}
         </div>
     </div>
     <div>
         <h5>Over dit bedrijf</h5>
         <div>
-            {!! $company_about ?? '<p>Er is geen informatie beschikbaar over dit bedrijf.</p>' !!}
+            {!! $description ?? '<p>Er is geen informatie beschikbaar over dit bedrijf.</p>' !!}
         </ul>
     </div>
 </div>

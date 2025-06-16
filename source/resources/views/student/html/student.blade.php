@@ -24,31 +24,14 @@
             ])
         </section>
         <section class="sectionType1">
-            @include('student.layouts.companyinfo', [
-                'company_description' => '
-                    <ul>
-                        <li>Gent, Oost-Vlaanderen</li>
-                        <li>Stage</li>
-                        <li>februari - juni 2025 (duur tijd bespreekbaar)</li>
-                        <li>Loon: n/a</li>
-                        <li>Fulltime positie</li>
-                        <li>Flexibele uren</li>
-                        <li>Jonge, dynamische werkomgeving</li>
-                    </ul>',
-                'company_requirements' => '
-                    <ul>
-                        <li>Bachelor Toegepaste Informatica / Graduaat Systeem- en Netwerkbeheer</li>
-                        <li>Goede communicatieve vaardigheden</li>
-                        <li>Probleemoplossend denken</li>
-                        <li>Teamplayer mentaliteit</li>
-                        <li>Basiskennis netwerken</li>
-                        <li>Kennis van Windows Server en Active Directory is een plus</li>
-                        <li>Rijbewijs B</li>
-                    </ul>',
-                'company_about' => '
-                    <p>ByteForge Solutions is een groeiend softwarebedrijf gespecialiseerd in maatwerkapplicaties voor KMOs. Met een klein maar gedreven team bouwen we weboplossingen, automatisering en business intelligence tools op maat van onze klanten.</p>
-                    <p>We geloven sterk in persoonlijke groei en bieden onze medewerkers veel ruimte voor ontwikkeling en innovatie. Onze moderne kantoren in het hart van Gent zijn uitgerust met de nieuwste technologieën.</p>
-                    <p>Als stagiair(e) word je vanaf dag één beschouwd als volwaardig teamlid en krijg je de kans om mee te werken aan uitdagende projecten voor echte klanten.</p>'
+            @include('student.layouts.companyinfo', ['
+                <ul>',
+                    'job_domain' => '<li>' . $companies[0]['job_domain'] . '</li>',
+                    'job_type' => '<li>' . $companies[0]['job_types'] . '</li>',
+                    'job_description' => '<li>' . $companies[0]['job_description'] . '</li>
+                </ul>',
+                'job_requirements' => '<ul><li>' . $companies[0]['job_requirements'] . '</li></ul>',
+                'description' => '<p>' . $companies[0]['description'] . '</p>'
             ])
         </section>
     </div>

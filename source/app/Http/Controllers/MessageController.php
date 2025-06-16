@@ -1,11 +1,11 @@
 <?php
 //Link AI: https://chatgpt.com/share/684fd09e-f0c0-8005-90e4-9f3e6d9cbdee
-namespace App\Http\Controllers\Api;
+namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
 use App\Models\Message;
 use Illuminate\Http\Request;
-use Illuminate\Http\JsonResponse;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Validation\ValidationException;
 
 class MessageController extends Controller
@@ -13,7 +13,7 @@ class MessageController extends Controller
     /**
      * Haal het gesprek op tussen een student en een bedrijf
      */
-    public function getConversation(Request $request): JsonResponse
+    public function getConversation(Request $request): RedirectResponse
     {
         try {
             $validated = $request->validate([
@@ -23,7 +23,7 @@ class MessageController extends Controller
                 'user2_type' => 'required|string',
             ]);
         } catch (ValidationException $e) {
-            return response()->json(['errors' => $e->errors()], 422);
+            return redirect()->back()->withErrors($e->errors());
         }
 
         $messages = Message::where(function ($query) use ($validated) {
@@ -46,7 +46,7 @@ class MessageController extends Controller
     /**
      * Verzend een nieuw bericht
      */
-    public function sendMessage(Request $request)
+    public function sendMessage(Request $request): RedirectResponse
     {
         try {
             $validated = $request->validate([
@@ -57,7 +57,7 @@ class MessageController extends Controller
                 'content' => 'required|string|max:1000',
             ]);
         } catch (ValidationException $e) {
-            return response()->json(['errors' => $e->errors()], 422);
+            return redirect()->back()->withErrors($e->errors());
         }
 
         $message = Message::create([

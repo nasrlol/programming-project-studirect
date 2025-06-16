@@ -297,44 +297,18 @@ body {
     min-height: 300px;
 }
 
-.message {
-    display: flex;
-    flex-direction: column;
-    gap: 0.3rem;
-    max-width: 70%;
-}
-
-.message.outgoing {
-    align-self: flex-end;
-}
-
-.message-bubble {
-    background: #4a4a8c;
-    color: #fff;
-    padding: 0.8rem 1rem;
-    border-radius: 12px;
-    border-bottom-right-radius: 4px;
-}
-
-.message.outgoing .message-bubble {
-    background: #4d4157;
-    border-bottom-right-radius: 12px;
-    border-bottom-left-radius: 4px;
-}
-
-.message-time {
-    font-size: 0.8rem;
-    color: #aaa;
-    align-self: flex-end;
-}
-
 .chat-input {
     display: flex;
-    gap: 1rem;
     padding: 1rem;
     background: #2a2a44;
     border-radius: 0 0 8px 8px;
     border-top: 1px solid #4d4157;
+}
+
+.chat-input form {
+    display: flex;
+    gap: 1rem;
+    width: 100%;
 }
 
 .chat-input textarea {
@@ -355,7 +329,7 @@ body {
     border-color: #4a4a8c;
 }
 
-.chat-input button {
+.chat-input input[type="submit"] {
     align-self: flex-end;
     padding: 0.8rem 1.5rem;
     background: #4a4a8c;
@@ -367,13 +341,8 @@ body {
     transition: background-color 0.3s;
 }
 
-.chat-input button:hover:not(:disabled) {
-    background: #5a5a9c;
-}
-
-.chat-input button:disabled {
-    opacity: 0.5;
-    cursor: not-allowed;
+.chat-input input[type="submit"]:hover {
+    background-color: #5c5cb2;
 }
 
 /* empty chat styles */

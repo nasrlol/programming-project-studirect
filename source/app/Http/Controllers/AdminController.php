@@ -62,7 +62,7 @@ class AdminController extends Controller
                 $log['target_type'] = 'Onbekend type';
             }
         }
-        dd($connections);
+        
         return view('/admin/admin', [
             'students' => $students, 
             'companies' => $companies,

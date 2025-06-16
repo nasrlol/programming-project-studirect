@@ -3,6 +3,9 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Http\JsonResponse;
+use Illuminate\View\View;
+use Illuminate\Support\Facades\Http;
 
 class ConnectionController extends Controller
 {
@@ -10,8 +13,8 @@ class ConnectionController extends Controller
     public function makeConnection(Request $request)
     {
         $data = $request->validate([
-            'student_id' => 'required|integer|exists:student,student_id',
-            'company_id' => 'required|integer|exists:company,company_id',
+            'student_id' => 'required|integer',
+            'company_id' => 'required|integer',
             'status'=> 'required|boolean'
         ]);
 

@@ -51,7 +51,8 @@ class StudentController extends Controller
         return view('student.html.student', [
             'student' => $student,
             'companies' => $companies,
-            'appointments' => $appointments
+            'appointments' => $appointments,
+            'connections' => $connections
         ]);
 
     }
@@ -94,7 +95,8 @@ class StudentController extends Controller
         return view('student.html.student', [
             'student' => $student,
             'companies' => $companies,
-            'appointments' => $appointments
+            'appointments' => $appointments,
+            'connections' => $connections
         ]);
 
     }

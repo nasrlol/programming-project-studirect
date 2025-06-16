@@ -16,18 +16,14 @@
     @endif
     </span>
     <div id='main-container'>
-        <nav id="navigation">
+        <nav id="navigation" class='nav-container'>
             <span class='info-nav nav-element'>Admin</span><br>
-            <button class="btn-nav nav-element" id="nav-dashboard">Dashboard</button>
             <button class="btn-nav nav-element" id="nav-users">Gebruikers</button>
             <button class="btn-nav nav-element" id="nav-companies">Bedrijven</button>
             <button class="btn-nav nav-element" id="nav-appointments">Afspraken</button>
             <button class="btn-nav nav-element" id="nav-logs">Logs</button>
-        </nav>
 
-        <div id='result-container'>
-            <section id='dashboard'>
-                <h2>Dashboard</h2>
+            <div class='info-nav'>Dashboard</div>
                 <div class='member-amount'>
                     <div class='amount-section'>
                         <div class='section-inside'>
@@ -48,7 +44,9 @@
                         </div>
                     </div>
                 </div>
-            </section>
+        </nav>
+
+        <div id='result-container'>
 
             <section id='students' class='searchable'>
                 <h2>Gebruikers</h2>
@@ -231,7 +229,7 @@
                         @endphp
                             <li>
                                 <div class='hidden logId'></div>
-                                <div class='logItem'>{{$log['target_type']}} {{$log['target_id']}}  {{$log['action']}}</div>
+                                <div class='logItem'>{{$log['target_type']}} {{$log['action']}}</div>
                                 <div>{{$log['date']}} om {{$log['time']}}</div>
                             </li>
                         @endforeach 

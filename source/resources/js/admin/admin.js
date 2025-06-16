@@ -92,15 +92,13 @@ export function createSearch(d, t) {
     t
 }
 export function switchDisplay(element) {
-    const dashboard = document.getElementById("dashboard")
-      , students = document.getElementById("students")
+    const students = document.getElementById("students")
       , companies = document.getElementById("companies")
       , addCompany = document.getElementById("addCompany")
       , addStudent = document.getElementById("addStudent")
       , appointments = document.getElementById('appointments')
       , logs = document.getElementById('logs');
       appointments.style.display = 'none'
-    dashboard.style.display = "none",
     students.style.display = "none",
     companies.style.display = "none",
     addCompany.style.display = "none",

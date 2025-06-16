@@ -1,11 +1,6 @@
 'use strict'
 import { dashboard, switchDisplay, popUp, removePopUp, createSearch, createTable, sortAppointment, data, copyArray, filterArray, setDeleteFunctionality, setViewFunctionality, removeForms } from './admin.js'
 
-//events
-document.getElementById("nav-dashboard").addEventListener("click", () => {
-    switchDisplay("dashboard")
-}
-);
 document.getElementById("nav-users").addEventListener("click", () => {
     switchDisplay("students")
 }

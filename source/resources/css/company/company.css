@@ -576,3 +576,16 @@ input:checked + .slider:before {
   }
 }
 
+.chat-bubble {
+  background-color: #333;
+  color: white;
+  padding: 8px 12px;
+  border-radius: 10px;
+  margin: 5px;
+  max-width: 70%;
+}
+
+.chat-bubble.me {
+  background-color: #4f46e5;
+  align-self: flex-end;
+}

@@ -10,8 +10,6 @@ use Illuminate\Support\Facades\Http;
 class AdminController extends Controller
 {
 
-    private string $apiUrl = 'http://10.2.160.208/api/';
-
     public function show(): View
 {
     try {

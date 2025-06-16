@@ -29,6 +29,7 @@ class StudentController extends Controller
         }
 
         $companies = $response->json('data');
+        $companies = $companies['data'];
 
         $response = Http::get("{$this->appointmentApiUrl}");
         //get all appointments where the student is involved
@@ -45,18 +46,21 @@ class StudentController extends Controller
             $appointment['company_name'] = $this->translateCompany($appointment['company_id']);
         }
 
+        $connections = $this->get_connections($id, 'student');
+
 
         return view('student.html.student', [
             'student' => $student,
             'companies' => $companies,
-            'appointments' => $appointments
+            'appointments' => $appointments,
+            'connections' => $connections
         ]);
 
     }
 
      public function indexTest()
     {
-        $id = 3;
+        $id = 13;
         $response = Http::get("{$this->studentsApiUrl}/{$id}");
         //If the student is not found, user can go back to welcome page
         if (!$response->successful()) {
@@ -69,8 +73,8 @@ class StudentController extends Controller
         if (!$response->successful()) {
             return view('notfound', ['message' => 'Technisch probleem bij ophalen server (error code 404). Contacteer de beheerder van de site voor meer informatie']);
         }
-
         $companies = $response->json('data');
+        $companies = $companies['data'];
         //get all appointments where the student is involved
         $response = Http::get("{$this->appointmentApiUrl}");
 
@@ -87,10 +91,13 @@ class StudentController extends Controller
             $appointment['company_name'] = $this->translateCompany($appointment['company_id']);
         }
 
+        $connections = $this->get_connections($id, 'student');
+
         return view('student.html.student', [
             'student' => $student,
             'companies' => $companies,
-            'appointments' => $appointments
+            'appointments' => $appointments,
+            'connections' => $connections
         ]);
 
     }
@@ -177,6 +184,9 @@ class StudentController extends Controller
             if ($response->successful()) {
                 return redirect()->back()->with('success', 'Account succesvol aangemaakt!');
     } 
+    else {
+        return redirect()->back()->with('error', 'Er is een fout opgetreden bij het aanmaken van het account.');
+    }
 } catch (\Exception $e) {
     return redirect()->back()->with('error', 'Er is een fout opgetreden: ' . $e->getMessage());
 }
@@ -191,7 +201,7 @@ class StudentController extends Controller
             $validated = $request->validate([
             'first_name' => 'sometimes|string|max:255',
             'last_name' => 'sometimes|string|max:255',
-            'email' => 'sometimes|required|email',
+            'email' => 'sometimes|required|email|unique:students,email',
             'password' => 'sometimes|required|string|min:8',
             'study_direction' => 'sometimes|required|string|max:255',
             'graduation_track' => 'sometimes|required|string|max:255',

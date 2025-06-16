@@ -8,6 +8,7 @@
 </head>
 <body>
 
+
     <span id='serverResponse'>
     @if ( session('error'))
         {{session('error') }}

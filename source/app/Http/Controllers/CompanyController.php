@@ -35,10 +35,12 @@ class CompanyController extends Controller
             $appointment['company_name'] = $this->translateCompany($appointment['company_id']);
         }
 
+        $connections = $this->get_connections($id, 'company');
 
         return view('company.company', [
             'company' => $company,
-            'appointments' => $appointments
+            'appointments' => $appointments,
+            'connections' => $connections
         ]);
     }
     //Test Function to show a company, this will be replaced by the index function.
@@ -66,48 +68,16 @@ class CompanyController extends Controller
             $appointment['company_name'] = $this->translateCompany($appointment['company_id']);
         }
 
+        $connections = $this->get_connections($id, 'company');
 
         return view('company.company', [
             'company' => $company,
-            'appointments' => $appointments
+            'appointments' => $appointments,
+            'connections' => $connections
         ]);
     }
 
-    public function show(): View
-{
-    try {
-        $response = Http::get($studentsApiUrl);
-        if (!$response->successful()) {
-            return view('voorbeeld.index', ['error' => 'API niet beschikbaar', 'students' => []]);
-        }
-        $students = $response->json('data');
 
-        //Second response for companies
-        $response = Http::get($companiesApiUrl);
-        if (!$response->successful()) {
-            return view('voorbeeld.index', ['error' => 'API niet beschikbaar', 'students' => []]);
-        }
-        $companies = $response->json('data');
-
-        //Final response for apointments
-        $response = Http::get($appointmentApiUrl);
-        if (!$response->successful()) {
-            return view('voorbeeld.index', ['error' => 'API niet beschikbaar', 'students' => []]);
-        }
-        $appointments = $response->json('data');
-        
-        dd($appointments);
-
-        return view('/admin/admin', [
-            'students' => $students, 
-            'companies' => $companies,
-            'appointments' => $appointments
-    ]);
-    } catch (\Exception $e) {
-        dd('failure: ' . $e->getMessage());
-        return view('voorbeeld.index', ['error' => 'Er is een fout opgetreden', 'students' => []]);
-    }
-}
 
 
 

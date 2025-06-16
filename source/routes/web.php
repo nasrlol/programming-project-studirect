@@ -47,3 +47,4 @@ Route::delete('/appointments/{id}', [AppointmentController::class, 'destroy']);
 
 //Route for making a connection between student and company
 Route::post('/connections', [ConnectionController::class, 'makeConnection']);
+Route::patch('/connections/{id}', [ConnectionController::class, 'removeConnection']);

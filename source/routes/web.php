@@ -4,6 +4,7 @@ use App\Http\Controllers\StudentController;
 use App\Http\Controllers\CompanyController;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\AppointmentController;
+use App\Http\Controllers\ConnectionController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {return view('welcome');});
@@ -42,3 +43,7 @@ Route::post('/appointments', [AppointmentController::class, 'store']);
 Route::put('/appointments/{id}', [AppointmentController::class, 'update']);
 //route for deleting appointments
 Route::delete('/appointments/{id}', [AppointmentController::class, 'destroy']);
+
+
+//Route for making a connection between student and company
+Route::post('/connections', [ConnectionController::class, 'makeConnection']);

@@ -47,4 +47,14 @@ abstract class Controller
         }
         return $id;
     }
+    protected function get_connections($id, $type)
+    {   
+        $type = strtolower($type . '_id');
+        $response = Http::get("{$this->connectionsApiUrl}");
+        
+        $response = $response->json('data');
+        // Filter connections based on the provided ID and type
+        $connections = collect($response)->where($type, $id)->all();
+        return $connections;
+    }
 }

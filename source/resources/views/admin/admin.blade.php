@@ -8,6 +8,17 @@
 </head>
 <body>
 
+    <form action='../connections/' method='POST'>
+        @csrf <!-- CSRF token for security -->
+        <label for='student_id'>Student ID:</label>
+        <input type='text' name='student_id'>
+        <label for='student_id'>Bedrijfs ID:</label>
+        <input type='text' name='company_id'>
+        <input type='hidden' name='status' value='1'>
+        <input type='submit' value='aanmaken' id='logoutButton'>
+    </form>
+
+
     <span id='serverResponse'>
     @if ( session('error'))
         {{session('error') }}

@@ -3,6 +3,7 @@
 use App\Http\Controllers\StudentController;
 use App\Http\Controllers\CompanyController;
 use App\Http\Controllers\AdminController;
+use App\Http\Controllers\AppointmentController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {return view('welcome');});
@@ -33,3 +34,11 @@ Route::delete('/students/{id}', [StudentController::class, 'destroy'])->name('st
 
 
 Route::get('/admin', [AdminController::class, 'show']);
+
+//Getting appointments goes via other controller, so this is not needed here
+//route for making appointments
+Route::post('/appointments', [AppointmentController::class, 'store']);
+//route for updating appointments
+Route::put('/appointments/{id}', [AppointmentController::class, 'update']);
+//route for deleting appointments
+Route::delete('/appointments/{id}', [AppointmentController::class, 'destroy']);

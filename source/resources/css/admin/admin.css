@@ -88,7 +88,7 @@ th {
     text-align: center;
 }
 
-td {
+tr {
     border: solid;
     border-width: 1px;
     border-color: rgb(235, 235, 235);
@@ -215,16 +215,21 @@ h2 {
 
 /*LOGS*/
 
-li {
+.logItem {
+    margin-left:0px;
     padding-bottom:2%;
     display: flex;
     flex-direction: row;
-    justify-content: right;
 }
 
-.logItem {
-    width:80%;
+.logAction {
+    width:50%;
 }
+.logDate {
+    width:30%;
+}
+
+
 
 select {
     border:none;

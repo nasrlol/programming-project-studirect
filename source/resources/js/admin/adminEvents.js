@@ -1,5 +1,5 @@
 'use strict'
-import { dashboard, switchDisplay, popUp, removePopUp, createSearch, createTable, sortAppointment, data, copyArray, filterArray, setDeleteFunctionality, setViewFunctionality, removeForms } from './admin.js'
+import { dashboard, switchDisplay, popUp, removePopUp, createSearch, createTable, sortAppointment, data, copyArray, filterArray, setDeleteFunctionality, setViewFunctionality, removeForms, sortLogs } from './admin.js'
 
 document.getElementById("nav-users").addEventListener("click", () => {
     switchDisplay("students")
@@ -59,8 +59,15 @@ document.addEventListener('keydown', e => {
     }
 })
 
+document.getElementById('searchType').addEventListener('change', () => {
+    const searchType = document.getElementById('searchType').value;
+    sortLogs(searchType)
+    
+})
+
 window.addEventListener("load", () => {
     dashboard();
+    sortLogs('belang')
     switchDisplay("logs");
     const filterElements = document.getElementsByClassName("filter");
     let count = 0;

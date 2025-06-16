@@ -68,6 +68,31 @@ function tableToObjects() {
     }
 
     //add logs
+    let logId = document.getElementsByClassName('logId')
+    let logAction = document.getElementsByClassName('logAction')
+    let logDate = document.getElementsByClassName('logDate')
+    let severity = document.getElementsByClassName('severity')
+
+    for (let i = 0; i < logId.length; i++) {
+        let severityInt;
+        switch (severity[i].innerHTML.trim().toLocaleLowerCase()) {
+            case 'normal':
+                severityInt = 0;
+                break;
+            case 'critical':
+                severityInt = 1;
+                break;
+            default:
+                severityInt = 0;
+                break;
+        }
+        objects.logs.push({
+            id: logId[i].innerHTML,
+            action: logAction[i].innerHTML,
+            date: logDate[i].innerHTML.trim(),
+            severity: severityInt
+        });
+    }
 
     return objects
 }
@@ -307,26 +332,28 @@ export function setViewFunctionality () {
         //use filter to find the user we want, based on ID 
         const user =  list.filter(obj => obj.id == id)[0]
         const response = document.createElement('div');
-        response.innerHTML = `Naam: ${user.name}<br>`
-        response.innerHTML += `Email: ${user.mail}<br>`
+        const li = document.createElement('ul');
+        li.innerHTML = `<li>Naam: ${user.name}</li>`
+        li.innerHTML += `<li>Email: ${user.mail}<br>`
         //Extra info if it's a student
         if (isStudent) {
             let geactiveerd = (user.activated == 1) ? 'Ja' : 'Nee'
             
-            response.innerHTML += `Geactiveerd: ${geactiveerd}<br>`
-            response.innerHTML += `Job interesses: ${user.interests}<br>`
-            response.innerHTML += `Studierichting: ${user.studyDirection}<br>`
-            response.innerHTML += `Job voorkeuren: ${user.preferences}`
+            li.innerHTML += `<li>Geactiveerd: ${geactiveerd}</li>`
+            li.innerHTML += `<li>Job interesses: ${user.interests}</li>`
+            li.innerHTML += `<li>Studierichting: ${user.studyDirection}</li>`
+            li.innerHTML += `<li>Job voorkeuren: ${user.preferences}</li>`
         }
         //Extra info if it's a company
         else {
-            response.innerHTML += `Prijs plan: ${user.planType}<br>`
-            response.innerHTML += `Type job: ${user.jobTypes}<br>`
-            response.innerHTML += `Jobdomein: ${user.jobDomain}<br>`
-            response.innerHTML += `Beschrijving: ${user.description}<br>`
-            response.innerHTML += `Locatie booth: ${user.boothLocation}<br>`
-            response.innerHTML += `Duur speeddates: ${user.speeddateDuration}<br>`
+            li.innerHTML += `<li>Prijs plan: ${user.planType}</li>`
+            li.innerHTML += `<li>Type job: ${user.jobTypes}</li>`
+            li.innerHTML += `<li>Jobdomein: ${user.jobDomain}</li>`
+            li.innerHTML += `<li>Beschrijving: ${user.description}</li>`
+            li.innerHTML += `<li>Locatie booth: ${user.boothLocation}</li>`
+            li.innerHTML += `<li>Duur speeddates: ${user.speeddateDuration}</li>`
         }
+        response.appendChild(li);
 
         popUp(response.innerHTML)
     })
@@ -338,4 +365,43 @@ export function removeForms () {
     document.getElementById('deletionForm').action = ''
     for (let element of document.getElementsByClassName('tempForm')) element.style.display = 'none'
     for (let element of document.getElementsByClassName('normalForm')) element.style.display = 'block'
+}
+
+export function sortLogs(searchType) {
+    let color;
+    let severity;
+    document.getElementById('log-list').innerHTML = ''
+
+    if (searchType == 'belang') {
+        data.logs.sort((a, b) => {
+        return a.severity - b.severity;
+    })
+    }
+    else if (searchType == 'datum') {
+        data.logs = data.logs.sort((a, b) => {
+            return a.date.localeCompare(b.date);
+        });
+    }
+        for (let log of data.logs) {
+        switch (log.severity) {
+            case 0:
+                color = 'black';
+                severity = 'Normaal';
+                break;
+            case 1:
+                color = 'red';
+                severity = 'Kritiek';
+                break;
+            default:
+                color = 'grey';
+        }
+        document.getElementById('log-list').innerHTML += `<li class='logItem' style='color: ${color}'>
+            <div class='hidden logId'>${log.id}</div>
+            <div class='logAction'>${log.action}</div>
+            <div class='logDate'>${log.date}</div>
+            <div class='severity'>Belang: ${severity}</div>
+            </li>`
+    }
+    
+
 }

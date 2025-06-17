@@ -1,7 +1,7 @@
 <nav class="navbar">
     <div class="nav-profile">
         <div class="profile-pic"></div>
-        <span class="profile-name">{{ $students[0]['first_name'] ?? 'User' }}</span>
+        <span class="profile-name">{{ $student['first_name'] ?? 'User' }}</span>
     </div>
     <ul class="nav-links">
         <li><a href="#" id="homeBtn">Home</a></li>

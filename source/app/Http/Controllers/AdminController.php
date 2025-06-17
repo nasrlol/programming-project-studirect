@@ -17,12 +17,11 @@ class AdminController extends Controller
 
         $response = Http::get($this->studentsApiUrl);
         $students = $response->json('data');
-        $students = $students['data'];
+
         //Second response for companies
         $response = Http::get($this->companiesApiUrl);
         
         $companies = $response->json('data');
-        $companies = $companies['data'];
 
         $appointments = $this->getAppointments();   
         $connections = $this->getConnections();

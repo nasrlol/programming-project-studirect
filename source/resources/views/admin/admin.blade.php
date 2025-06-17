@@ -79,14 +79,14 @@
                             <td class='hidden job-preferences'>
                                 {{$student['job_preferences']}}
                             </td>
-                            <td class='hidden studentLogs'>
+                            <td class='hidden  studentLogs'>
                                 @foreach ($student['logs'] as $log)
                                 <ul>
                                 <li class='hidden studentLogId'>{{$student['id']}}</li>
                                 <li class=' studentLogAction'>{{$log['actor']}} {{$log['actor_id']}} {{$log['action']}}</li>
                                 <li class=' studentLogTime'>{{$log['date']}} om {{$log['time']}}</li>
                                 <li class=' studentSeverity'>{{$log['severity']}}</li>
-                                </li>
+                                </ul>
 
                                 @endforeach
                             </td>
@@ -167,6 +167,18 @@
                                 <td class='hidden speeddate-duration'>
                                     {{$company['speeddate_duration']}}
                                 </td>
+                                
+                                <td class='hidden  companyLogs'>
+                                @foreach ($company['logs'] as $log)
+                                    <ul>
+                                    <li class='hidden companyLogId'>{{$company['id']}}</li>
+                                    <li class=' companyLogAction'>{{$log['actor']}} {{$log['actor_id']}} {{$log['action']}}</li>
+                                    <li class=' companyLogTime'>{{$log['date']}} om {{$log['time']}}</li>
+                                    <li class=' companytSeverity'>{{$log['severity']}}</li>
+                                    </ul>
+
+                                @endforeach
+                            </td>
                             </tr>
                             @endforeach
                         </table>

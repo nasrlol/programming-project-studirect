@@ -70,8 +70,39 @@ function tableToObjects() {
     const  description = document.getElementsByClassName('description')
     const  boothLocation = document.getElementsByClassName('booth-location')
     const  speeddateDuration = document.getElementsByClassName('speeddate-duration')
+    //for logs that a company may have
+    const companyLogIds = document.getElementsByClassName('companyLogIds')
+    const companyLogAction = document.getElementsByClassName('companyLogAction')
+    const companyLogTime = document.getElementsByClassName('companyLogTime');
+    const companySeverity = document.getElementsByClassName('companySeverity')
 
-    for (let i = 0; i < names.length; i++)
+    for (let i = 0; i < names.length; i++) {
+        let currentId = ids[i].innerHTML;
+        //check if the company has any logs
+        let logs = new Array()
+        //add any logs that are necessary
+        for (let i = 0; i < companyLogIds.length; i++) {
+            if (companyLogIds[i].innerHTML == currentId) {
+                let severityInt;
+                switch (companySeverity[i].innerHTML.trim().toLocaleLowerCase()) {
+                    case 'normal':
+                        severityInt = 0;
+                        break;
+                    case 'critical':
+                        severityInt = 1;
+                        break;
+                    default:
+                        severityInt = 0;
+                        break;
+                }
+                logs.push({
+                    action: companyLogAction[i].innerHTML,
+                    date: companyLogTime[i].innerHTML.trim(),
+                    severity: severityInt
+                });
+            }
+        }
+
         objects.company.push({
             id: ids[i].innerHTML,
             name: names[i].innerHTML,
@@ -82,8 +113,10 @@ function tableToObjects() {
             jobDomain: jobDomain[i].innerHTML.trim(),
             description: description[i].innerHTML.trim(),
             boothLocation: boothLocation[i].innerHTML.trim(),
-            speeddateDuration: speeddateDuration[i].innerHTML.trim()
+            speeddateDuration: speeddateDuration[i].innerHTML.trim(),
+            logs: logs
         });
+    }
 
     //Add apointments
     let studentId = document.getElementsByClassName('appointmentSId')
@@ -471,6 +504,4 @@ export function sortLogs(searchType) {
             <div class='severity'>Belang: ${severity}</div>
             </li>`
     }
-    
-
 }

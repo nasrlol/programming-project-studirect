@@ -99,8 +99,7 @@ class AdminController extends Controller
                 foreach ($students as &$student) {
                     if ($student['id'] == $id) array_push($student['logs'], $log );
                 }
-            } elseif ($log['actor'] === 'Company') {
-                $log['actor_id'] = $this->translateCompany($id);
+            } elseif ($log['actor'] === 'Bedrijf') {
                 //This code adds a log to the user 
                 foreach ($companies as &$company) {
                     if ($company['id'] == $id) array_push($company['logs'], $log );
@@ -108,9 +107,6 @@ class AdminController extends Controller
             }
             elseif ($log['actor'] === 'Admin') {
                 $log['actor'] = 'Steve';
-            }
-            else {
-                $log['actor'] = 'Onbekend doel';
             }
         
         }

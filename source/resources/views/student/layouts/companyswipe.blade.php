@@ -1,6 +1,6 @@
 <div id="company-screen">
     <div id="company-title">
-        <h2 id="company-name">
+        <h2>
         {{ $company_name ?? 'Naam Bedrijf' }}
         </h2>
         <p>

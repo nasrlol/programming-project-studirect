@@ -15,7 +15,7 @@ function tableToObjects() {
     const preferences = document.getElementsByClassName('job-preferences')
     for (let i = 0; i < names.length; i++)
     {
-        objects.student.push({
+        objects.student.push({ 
             id: ids[i].innerHTML,
             activated: activated[i].innerHTML,
             name: names[i].innerHTML,

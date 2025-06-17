@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
 use Illuminate\View\View;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Log;
 use App\Http\Controllers\MessageController;
 
 class StudentController extends Controller
@@ -30,7 +31,6 @@ class StudentController extends Controller
         }
 
         $companies = $response->json('data');
-        $companies = $companies['data'];
 
         $response = Http::get("{$this->appointmentApiUrl}");
         //get all appointments where the student is involved
@@ -53,12 +53,29 @@ class StudentController extends Controller
         $messageController = new MessageController();
         $allMessages = $messageController->getAllMessagesForStudent($id);
 
+        // fetch diplomas for graduation track dropdown
+        $diplomasResponse = Http::get($this->diplomasApiUrl);
+        if ($diplomasResponse->successful()) {
+            $diplomasData = $diplomasResponse->json('data');
+
+            // check if the data is nested like companies API
+            $diplomas = isset($diplomasData['data']) ? $diplomasData['data'] : $diplomasData;
+        } else {
+            Log::error('Diplomas API Failed:', [
+                'status' => $diplomasResponse->status(),
+                'body' => $diplomasResponse->body(),
+                'url' => $this->diplomasApiUrl
+            ]);
+            $diplomas = [];
+        }
+
         return view('student.html.student', [
             'student' => $student,
             'companies' => $companies,
             'appointments' => $appointments,
             'connections' => $connections,
-            'allMessages' => $allMessages
+            'allMessages' => $allMessages,
+            'diplomas' => $diplomas
         ]);
 
     }
@@ -102,12 +119,23 @@ class StudentController extends Controller
         $messageController = new MessageController();
         $allMessages = $messageController->getAllMessagesForStudent($id);
 
+        // fetch diplomas for graduation track dropdown
+        $diplomasResponse = Http::get($this->diplomasApiUrl);
+        if ($diplomasResponse->successful()) {
+            $diplomasData = $diplomasResponse->json('data');
+            // Check if the data is nested like companies API
+            $diplomas = isset($diplomasData['data']) ? $diplomasData['data'] : $diplomasData;
+        } else {
+            $diplomas = [];
+        }
+
         return view('student.html.student', [
             'student' => $student,
             'companies' => $companies,
             'appointments' => $appointments,
             'connections' => $connections,
-            'allMessages' => $allMessages
+            'allMessages' => $allMessages,
+            'diplomas' => $diplomas
         ]);
 
     }

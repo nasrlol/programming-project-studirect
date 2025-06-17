@@ -423,12 +423,10 @@ export function setViewFunctionality () {
         //Add user logs, if they exist
         li.innerHTML += `<li>Logs</li>`
         const logList = document.createElement('ul');
-        console.log(user)
         if (user.logs.length > 0) {
             let color;
             let severity;
             for (let log of user.logs) {
-                console.log(log)
                 switch (log.severity) {
                     case 0:
                         color = 'black';

@@ -2,6 +2,7 @@ body {
   margin: 0;
   background-color: hwb(0 11% 89%);
   font-family: Verdana, Geneva, Tahoma, sans-serif;
+  max-height: 100%;
 }
 
 header {
@@ -116,6 +117,7 @@ header {
   width: 25%;
   border-right: 2px solid #333;
   padding: 10px;
+  overflow-y: auto;
 }
 
 .chat-list h3 {

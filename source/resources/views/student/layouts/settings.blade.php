@@ -24,7 +24,7 @@
                 </div>
                 <div class="form-group">
                     <label for="email">Email</label>
-                    <input type="email" id="email" value="{{ $student['email'] ?? '' }}" />
+                    <input type="email" id="email" value="{{ $student['email'] ?? '' }}" readonly class="readonly-input" />
                 </div>
                 <div class="form-group">
                     <label>Password</label>
@@ -55,7 +55,10 @@
                         @endif
                     </select>
                 </div>
-                <button class="save-btn">Save Changes</button>
+                <div class="button-group">
+                    <button class="save-btn">Save Changes</button>
+                    <button class="undo-btn" id="undoChangesBtn" style="display: none;">Undo Changes</button>
+                </div>
             </div>
         </div>
 

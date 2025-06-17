@@ -771,3 +771,54 @@ body {
 .remove-file-btn:hover {
     background: #ff5252;
 }
+
+/* Theme selection styles */
+.theme-options {
+    display: flex;
+    gap: 1rem;
+    margin-top: 0.5rem;
+}
+
+.theme-option {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
+    background: #363656;
+    border: 2px solid transparent;
+    border-radius: 8px;
+    padding: 1rem;
+    cursor: pointer;
+    transition: border-color 0.3s, background-color 0.3s;
+    color: #fff;
+    font-family: inherit;
+    font-size: 0.9rem;
+}
+
+.theme-option:hover {
+    background: #4a4a8c;
+}
+
+.theme-option.active {
+    border-color: #5c5cb2;
+    background: #4a4a8c;
+}
+
+.theme-preview {
+    width: 60px;
+    height: 40px;
+    border-radius: 4px;
+    border: 1px solid #4a4a8c;
+}
+
+.dark-theme {
+    background: linear-gradient(45deg, #3a3550 50%, #2a2a44 50%);
+}
+
+.light-theme {
+    background: linear-gradient(45deg, #f5f5f5 50%, #e0e0e0 50%);
+}
+
+.theme-option span {
+    font-weight: 500;
+}

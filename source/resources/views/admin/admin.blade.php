@@ -223,7 +223,7 @@
                         @endphp
                             <li class='logItem'>
                                 <div class='hidden logId'>{{$log['id']}}</div>
-                                <div class='logAction'>{{$log['target_type']}} {{$log['action']}}</div>
+                                <div class='logAction'>{{$log['actor']}} {{$log['actor_id']}} {{$log['action']}}</div>
                                 <div class='logDate'>{{$log['date']}} om {{$log['time']}}</div>
                                 <div class='hidden severity'>{{$log['severity']}}</div>
                             </li>

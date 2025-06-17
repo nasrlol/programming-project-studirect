@@ -15,17 +15,48 @@ function tableToObjects() {
     const studys = document.getElementsByClassName('study-direction')
     const interests = document.getElementsByClassName('interests')
     const preferences = document.getElementsByClassName('job-preferences')
+    //for logs that a student may have
+    const studentLogIds = document.getElementsByClassName('studentLogId')
+    const studentLogAction = document.getElementsByClassName('studentLogAction')
+    const studentLogTime = document.getElementsByClassName('studentLogTime');
+    const studentSeverity = document.getElementsByClassName('studentSeverity')
     for (let i = 0; i < names.length; i++)
     {
+        let currentId = ids[i].innerHTML
+        //check if the student has any logs
+        let logs = new Array()
+        //add any logs that are necessary
+        for (let i = 0; i < studentLogIds.length; i++) {
+            if (studentLogIds[i].innerHTML == currentId) {
+                let severityInt;
+                switch (studentSeverity[i].innerHTML.trim().toLocaleLowerCase()) {
+                    case 'normal':
+                        severityInt = 0;
+                        break;
+                    case 'critical':
+                        severityInt = 1;
+                        break;
+                    default:
+                        severityInt = 0;
+                        break;
+                }
+                logs.push({
+                    action: studentLogAction[i].innerHTML,
+                    date: studentLogTime[i].innerHTML.trim(),
+                    severity: severityInt
+                });
+            }
+        }
         objects.student.push({
-            id: ids[i].innerHTML,
+            id: currentId,
             activated: activated[i].innerHTML,
             name: names[i].innerHTML,
             mail: mails[i].innerHTML,
             login: logins[i].innerHTML,
             studyDirection: studys[i].innerHTML.trim(),
             interests: interests[i].innerHTML.trim(),
-            preferences: preferences[i].innerHTML.trim()
+            preferences: preferences[i].innerHTML.trim(),
+            logs: logs
         });
     }
     //Add companies
@@ -354,7 +385,43 @@ export function setViewFunctionality () {
             li.innerHTML += `<li>Beschrijving: ${user.description}</li>`
             li.innerHTML += `<li>Locatie booth: ${user.boothLocation}</li>`
             li.innerHTML += `<li>Duur speeddates: ${user.speeddateDuration}</li>`
+
         }
+        //Add user logs, if they exist
+        li.innerHTML += `<li>Logs</li>`
+        const logList = document.createElement('ul');
+        console.log(user)
+        if (user.logs.length > 0) {
+            let color;
+            let severity;
+            for (let log of user.logs) {
+                console.log(log)
+                switch (log.severity) {
+                    case 0:
+                        color = 'black';
+                        severity = 'Normaal';
+                        break;
+                    case 1:
+                        color = 'red';
+                        severity = 'Kritiek';
+                        break;
+                    default:
+                        color = 'grey';
+                }
+
+                logList.innerHTML += `<li class='logItem' style='color: ${color}'>
+                <div class='logAction'>${log.action}</div>
+                <div class='logDate'>${log.date}</div>
+                <div class='severity'>Belang: ${severity}</div>
+                </li>`
+            }
+        }
+        //Else say no logs were found
+        else logList.innerHTML = "Geen logs bij deze user"
+        
+        li.appendChild(logList);
+        li.innerHTML += '</li>'
+        
         response.appendChild(li);
 
         document.getElementById('detailList').innerHTML = response.innerHTML;

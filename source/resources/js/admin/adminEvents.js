@@ -55,6 +55,7 @@ document.getElementById('searchType').addEventListener('change', () => {
 })
 
 window.addEventListener("load", () => {
+    console.log(data)
     dashboard();
     sortLogs('belang')
     switchDisplay("logs");

@@ -65,6 +65,15 @@ function handleCompanySelection() {
             // update the company name in the chat header
             const headerTitle = chatContainer.querySelector('.chat-header h2');
             headerTitle.textContent = companyMatch.querySelector('.company-name').textContent;
+
+            // get company ID and trigger conversation loading
+            const companyId = companyMatch.dataset.companyId;
+            if (companyId) {
+                // dispatch custom event to load conversation
+                window.dispatchEvent(new CustomEvent('companySelected', {
+                    detail: { companyId: companyId }
+                }));
+            }
         });
     });
 }

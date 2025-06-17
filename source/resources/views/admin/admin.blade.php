@@ -51,7 +51,7 @@
                 <div class='filter' id='student'></div>
                 <div class='list'>
                     <table id='studentTable'>
-                        <tr><th class='nameTh'>Naam</th><th class='nameTh'>Email</th><th class='loginTh'>Laatste login</th><th class='extraTh'>Acties</th></tr>
+                        <tr><th>Naam</th><th>Email</th><th class='loginTh'>Laatste login</th><th class='extraTh'>Acties</th></tr>
                         <!--API call-->
                         <!--Last log still needs to be added-->
                         @foreach ($students as $student)

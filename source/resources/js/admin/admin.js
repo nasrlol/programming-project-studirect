@@ -227,7 +227,7 @@ export function createTable(input, extra = null) {
     if (extra) {
         for (let e of extra) {
             const a = document.createElement("tr");
-            a.innerHTML = `<td>|${e.name}</td>`,
+            a.innerHTML = `<td class='highlighted'>|${e.name}</td>`,
             a.innerHTML += `<td>${e.mail}</td>`,
             a.innerHTML += `<td class='extraTd'>${e.login}</td>`,
             a.innerHTML += `<td class='extraTd'><span>

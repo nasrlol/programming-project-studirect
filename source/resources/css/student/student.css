@@ -54,6 +54,15 @@ body {
     display: flex;
     align-items: center;
     gap: 1rem;
+    position: relative;
+    cursor: pointer;
+    padding: 0.5rem;
+    border-radius: 4px;
+    transition: background-color 0.3s;
+}
+
+.nav-profile:hover {
+    background-color: #4a4a8c;
 }
 
 .profile-pic {
@@ -65,6 +74,50 @@ body {
 
 .profile-name {
     font-weight: 600;
+}
+
+/* Profile dropdown styles */
+.profile-dropdown {
+    position: absolute;
+    top: 100%;
+    right: 0;
+    background-color: #2a2a44;
+    border: 1px solid #4a4a8c;
+    border-radius: 6px;
+    min-width: 120px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+    z-index: 10;
+    display: none;
+    flex-direction: column;
+    margin-top: 0.5rem;
+}
+
+.profile-dropdown.show {
+    display: flex;
+}
+
+.profile-dropdown a {
+    padding: 0.75rem 1rem;
+    text-decoration: none;
+    color: #fff;
+    transition: background-color 0.3s;
+    border-bottom: 1px solid #4a4a8c;
+}
+
+.profile-dropdown a:last-child {
+    border-bottom: none;
+}
+
+.profile-dropdown a:hover {
+    background-color: #4a4a8c;
+}
+
+.profile-dropdown a:first-child {
+    border-radius: 6px 6px 0 0;
+}
+
+.profile-dropdown a:last-child {
+    border-radius: 0 0 6px 6px;
 }
 
 /* studirect logo style */
@@ -267,11 +320,6 @@ body {
     background: #4d4157;
 }
 
-.chat-section {
-    display: flex;
-    flex-direction: column;
-}
-
 .chat-header {
     margin-bottom: 1rem;
     padding-bottom: 1rem;
@@ -289,13 +337,26 @@ body {
     min-height: 300px;
 }
 
+/* Conversation container */
+.conversation {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    width: 100%;
+}
+
 .chat-input {
     display: flex;
-    gap: 1rem;
     padding: 1rem;
     background: #2a2a44;
     border-radius: 0 0 8px 8px;
     border-top: 1px solid #4d4157;
+}
+
+.chat-input form {
+    display: flex;
+    gap: 1rem;
+    width: 100%;
 }
 
 .chat-input textarea {
@@ -316,7 +377,7 @@ body {
     border-color: #4a4a8c;
 }
 
-.chat-input button {
+.chat-input input[type="submit"] {
     align-self: flex-end;
     padding: 0.8rem 1.5rem;
     background: #4a4a8c;
@@ -328,13 +389,8 @@ body {
     transition: background-color 0.3s;
 }
 
-.chat-input button:hover:not(:disabled) {
-    background: #5a5a9c;
-}
-
-.chat-input button:disabled {
-    opacity: 0.5;
-    cursor: not-allowed;
+.chat-input input[type="submit"]:hover {
+    background-color: #5c5cb2;
 }
 
 /* empty chat styles */
@@ -378,4 +434,404 @@ body {
     display: flex;
     flex-direction: column;
     height: 100%;
+}
+
+/* Message display styles */
+.message {
+    display: flex;
+    margin-bottom: 1rem;
+    max-width: 70%;
+    width: fit-content;
+}
+
+.message.sent {
+    align-self: flex-end;
+    margin-left: auto;
+    margin-right: 0;
+}
+
+.message.received {
+    align-self: flex-start;
+    margin-left: 0;
+    margin-right: auto;
+}
+
+.message-content {
+    background: #363656;
+    padding: 0.8rem 1rem;
+    border-radius: 12px;
+    position: relative;
+    word-wrap: break-word;
+}
+
+.message.sent .message-content {
+    background: #4a4a8c;
+    border-bottom-right-radius: 4px;
+}
+
+.message.received .message-content {
+    background: #363656;
+    border-bottom-left-radius: 4px;
+}
+
+.message-content p {
+    margin: 0;
+    line-height: 1.4;
+    color: #fff;
+}
+
+.message-time {
+    display: block;
+    font-size: 0.75rem;
+    color: #aaa;
+    margin-top: 0.25rem;
+    text-align: right;
+}
+
+.message.received .message-time {
+    text-align: left;
+}
+
+/* Loading and empty states */
+.loading-messages,
+.no-messages,
+.error-message {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+    color: #aaa;
+    font-style: italic;
+}
+
+.error-message {
+    color: #ff6b6b;
+}
+
+/* Chat messages container scrolling */
+.chat-messages::-webkit-scrollbar {
+    width: 6px;
+}
+
+.chat-messages::-webkit-scrollbar-track {
+    background: #2a2a44;
+}
+
+.chat-messages::-webkit-scrollbar-thumb {
+    background: #4a4a8c;
+    border-radius: 3px;
+}
+
+.chat-messages::-webkit-scrollbar-thumb:hover {
+    background: #5c5cb2;
+}
+
+/* Settings page styles */
+.settings-sidebar {
+    display: flex;
+    flex-direction: column;
+}
+
+.settings-nav {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.settings-nav h3 {
+    color: #fff;
+    font-size: 1.4rem;
+    margin: 0;
+    padding: 0 0.5rem;
+}
+
+.settings-menu {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.settings-btn {
+    background: #363656;
+    border: none;
+    color: #fff;
+    padding: 0.8rem 1rem;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    text-align: left;
+    font-size: 1rem;
+    font-family: inherit;
+}
+
+.settings-btn:hover {
+    background: #4a4a8c;
+}
+
+.settings-btn.active {
+    background: #4a4a8c;
+    border-left: 3px solid #5c5cb2;
+}
+
+.settings-main {
+    position: relative;
+}
+
+.settings-panel {
+    display: none;
+    height: 100%;
+    overflow-y: auto;
+}
+
+.settings-panel.active {
+    display: block;
+}
+
+.settings-panel h2 {
+    color: #fff;
+    margin-bottom: 1.5rem;
+    font-size: 1.6rem;
+}
+
+.settings-form {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    max-width: 600px;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.form-group label {
+    color: #fff;
+    font-weight: 500;
+    font-size: 1rem;
+}
+
+.form-group input,
+.form-group textarea,
+.form-group select {
+    background: #363656;
+    border: 1px solid #4a4a8c;
+    border-radius: 6px;
+    padding: 0.8rem;
+    color: #fff;
+    font-size: 1rem;
+    font-family: inherit;
+    transition: border-color 0.3s;
+}
+
+.form-group input:focus,
+.form-group textarea:focus,
+.form-group select:focus {
+    outline: none;
+    border-color: #5c5cb2;
+}
+
+/* Darker placeholder option for graduation track dropdown */
+#graduationTrack option[value=""] {
+    color: #888;
+    font-style: italic;
+}
+
+#graduationTrack option:not([value=""]) {
+    color: #fff;
+    font-style: normal;
+}
+
+/* Read-only input styling */
+.readonly-input {
+    background: #2a2a44 !important;
+    color: #aaa !important;
+    cursor: not-allowed !important;
+    border-color: #333 !important;
+}
+
+.readonly-input:focus {
+    border-color: #333 !important;
+    box-shadow: none !important;
+}
+
+.checkbox-label {
+    display: flex !important;
+    flex-direction: row !important;
+    align-items: center;
+    gap: 0.8rem;
+    cursor: pointer;
+}
+
+.checkbox-label input[type="checkbox"] {
+    width: auto;
+    margin: 0;
+}
+
+.save-btn {
+    background: #4a4a8c;
+    border: none;
+    color: #fff;
+    padding: 1rem 2rem;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 1rem;
+    font-weight: 500;
+    transition: background-color 0.3s;
+    align-self: flex-start;
+}
+
+.save-btn:hover {
+    background: #5c5cb2;
+}
+
+.password-btn {
+    background: #363656;
+    border: 1px solid #4a4a8c;
+    color: #fff;
+    padding: 0.8rem 1.5rem;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 1rem;
+    font-weight: 500;
+    transition: background-color 0.3s;
+    align-self: flex-start;
+}
+
+.password-btn:hover {
+    background: #4a4a8c;
+}
+
+.undo-btn {
+    background: #ff6b6b;
+    border: none;
+    color: #fff;
+    padding: 1rem 2rem;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 1rem;
+    font-weight: 500;
+    transition: background-color 0.3s;
+    align-self: flex-start;
+}
+
+.undo-btn:hover {
+    background: #ff5252;
+}
+
+/* Button group for side-by-side layout */
+.button-group {
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+}
+
+/* Modified profile section styling */
+.profile-settings-changed {
+    border: 2px solid #ff9500 !important;
+    box-shadow: 0 0 10px rgba(255, 149, 0, 0.3);
+}
+
+.form-group input.changed,
+.form-group select.changed,
+.form-group textarea.changed {
+    border-color: #ff9500 !important;
+}
+
+/* Theme selection styles */
+.theme-options {
+    display: flex;
+    gap: 1rem;
+    margin-top: 0.5rem;
+}
+
+/* PDF Upload Zone Styles */
+.pdf-upload-zone {
+    position: relative;
+    border: 2px dashed #4a4a8c;
+    border-radius: 8px;
+    padding: 2rem;
+    background: #363656;
+    text-align: center;
+    cursor: pointer;
+    transition: border-color 0.3s, background-color 0.3s;
+    min-height: 120px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.pdf-upload-zone:hover {
+    border-color: #5c5cb2;
+    background: #4a4a8c;
+}
+
+.pdf-upload-zone input[type="file"] {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    opacity: 0;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+}
+
+.pdf-upload-text {
+    color: #fff;
+    font-size: 1rem;
+    font-weight: 500;
+    pointer-events: none;
+}
+
+.pdf-upload-current {
+    margin-top: 0.5rem;
+    color: #aaa;
+    font-size: 0.9rem;
+    pointer-events: none;
+}
+
+.theme-option {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
+    background: #363656;
+    border: 2px solid transparent;
+    border-radius: 8px;
+    padding: 1rem;
+    cursor: pointer;
+    transition: border-color 0.3s, background-color 0.3s;
+    color: #fff;
+    font-family: inherit;
+    font-size: 0.9rem;
+}
+
+.theme-option:hover {
+    background: #4a4a8c;
+}
+
+.theme-option.active {
+    border-color: #5c5cb2;
+    background: #4a4a8c;
+}
+
+.theme-preview {
+    width: 60px;
+    height: 40px;
+    border-radius: 4px;
+    border: 1px solid #4a4a8c;
+}
+
+.dark-theme {
+    background: linear-gradient(45deg, #3a3550 50%, #2a2a44 50%);
+}
+
+.light-theme {
+    background: linear-gradient(45deg, #f5f5f5 50%, #e0e0e0 50%);
+}
+
+.theme-option span {
+    font-weight: 500;
 }

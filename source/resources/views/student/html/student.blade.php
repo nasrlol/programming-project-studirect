@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>StuDirect</title>
     <link href="https://fonts.googleapis.com/css2?family=EB+Garamond:wght@400;500;600&display=swap" rel="stylesheet">
     @vite ('resources/css/student/student.css')
@@ -10,6 +11,8 @@
 <body>
     @include('student.layouts.navbar')
 <main class:"container">
+    @include('student.layouts.settings')
+
     <div id="home-content" class="content-container">
         <section class="sectionType1">
                 @include('student.layouts.notification', [
@@ -44,6 +47,7 @@
                     @include('student.layouts.messageList', [
                         'photo' => $company['photo'] ?? '',
                         'name' => $company['name'],
+                        'id' => $company['id'],
                     ])
                 @endforeach
             </div>
@@ -56,14 +60,19 @@
                 </div>
             </div>
             <div class="chat-container">
-                @include('student.layouts.chat')
+                @include('student.layouts.chat', [
+                    'student_id' => $student['id'],
+                    'company_id' => $companies[0]['id'],
+                ])
             </div>
         </section>
     </div>
 
     <div id="calendar-content" class:"content-container">
     </div>
+
 </main>
 @vite ('resources/js/student/student.js')
+@vite ('resources/js/student/chat.js')
 </body>
 </html>

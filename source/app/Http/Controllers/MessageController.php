@@ -108,7 +108,7 @@ class MessageController extends Controller
         }
 
         $companiesData = $response->json('data');
-        $companies = $companiesData['data'] ?? [];
+        $companies = $companiesData ?? [];
 
         if (empty($companies)) {
             return [];

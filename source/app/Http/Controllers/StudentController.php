@@ -30,7 +30,6 @@ class StudentController extends Controller
         }
 
         $companies = $response->json('data');
-        $companies = $companies['data'];
 
         $response = Http::get("{$this->appointmentApiUrl}");
         //get all appointments where the student is involved
@@ -79,7 +78,6 @@ class StudentController extends Controller
             return view('notfound', ['message' => 'Technisch probleem bij ophalen server (error code 404). Contacteer de beheerder van de site voor meer informatie']);
         }
         $companies = $response->json('data');
-        $companies = $companies['data'];
         //get all appointments where the student is involved
         $response = Http::get("{$this->appointmentApiUrl}");
 

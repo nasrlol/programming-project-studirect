@@ -4,13 +4,15 @@ const loggedInCompanyId = 5; // <-- Vervang met de juiste ID van jouw bedrijf
 const loggedInCompanyType = "App/Models/Company";
 
 function getTimeRowIndex(time) {
-    const times = ["09:00", "09:15", "09:30", "10:00", "10:30", "12:30", "12:45"];
-    return times.indexOf(time) + 1; // +1 omdat row 0 headers zijn
+    const hour = time.split(":")[0]; // "09:00" → "09"
+    const mapping = { "09": 1, "10": 2, "11": 3, "12": 4, "13": 5, "14": 6, "15": 7 };
+    return mapping[hour] ?? 1; // default op 09u
 }
 
-function getDayColumnIndexFromDateString(dateString) {
-    const day = new Date(dateString).getDay(); // 0 = zondag
-    return day >= 1 && day <= 5 ? day : 1; // Beperk tot ma-vr, fallback = maandag
+function getMinuteColumnIndex(time) {
+    const minute = time.split(":")[1]; // "09:15" → "15"
+    const mapping = { "00": 1, "15": 2, "30": 3, "45": 4 };
+    return mapping[minute] ?? 1; // default op 00
 }
 
 function setAppointment(rowIndex, colIndex, text) {
@@ -40,9 +42,9 @@ function loadHomeContent() {
     notificationSection.appendChild(title);
 
     const notifications = document.createElement("p");
-        notifications.textContent =  "Wij zijn verheugd om u te verwelkomen als partner in het begeleiden van de professionals van morgen. Via CareerLaunch krijgt u de kans om uw bedrijf in de kijker te zetten, vacatures te delen en rechtstreeks in contact te komen met gemotiveerde studenten. Samen bouwen we aan de toekomst. Start vandaag nog met het ontdekken van talent!";
-        notificationSection.appendChild(notifications);
-   
+    notifications.textContent = "Wij zijn verheugd om u te verwelkomen als partner in het begeleiden van de professionals van morgen. Via CareerLaunch krijgt u de kans om uw bedrijf in de kijker te zetten, vacatures te delen en rechtstreeks in contact te komen met gemotiveerde studenten. Samen bouwen we aan de toekomst. Start vandaag nog met het ontdekken van talent!";
+    notificationSection.appendChild(notifications);
+
 
     const mapSection = document.createElement("section");
     mapSection.classList.add("map");
@@ -107,7 +109,7 @@ document.addEventListener("DOMContentLoaded", () => {
             name.innerHTML = `<img src="${user.photo}" class="avatar"> ${user.name}`;
             chatWindow.appendChild(name);
 
-            // 📩 Post om gesprekken op te halen (nieuwe API)
+            // ✅ Correcte POST naar conversation endpoint
             fetch("http://10.2.160.208/api/messages/conversation", {
                 method: "POST",
                 headers: {
@@ -122,17 +124,21 @@ document.addEventListener("DOMContentLoaded", () => {
             })
                 .then(response => response.json())
                 .then(data => {
-                    const messages = data.content || []; // nieuwe API-structuur
+                    const messages = data.conversation || []; // ✅ Correct veld
+
                     messages.forEach(msg => {
                         const bubble = document.createElement("div");
                         bubble.classList.add("chat-bubble");
                         bubble.textContent = msg.content;
+
                         if (msg.sender_id === loggedInCompanyId && msg.sender_type === loggedInCompanyType) {
                             bubble.classList.add("me");
                         }
+
                         chatWindow.appendChild(bubble);
                     });
 
+                    // ✅ Input toevoegen ná alle messages
                     const input = document.createElement("input");
                     input.type = "text";
                     input.placeholder = "Type a message";
@@ -160,7 +166,7 @@ document.addEventListener("DOMContentLoaded", () => {
                                     const bubble = document.createElement("div");
                                     bubble.classList.add("chat-bubble", "me");
                                     bubble.textContent = contentValue;
-                                    chatWindow.insertBefore(bubble, input); // boven input invoegen
+                                    chatWindow.insertBefore(bubble, input);
                                     input.value = "";
                                 })
                                 .catch(err => {
@@ -231,7 +237,6 @@ document.addEventListener("DOMContentLoaded", () => {
         setActiveButton("calendarBtn");
         content.innerHTML = "";
 
-
         const calendarContainer = document.createElement("div");
         calendarContainer.classList.add("calendar-container");
 
@@ -243,84 +248,139 @@ document.addEventListener("DOMContentLoaded", () => {
         calendarTable.classList.add("calendar-table");
         calendarTable.innerHTML = `
         <table id="calendar-table">
-            <tr><th>Time slot</th><th>Monday</th><th>Tuesday</th><th>Wednesday</th><th>Thursday</th><th>Friday</th></tr>
-            <tr><td>09:00</td><td>–</td><td>–</td><td>–</td><td>–</td><td>–</td></tr>
-            <tr><td>09:15</td><td>–</td><td>–</td><td>–</td><td>–</td><td>–</td></tr>
-            <tr><td>09:30</td><td>–</td><td>–</td><td>–</td><td>–</td><td>–</td></tr>
-            <tr><td>10:00</td><td>–</td><td>–</td><td>–</td><td>–</td><td>–</td></tr>
-            <tr><td>10:30</td><td>–</td><td>–</td><td>–</td><td>–</td><td>–</td></tr>
-            <tr><td>12:30</td><td>–</td><td>–</td><td>–</td><td>–</td><td>–</td></tr>
-            <tr><td>12:45</td><td>–</td><td>–</td><td>–</td><td>–</td><td>–</td></tr>
+            <tr><th>Time slots</th><th>00</th><th>15</th><th>30</th><th>45</th></tr>
+            <tr><td>09u</td><td>–</td><td>–</td><td>–</td><td>–</td></tr>
+            <tr><td>10u</td><td>–</td><td>–</td><td>–</td><td>–</td></tr>
+            <tr><td>11u</td><td>–</td><td>–</td><td>–</td><td>–</td></tr>
+            <tr><td>12u</td><td>–</td><td>–</td><td>–</td><td>–</td></tr>
+            <tr><td>13u</td><td>–</td><td>–</td><td>–</td><td>–</td></tr>
+            <tr><td>14u</td><td>–</td><td>–</td><td>–</td><td>–</td></tr>
+            <tr><td>15u</td><td>–</td><td>–</td><td>–</td><td>–</td></tr>
         </table>
     `;
         calendarContainer.appendChild(calendarTable);
         content.appendChild(calendarContainer);
-
+/**
         fetch("http://10.2.160.208/api/appointments")
-            .then(response => response.json())
-            .then(async (response) => {
-                const appointments = response.data;
-                appointmentList.innerHTML = "<h3>appointments:</h3>";
+    .then(response => response.json())
+    .then(async (response) => {
+        const allAppointments = response.data;
 
-                for (const appointment of appointments) {
-                    const time = appointment.time_slot.split(" - ")[0]; // "09:00"
-                    const studentId = appointment.student_id;
+        // ✅ FILTER enkel voor dit bedrijf
+        const appointments = allAppointments.filter(appt => appt.company_id === loggedInCompanyId);
 
-                    let studentName = `Student ${studentId}`;
+        if (appointments.length === 0) {
+            appointmentList.innerHTML = "<p>Geen afspraken gevonden voor jouw bedrijf.</p>";
+            return;
+        }
 
-                    // Probeer student op te halen
-                    try {
-                        const studentRes = await fetch(`http://10.2.160.208/api/students/${studentId}`);
-                        const studentJson = await studentRes.json();
+        appointmentList.innerHTML = "<h3>Afspraken vandaag:</h3>";
 
-                        if (studentJson.data) {
-                            const s = studentJson.data;
-                            studentName = `${s.first_name ?? ""} ${s.last_name ?? ""}`.trim();
-                        }
-                    } catch (error) {
-                        console.warn(`Kon student ${studentId} niet ophalen`);
-                    }
+        for (const appointment of appointments) {
+            const time = appointment.time_slot.split(" - ")[0];
+            const studentId = appointment.student_id;
 
-                    const rowIndex = getTimeRowIndex(time);
-                    const colIndex = getDayColumnIndexFromDateString(appointment.created_at);
-                    const table = document.getElementById("calendar-table");
-                    const row = table.rows[rowIndex];
-                    const cell = row?.cells?.[colIndex];
-
-                    // ✅ Alleen verdergaan als de cel leeg is
-                    if (cell && (cell.innerText.trim() === "–" || cell.innerText.trim() === "")) {
-                        // Voeg toe aan linker lijst
-                        let group = appointmentList.querySelector(`p[data-time='${time}']`);
-                        if (!group) {
-                            group = document.createElement("p");
-                            group.dataset.time = time;
-                            group.textContent = time;
-                            appointmentList.appendChild(group);
-
-                            const ul = document.createElement("ul");
-                            ul.dataset.time = time;
-                            appointmentList.appendChild(ul);
-                        }
-
-                        const ul = appointmentList.querySelector(`ul[data-time='${time}']`);
-                        const li = document.createElement("li");
-                        li.textContent = studentName;
-                        ul.appendChild(li);
-
-                        // Zet in de tabel
-                        setAppointment(rowIndex, colIndex, studentName);
-                    } else {
-                        console.log(`⛔ Slot al bezet op ${time} (${rowIndex}, ${colIndex}) – overslaan ${studentName}`);
-                    }
-
+            let studentName = `Student ${studentId}`;
+            try {
+                const studentRes = await fetch(`http://10.2.160.208/api/students/${studentId}`);
+                const studentJson = await studentRes.json();
+                if (studentJson.data) {
+                    const s = studentJson.data;
+                    studentName = `${s.first_name ?? ""} ${s.last_name ?? ""}`.trim();
                 }
-            })
-            .catch(error => {
-                console.error("Fout bij ophalen van afspraken:", error);
-                appointmentList.innerHTML += "<p>Kon afspraken niet laden.</p>";
-            });
-    });
+            } catch (error) {
+                console.warn(`Kon student ${studentId} niet ophalen`);
+            }
 
+            const rowIndex = getTimeRowIndex(time);      // bv. 10u = rij 2
+            const colIndex = getMinuteColumnIndex(time); // bv. :15 = kolom 2
+
+            const table = document.getElementById("calendar-table");
+            const row = table.rows[rowIndex];
+            const cell = row?.cells?.[colIndex];
+
+            if (cell && (cell.innerText.trim() === "–" || cell.innerText.trim() === "")) {
+                let group = appointmentList.querySelector(`p[data-time='${time}']`);
+                if (!group) {
+                    group = document.createElement("p");
+                    group.dataset.time = time;
+                    group.textContent = time;
+                    appointmentList.appendChild(group);
+
+                    const ul = document.createElement("ul");
+                    ul.dataset.time = time;
+                    appointmentList.appendChild(ul);
+                }
+
+                const ul = appointmentList.querySelector(`ul[data-time='${time}']`);
+                const li = document.createElement("li");
+                li.textContent = studentName;
+                ul.appendChild(li);
+
+                setAppointment(rowIndex, colIndex, studentName);
+            } else {
+                console.log(`⛔ Slot al bezet op ${time} (${rowIndex}, ${colIndex}) – overslaan ${studentName}`);
+            }
+        }
+    })
+    .catch(error => {
+        console.error("Fout bij ophalen van afspraken:", error);
+        appointmentList.innerHTML += "<p>Kon afspraken niet laden.</p>";
+    });
+});
+ EINDE **/
+
+// ⬇️ Extra: Appointment ID 6 ophalen
+fetch("http://10.2.160.208/api/appointments/6")
+    .then(res => {
+        if (!res.ok) throw new Error("Appointment 6 niet gevonden.");
+        return res.json();
+    })
+    .then(async ({ data: appointment }) => {
+        const section = document.createElement("div");
+        section.classList.add("highlight-appointment");
+
+        const title = document.createElement("h3");
+        title.textContent = "Belangrijke Afspraak (ID 6)";
+        section.appendChild(title);
+
+        const time = appointment.time_slot.split(" - ")[0];
+        const rowIndex = getTimeRowIndex(time);
+        const colIndex = getMinuteColumnIndex(time);
+
+        let studentName = `Student ${appointment.student_id}`;
+        try {
+            const res = await fetch(`http://10.2.160.208/api/students/${appointment.student_id}`);
+            const studentJson = await res.json();
+            if (studentJson.data) {
+                const s = studentJson.data;
+                studentName = `${s.first_name ?? ""} ${s.last_name ?? ""}`.trim();
+            }
+        } catch (e) {
+            console.warn("Kon student bij afspraak 6 niet ophalen");
+        }
+
+        // Toon apart onderaan
+        const info = document.createElement("p");
+        info.textContent = `Tijdslot: ${appointment.time_slot} — Student: ${studentName}`;
+        section.appendChild(info);
+
+        // Optioneel: ook in de kalender zetten
+        const table = document.getElementById("calendar-table");
+        const cell = table?.rows?.[rowIndex]?.cells?.[colIndex];
+        if (cell && (cell.innerText.trim() === "–" || cell.innerText.trim() === "")) {
+            setAppointment(rowIndex, colIndex, studentName);
+        }
+
+        content.appendChild(section);
+    })
+    .catch(err => {
+        const warning = document.createElement("p");
+        warning.textContent = "❌ Kon afspraak met ID 6 niet ophalen.";
+        content.appendChild(warning);
+        console.error(err);
+    });
+});
 
     function setActiveButton(activeId) {
         const buttons = document.querySelectorAll(".center button, .right button");

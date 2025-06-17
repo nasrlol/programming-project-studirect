@@ -414,7 +414,7 @@ fetch("http://10.2.160.208/api/appointments/6")
 
         const navItems = [
             { id: "profile", label: "profile", icon: "👤" },
-            { id: "privacy", label: "privacy", icon: "🔒" },
+            
             { id: "appearance", label: "appearance", icon: "🎨" },
             { id: "account", label: "account", icon: "⚙️" }
         ];
@@ -452,9 +452,6 @@ fetch("http://10.2.160.208/api/appointments/6")
                 case "profile":
                     loadProfileSettings(contentContainer);
                     break;
-                case "privacy":
-                    loadPrivacySettings(contentContainer);
-                    break;
                 case "appearance":
                     loadAppearanceSettings(contentContainer);
                     break;
@@ -472,8 +469,8 @@ fetch("http://10.2.160.208/api/appointments/6")
             <h2>Profile Settings</h2>
             <form id="profileForm">
                 <label>
-                    Full Name:
-                    <input type="text" id="fullName" value="" placeholder="Enter your full name">
+                   Name:
+                    <input type="text" id="fullName" value="" placeholder="Enter your company-name">
                 </label>
                 <label>
                     Email:
@@ -486,7 +483,7 @@ fetch("http://10.2.160.208/api/appointments/6")
                 </label>
                 <label>
                     Bio:
-                    <textarea id="bio" rows="3" placeholder="Tell us about yourself..."></textarea>
+                    <textarea id="bio" rows="3" placeholder="Tell us about your company..."></textarea>
                 </label>
                 <button type="submit" class="btn primary">Save Profile</button>
             </form>
@@ -501,27 +498,6 @@ fetch("http://10.2.160.208/api/appointments/6")
             container.appendChild(profileCard);
         }
 
-
-        function loadPrivacySettings(container) {
-            const settingsCard = document.createElement("div");
-            settingsCard.classList.add("settings-card");
-
-            settingsCard.innerHTML = `
-            <h2>Privacy Settings</h2>
-            <div class="toggle-row">
-                <span>Profile Visibility</span>
-                <label class="toggle-switch">
-                    <input type="checkbox" id="profileVisible" checked>
-                    <span class="slider"></span>
-                </label>
-            </div>
-            
-            
-            <button class="btn primary" onclick="showNotification('Privacy settings updated!', 'success')">Save Settings</button>
-        `;
-
-            container.appendChild(settingsCard);
-        }
 
         function loadAppearanceSettings(container) {
             const settingsCard = document.createElement("div");

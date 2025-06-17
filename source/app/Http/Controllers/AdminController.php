@@ -111,13 +111,8 @@ class AdminController extends Controller
         
         }
 
-        $degreesObject = Http::get($this->apiUrl . 'diplomas')->json('data');
-
-        $degrees = array();
-
-        foreach ($degreesObject as $object) {
-            array_push($degrees, $object['type']);
-        }
+        $degrees = Http::get($this->apiUrl . 'diplomas')->json('data');
+        
         return view('/admin/admin', [
             'students' => $students, 
             'companies' => $companies,

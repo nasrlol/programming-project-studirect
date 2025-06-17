@@ -111,7 +111,7 @@
                             <label for='graduation_track'>Type diploma</label>
                             <select name='graduation_track' class='professional'>
                                 @foreach ($degrees as $degree)
-                                    <option value="{{ $degree }}">{{ $degree }}</option>
+                                    <option value="{{ $degree['id'] }}">{{ $degree['type'] }}</option>
                                 @endforeach
                             </select>
                         </div>

@@ -61,6 +61,7 @@
                     @include('student.layouts.messageList', [
                         'photo' => $company['photo'] ?? '',
                         'name' => $company['name'],
+                        'id' => $company['id'],
                     ])
                 @endforeach
             </div>
@@ -85,5 +86,6 @@
     </div>
 </main>
 @vite ('resources/js/student/student.js')
+@vite ('resources/js/student/chat.js')
 </body>
 </html>

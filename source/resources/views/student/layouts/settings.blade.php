@@ -75,20 +75,11 @@
                 </div>
                 <div class="form-group">
                     <label for="cvUpload">Upload CV (PDF)</label>
-                    <div class="file-upload-area">
+                    <div class="pdf-upload-zone">
                         <input type="file" id="cvUpload" accept=".pdf" />
-                        <div class="file-upload-info">
-                            <span class="file-upload-icon">📄</span>
-                            <span class="file-upload-text">Click to upload your CV or drag and drop</span>
-                            <small>Only PDF files are accepted</small>
-                        </div>
-                    </div>
-                    <div id="currentCV" class="current-file">
+                        <div class="pdf-upload-text">Click to upload or drag and drop your CV</div>
                         @if(isset($student['cv_filename']) && $student['cv_filename'])
-                            <span>Current CV: {{ $student['cv_filename'] }}</span>
-                            <button type="button" class="remove-file-btn">Remove</button>
-                        @else
-                            <span>No CV uploaded</span>
+                            <div class="pdf-upload-current">Current: {{ $student['cv_filename'] }}</div>
                         @endif
                     </div>
                 </div>

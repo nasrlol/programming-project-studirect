@@ -18,6 +18,12 @@ class AdminController extends Controller
         $response = Http::get($this->studentsApiUrl);
         $students = $response->json('data');
 
+        if (!$response->successful()) {
+            return view('APINotFound', ['message' => "De API is tijdelijk niet beschikbaar. Gelieve even te wachten, en dan opnieuw te proberen",
+            'location' => '/admin'
+        ]);
+        }
+
         //Second response for companies
         $response = Http::get($this->companiesApiUrl);
         
@@ -32,6 +38,7 @@ class AdminController extends Controller
         }
     
         else $response = Http::get($apiLogs);
+
         $logs = $response->json('data');
         //save next page from lgos, to add it seperatly in the view
         $nextPage = isset($logs['next_cursor']) ? $logs['next_cursor'] : null;
@@ -44,7 +51,7 @@ class AdminController extends Controller
             $id = $log['actor_id'];
             if ($log['actor'] === 'Student') {
                 $student = collect($students)->firstWhere('id', $id);
-                $log['actor_id'] = $this->translateStudent($student);
+                $log['actor_id'] = $this->translateStudent($id);
             } elseif ($log['actor'] === 'Company') {
                 $company = collect($companies)->firstWhere('id', $id);
                 $log['actor_id'] = $this->translateCompany($id);

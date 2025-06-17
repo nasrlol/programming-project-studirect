@@ -10,6 +10,8 @@
 <body>
     @include('student.layouts.navbar')
 <main class:"container">
+    @include('student.layouts.settings')
+
     <div id="home-content" class="content-container">
         <section class="sectionType1">
                 @include('student.layouts.notification', [
@@ -84,6 +86,7 @@
 
     <div id="calendar-content" class:"content-container">
     </div>
+
 </main>
 @vite ('resources/js/student/student.js')
 @vite ('resources/js/student/chat.js')

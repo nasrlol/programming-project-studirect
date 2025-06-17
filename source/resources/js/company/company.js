@@ -187,7 +187,7 @@ document.addEventListener("DOMContentLoaded", () => {
         fetch("http://10.2.160.208/api/students")
             .then(response => response.json())
             .then(apiResponse => {
-                const students = Array.isArray(apiResponse.data?.data) ? apiResponse.data.data : [];
+                const students = Array.isArray(apiResponse.data) ? apiResponse.data : [];
                 console.log("Gevonden studenten:", students);
 
                 if (students.length === 0) {
@@ -202,7 +202,7 @@ document.addEventListener("DOMContentLoaded", () => {
                     id: student.id,
                     name: `${student.first_name} ${student.last_name}`.trim() || `Student ${index + 1}`,
                     type: "App/Models/Student",
-                    photo: `https://i.pravatar.cc/40?img=${(index % 70) + 1}`
+                    photo: ``
                 }));
 
                 users.forEach(user => {
@@ -372,7 +372,7 @@ fetch("http://10.2.160.208/api/appointments/6")
             setAppointment(rowIndex, colIndex, studentName);
         }
 
-        content.appendChild(section);
+        document.querySelector(".appointment-list").appendChild(section);
     })
     .catch(err => {
         const warning = document.createElement("p");

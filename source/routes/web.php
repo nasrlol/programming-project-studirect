@@ -32,7 +32,7 @@ Route::get('/admin', [AdminController::class, 'show']);
 // GET loginpagina
 Route::get('/student/login', function () {
     return view('student.login_register.loginstudent');
-})->name('student.loginstudent.form');
+})->name('student.login.form');
 
 // POST login
 Route::post('/student/login', [LoginController::class, 'submit'])->name('student.login');
@@ -70,5 +70,6 @@ Route::get('/test-controller', [RegistrationStudentController::class, 'debug']);
 
 
 Route::get('/test-class-load', function () {
-    return new \App\Http\Controllers\RegistrationStudentController();
+    $controller = new \App\Http\Controllers\RegistrationStudentController();
+    return "Controller loaded successfully: " . get_class($controller);
 });

@@ -7,10 +7,11 @@ use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
 use Illuminate\View\View;
 use Illuminate\Support\Facades\Http;
+use App\Http\Controllers\MessageController;
 
 class StudentController extends Controller
 {
-    
+
 
     //Function that shows only one specific student, and all of the companies. To be used by the students page
     public function index(string $id)
@@ -19,7 +20,7 @@ class StudentController extends Controller
         //If the student is not found, user can go back to welcome page
         if (!$response->successful()) {
             return view('notfound', ['message' => 'Deze student lijkt niet te bestaan (error code 404). Contacteer de beheerder van de site voor meer informatie']);
-        } 
+        }
         //One student exists, so Array just consists of all the keys and their values
         $student = $response->json('data');
 
@@ -42,18 +43,22 @@ class StudentController extends Controller
             //translate student and company id to names
             $appointment['student_name'] = $this->translateStudent($appointment['student_id']);
 
-            
+
             $appointment['company_name'] = $this->translateCompany($appointment['company_id']);
         }
 
         $connections = $this->get_connections($id, 'student');
 
+        // get all messages for this student
+        $messageController = new MessageController();
+        $allMessages = $messageController->getAllMessagesForStudent($id);
 
         return view('student.html.student', [
             'student' => $student,
             'companies' => $companies,
             'appointments' => $appointments,
-            'connections' => $connections
+            'connections' => $connections,
+            'allMessages' => $allMessages
         ]);
 
     }
@@ -65,7 +70,7 @@ class StudentController extends Controller
         //If the student is not found, user can go back to welcome page
         if (!$response->successful()) {
             return view('notfound', ['message' => 'Deze student lijkt niet te bestaan (error code 404). Contacteer de beheerder van de site voor meer informatie']);
-        } 
+        }
         //One student exists, so Array just consists of all the keys and their values
         $student = $response->json('data');
 
@@ -87,17 +92,22 @@ class StudentController extends Controller
             //translate student and company id to names
             $appointment['student_name'] = $this->translateStudent($appointment['student_id']);
 
-            
+
             $appointment['company_name'] = $this->translateCompany($appointment['company_id']);
         }
 
         $connections = $this->get_connections($id, 'student');
 
+        // Get all messages for this student
+        $messageController = new MessageController();
+        $allMessages = $messageController->getAllMessagesForStudent($id);
+
         return view('student.html.student', [
             'student' => $student,
             'companies' => $companies,
             'appointments' => $appointments,
-            'connections' => $connections
+            'connections' => $connections,
+            'allMessages' => $allMessages
         ]);
 
     }
@@ -183,7 +193,7 @@ class StudentController extends Controller
 
             if ($response->successful()) {
                 return redirect()->back()->with('success', 'Account succesvol aangemaakt!');
-    } 
+    }
     else {
         return redirect()->back()->with('error', 'Er is een fout opgetreden bij het aanmaken van het account.');
     }

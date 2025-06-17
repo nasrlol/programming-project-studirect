@@ -3,9 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
-use App\Models\Message;
 use Illuminate\Http\Request;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Support\Facades\Http;
 use Illuminate\Validation\ValidationException;
 
 class MessageController extends Controller
@@ -13,7 +13,7 @@ class MessageController extends Controller
     /**
      * Haal het gesprek op tussen een student en een bedrijf
      */
-    public function getConversation(Request $request): RedirectResponse
+    public function getConversation(Request $request)
     {
         try {
             $validated = $request->validate([
@@ -23,22 +23,31 @@ class MessageController extends Controller
                 'user2_type' => 'required|string',
             ]);
         } catch (ValidationException $e) {
+            if ($request->expectsJson()) {
+                return response()->json(['errors' => $e->errors()], 422);
+            }
             return redirect()->back()->withErrors($e->errors());
         }
 
-        $messages = Message::where(function ($query) use ($validated) {
-            $query->where('sender_id', $validated['user1_id'])
-                  ->where('sender_type', $validated['user1_type'])
-                  ->where('receiver_id', $validated['user2_id'])
-                  ->where('receiver_type', $validated['user2_type']);
-        })->orWhere(function ($query) use ($validated) {
-            $query->where('sender_id', $validated['user2_id'])
-                  ->where('sender_type', $validated['user2_type'])
-                  ->where('receiver_id', $validated['user1_id'])
-                  ->where('receiver_type', $validated['user1_type']);
-        })
-        ->orderBy('created_at', 'asc')
-        ->get();
+        // API call to get conversation
+        $response = Http::post("{$this->messagesApiUrl}/conversation", $validated);
+
+        if (!$response->successful()) {
+            if ($request->expectsJson()) {
+                return response()->json(['error' => 'Failed to fetch conversation'], 500);
+            }
+            return redirect()->back()->withErrors(['error' => 'Failed to fetch conversation']);
+        }
+
+        $responseData = $response->json();
+        $messages = $responseData['conversation'] ?? [];
+
+        if ($request->expectsJson()) {
+            return response()->json([
+                'success' => true,
+                'data' => $messages
+            ]);
+        }
 
         return redirect()->back()->with('messages', $messages);
     }
@@ -46,7 +55,7 @@ class MessageController extends Controller
     /**
      * Verzend een nieuw bericht
      */
-    public function sendMessage(Request $request): RedirectResponse
+    public function sendMessage(Request $request)
     {
         try {
             $validated = $request->validate([
@@ -57,17 +66,81 @@ class MessageController extends Controller
                 'content' => 'required|string|max:1000',
             ]);
         } catch (ValidationException $e) {
+            if ($request->expectsJson()) {
+                return response()->json(['errors' => $e->errors()], 422);
+            }
             return redirect()->back()->withErrors($e->errors());
         }
 
-        $message = Message::create([
-            'sender_id' => $validated['sender_id'],
-            'sender_type' => $validated['sender_type'],
-            'receiver_id' => $validated['receiver_id'],
-            'receiver_type' => $validated['receiver_type'],
-            'content' => $validated['content'],
-        ]);
+        // API call to send message
+        $response = Http::post("{$this->messagesApiUrl}/send", $validated);
+
+        if (!$response->successful()) {
+            if ($request->expectsJson()) {
+                return response()->json(['error' => 'Failed to send message'], 500);
+            }
+            return redirect()->back()->withErrors(['error' => 'Failed to send message']);
+        }
+
+        $message = $response->json('data');
+
+        if ($request->expectsJson()) {
+            return response()->json([
+                'success' => true,
+                'message' => 'Bericht succesvol verzonden!',
+                'data' => $message
+            ]);
+        }
 
         return redirect()->back()->with('messageRes', 'Bericht succesvol verzonden!');
+    }
+
+    /**
+     * Haal alle berichten op voor een specifieke student
+     */
+    public function getAllMessagesForStudent($studentId)
+    {
+        // Get all companies instead of just connected ones
+        $response = Http::get($this->companiesApiUrl);
+
+        if (!$response->successful()) {
+            return [];
+        }
+
+        $companiesData = $response->json('data');
+        $companies = $companiesData['data'] ?? [];
+
+        if (empty($companies)) {
+            return [];
+        }
+
+        $groupedMessages = [];
+
+        // For each company, fetch the conversation with the student
+        foreach ($companies as $company) {
+            $companyId = $company['id'];
+
+            // Prepare data for conversation API call
+            $conversationData = [
+                'user1_id' => (int)$studentId,
+                'user1_type' => 'App\\Models\\Student',
+                'user2_id' => (int)$companyId,
+                'user2_type' => 'App\\Models\\Company',
+            ];
+
+            // API call to get conversation between student and this company
+            $response = Http::post("{$this->messagesApiUrl}/conversation", $conversationData);
+
+            if ($response->successful()) {
+                $responseData = $response->json();
+                $messages = $responseData['conversation'] ?? []; // Use 'conversation' key from API response
+
+                if (!empty($messages)) {
+                    $groupedMessages[$companyId] = $messages;
+                }
+            }
+        }
+
+        return $groupedMessages;
     }
 }

@@ -99,11 +99,7 @@
                 <div class="form-group">
                     <label>Color Theme</label>
                     <div class="theme-options">
-                        <button class="theme-option active" data-theme="default">
-                            <div class="theme-preview default-theme"></div>
-                            <span>Default</span>
-                        </button>
-                        <button class="theme-option" data-theme="dark">
+                        <button class="theme-option active" data-theme="dark">
                             <div class="theme-preview dark-theme"></div>
                             <span>Dark</span>
                         </button>

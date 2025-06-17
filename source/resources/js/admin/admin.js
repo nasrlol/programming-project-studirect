@@ -122,13 +122,15 @@ export function switchDisplay(element) {
       , addCompany = document.getElementById("addCompany")
       , addStudent = document.getElementById("addStudent")
       , appointments = document.getElementById('appointments')
-      , logs = document.getElementById('logs');
+      , logs = document.getElementById('logs'),
+      details = document.getElementById('details');
       appointments.style.display = 'none'
     students.style.display = "none",
     companies.style.display = "none",
     addCompany.style.display = "none",
     addStudent.style.display = "none"
     logs.style.display = "none"
+    details.style.display = "none"
     document.getElementById(element).style.display = "block"
 }
 
@@ -312,7 +314,6 @@ for (let element of document.getElementsByClassName('delete')) {
         }
         form.style.display = 'block'
         //Set popup
-        for (let element of document.getElementsByClassName('normalForm')) element.style.display = 'none'
         popUp(response)
     })
 }
@@ -355,7 +356,8 @@ export function setViewFunctionality () {
         }
         response.appendChild(li);
 
-        popUp(response.innerHTML)
+        document.getElementById('detailList').innerHTML = response.innerHTML;
+        switchDisplay('details')
     })
 }
 }
@@ -364,7 +366,6 @@ export function setViewFunctionality () {
 export function removeForms () {
     document.getElementById('deletionForm').action = ''
     for (let element of document.getElementsByClassName('tempForm')) element.style.display = 'none'
-    for (let element of document.getElementsByClassName('normalForm')) element.style.display = 'block'
 }
 
 export function sortLogs(searchType) {

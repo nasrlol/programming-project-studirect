@@ -201,8 +201,6 @@
                             <option value='datum'>Datum</option>
                         </select>
                     </div>
-                    <!-- This button is temporarily placed outside of the above div -->
-                    <button id='exportLog'>Exporteren</button>
                 </div>
                 <div class='list'>
                     <ul id='log-list'>
@@ -232,12 +230,22 @@
                         @endforeach 
                     </ul>
                 </div>
+                <div id='form-container'>
+                    <form method='GET' action='/admin' id='prev-log-form'>
+                        <input id='prev-log-page' type='hidden' name='cursor' value='{{$previousPage}}'>
+                        <input type='submit' value='Vorige'>
+                    </form>
+                    <form method='GET' action='/admin' id='next-log-form'>
+                        <input id='next-log-page' type='hidden' name='cursor' value='{{$nextPage}}'>
+                        <input type='submit' value='Volgende'>
+                    </form>
+                </div>
             </section>
             <section id='appointments'> 
                 <table id='appointmentInfo'>
                     <tr><th>Student</th><th>Bedrijf</th><th>Tijdslot</th></tr>
                     @foreach ($appointments as $appointment)
-                        <tr class='apointmentList t{{substr(str_replace(':', '-',$appointment['time_slot']), 0, 5)}}'>
+                        <tr class="apointmentList t{{substr(str_replace(':', '-',$appointment['time_slot']), 0, 5)}}">
                             <td class='hidden appointmentId'>{{$appointment['id']}}</td>
                             <td class='appointmentSId'>{{$appointment['student_id']}}</td>
                             <td class='appointmentCId'>{{$appointment['company_id']}}</td>
@@ -249,12 +257,15 @@
                     </div>
                 </table>
             </section>
+            <section id='details'>
+                 <h2>Details:</h2>
+                 <div id='detailList'></div>
+            </section>
         </div>
     </div>
 
     <div id='extra-container'>
         <div id='extra-message-container'>
-            <button id='removePopupButton' class='normalForm'>&times;</button>
             <div id='extra-message'>Found me!</div>
             <button id='abortAction' class='deletionForm tempForm'>Nee</button>
             <form id='deletionForm' class='deletionForm tempForm' method='POST'>

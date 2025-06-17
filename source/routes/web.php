@@ -36,6 +36,7 @@ Route::delete('/students/{id}', [StudentController::class, 'destroy'])->name('st
 
 
 Route::get('/admin', [AdminController::class, 'show']);
+Route::get('/admin?cursor={$cursor}', [AdminController::class, 'show']);
 
 //Getting appointments goes via other controller, so this is not needed here
 //route for making appointments

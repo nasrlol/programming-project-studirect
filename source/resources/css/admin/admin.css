@@ -62,6 +62,10 @@ table {
     height:100%;
 }
 
+li {
+    margin-bottom:0.5%;
+}
+
 th {
     font-style: normal;
     text-align: center;
@@ -229,6 +233,19 @@ h2 {
     width:30%;
 }
 
+#form-container {
+    display: flex;
+    justify-content: right;
+}
+
+#next-log-form {
+    align-self: right;
+    width: 50%;
+}
+#prev-log-form {
+    align-self: left;
+    width: 50%;
+}
 
 
 select {

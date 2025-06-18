@@ -37,7 +37,7 @@ class CompanyController extends Controller
 
         $connections = $this->get_connections($id, 'company');
 
-        return view('company.company', [
+        return view('company.html.company', [
             'company' => $company,
             'appointments' => $appointments,
             'connections' => $connections
@@ -70,7 +70,7 @@ class CompanyController extends Controller
 
         $connections = $this->get_connections($id, 'company');
 
-        return view('company.company', [
+        return view('company.html.company', [
             'company' => $company,
             'appointments' => $appointments,
             'connections' => $connections

@@ -7,8 +7,6 @@
     <title>document</title>
 </head>
 <body>
-
-
     <span id='serverResponse'>
     @if ( session('error'))
         {{session('error') }}
@@ -17,47 +15,43 @@
     @endif
     </span>
     <div id='main-container'>
-        <nav id="navigation">
+        <nav id="navigation" class='nav-container'>
             <span class='info-nav nav-element'>Admin</span><br>
-            <button class="btn-nav nav-element" id="nav-dashboard">Dashboard</button>
-            <button class="btn-nav nav-element" id="nav-users">Gebruikers</button>
+            <button class="btn-nav nav-element" id="nav-users">Studenten</button>
             <button class="btn-nav nav-element" id="nav-companies">Bedrijven</button>
             <button class="btn-nav nav-element" id="nav-appointments">Afspraken</button>
             <button class="btn-nav nav-element" id="nav-logs">Logs</button>
-        </nav>
 
-        <div id='result-container'>
-            <section id='dashboard'>
-                <h2>Dashboard</h2>
-                <div class='member-amount'>
-                    <div class='amount-section'>
-                        <div class='section-inside'>
-                            <span id='student-amount'></span><br>
-                            <span>students</span>
-                        </div>
+            <div class='info-nav nav-element'>Dashboard</div>
+            <div class='amount-section nav-element'>
+                <div class='section-inside'>
+                    <span id='student-amount'></span><br>
+                    <span>studenten</span>
+                </div>
                     </div>
-                    <div class='amount-section'>
+                    <div class='amount-section nav-element'>
                         <div class='section-inside'>
                             <span id='company-amount'></span><br>
                             <span>bedrijven</span>    
                         </div>
                     </div>
-                    <div class='amount-section'>
+                    <div class='amount-section nav-element'>
                         <div class='section-inside'>
                             <span id='appointment-amount'></span><br>
                             <span>afspraken</span>    
                         </div>
                     </div>
-                </div>
-            </section>
+        </nav>
+
+        <div id='result-container'>
 
             <section id='students' class='searchable'>
-                <h2>Gebruikers</h2>
+                <h2>Studenten</h2>
                 <button class='.add' id='toAddStudent'>Student toevoegen</button>
                 <div class='filter' id='student'></div>
                 <div class='list'>
                     <table id='studentTable'>
-                        <tr><th>Naam</th><th>Email</th><th>Laatste login</th><th>Acties</th></tr>
+                        <tr><th>Naam</th><th>Email</th><th class='loginTh'>Laatste login</th><th class='extraTh'>Acties</th></tr>
                         <!--API call-->
                         <!--Last log still needs to be added-->
                         @foreach ($students as $student)
@@ -66,8 +60,8 @@
                             <td class='studentId'>{{$student['id']}}</td>
                             <td class='studentName' id="s{{$student['id']}}|">{{ $student['first_name'] ?? 'Onbekend' }} {{ $student['last_name'] ?? 'onbekend' }}</td>
                             <td class='studentMail'>{{ $student['email'] ?? 'Geen email' }}</td>
-                            <td class='studentLogin'>03-06-2025</td>
-                            <td>
+                            <td class='studentLogin extraTd'>03-06-2025</td>
+                            <td class='extraTd'>
                                 <span>
                                     <img class='moreInfo extraActions studentEye' id="eyeS{{$student['id']}}" src='../images/eyeball.png'>
                                 </span>  <span>
@@ -84,6 +78,17 @@
                             </td>
                             <td class='hidden job-preferences'>
                                 {{$student['job_preferences']}}
+                            </td>
+                            <td class='hidden  studentLogs'>
+                                @foreach ($student['logs'] as $log)
+                                <ul>
+                                <li class='hidden studentLogId'>{{$student['id']}}</li>
+                                <li class=' studentLogAction'>{{$log['actor']}} {{$log['actor_id']}} {{$log['action']}}</li>
+                                <li class=' studentLogTime'>{{$log['date']}} om {{$log['time']}}</li>
+                                <li class=' studentSeverity'>{{$log['severity']}}</li>
+                                </ul>
+
+                                @endforeach
                             </td>
                         </tr>
                         @endforeach
@@ -105,10 +110,9 @@
                         <div class='addInput' style='border: solid; border-width:1px'>
                             <label for='graduation_track'>Type diploma</label>
                             <select name='graduation_track' class='professional'>
-                                <option value='Associate'>Graduaat</option>
-                                <option value='Professional'>Professionele bachelor</option>
-                                <option value='Academic_bachelor'>Academische bachelor</option>
-                                <option value='Academic_master'>Academische Master</option>
+                                @foreach ($degrees as $degree)
+                                    <option value="{{ $degree['id'] }}">{{ $degree['type'] }}</option>
+                                @endforeach
                             </select>
                         </div>
 
@@ -129,14 +133,14 @@
                 <div class='searchContainer list'>
                     <div class='filter' id='company'></div>
                         <table id='companyTable'> 
-                            <tr><th>Naam</th><th>Email</th><th>Laatste login</th><th>Acties</th></tr>
+                            <tr><th>Naam</th><th>Email</th><th class='loginTh'>Laatste login</th><th class='extraTh'>Acties</th></tr>
                             @foreach ($companies as $company)
                             <tr>
                                 <td class='hidden companyId'>{{$company['id']}}</td>
                                 <td class='companyName' id="c{{$company['id']}}|">{{ $company['name'] ?? 'Onbekend' }}</td>
                                 <td class='companyMail'>{{ $company['email'] ?? 'Onbekend' }}</td>
-                                <td class='companyLogin'>02-04-2025</td>
-                                <td>
+                                <td class='companyLogin extraTd'>02-04-2025</td>
+                                <td class='extraTd'>
                                 <span>
                                     <img class='extraActions moreInfo' id="eyeC{{$company['id']}}" src='../images/eyeball.png'>
                                 </span>  
@@ -163,6 +167,18 @@
                                 <td class='hidden speeddate-duration'>
                                     {{$company['speeddate_duration']}}
                                 </td>
+                                
+                                <td class='hidden  companyLogs'>
+                                @foreach ($company['logs'] as $log)
+                                    <ul>
+                                    <li class='hidden companyLogId'>{{$company['id']}}</li>
+                                    <li class=' companyLogAction'>{{$log['actor']}} {{$log['actor_id']}} {{$log['action']}}</li>
+                                    <li class=' companyLogTime'>{{$log['date']}} om {{$log['time']}}</li>
+                                    <li class=' companytSeverity'>{{$log['severity']}}</li>
+                                    </ul>
+
+                                @endforeach
+                            </td>
                             </tr>
                             @endforeach
                         </table>
@@ -201,49 +217,42 @@
             <section id='logs' class='searchable'>
                 <h2>Logs</h2>
                 <div id='events'>
-                    <div class='hidden'>
-                        <input type='text' placeholder='Zoek...'>
-                        <label for='dateSearch'>Datum </label>
-                        <select id='dateSearch' style='border:none;'>
-                            <!--Data will be based depending on logs data-->
+                    <div >
+                        <label for='searchType'>Sorteer op</label>
+                        <select id='searchType' style='border:none;'>
+                            <option value='belang'>Belang</option>
+                            <option value='datum'>Datum</option>
                         </select>
                     </div>
-                    <!-- This button is temporarily placed outside of the above div -->
-                    <button id='exportLog'>Exporteren</button>
                 </div>
                 <div class='list'>
-                    <ul id='logs'>
+                    <ul id='log-list'>
                         @foreach ($logs as $log)
-                        @php 
-                            //switch case generated by Copilot
-                            switch ($log['action']) {
-                                case 'create':
-                                    $log['action'] = 'heeft een account aangemaakt';
-                                    break;
-                                case 'update':
-                                    $log['action'] = 'heeft hun account geüpdatet';
-                                    break;
-                                case 'delete':
-                                    $log['action'] = 'heeft hun account verwijderd';
-                                    break;
-                                default:
-                                    $log['action'] = 'heeft hun account bekeken';
-                            }
-                        @endphp
-                            <li>
-                                <div class='hidden logId'></div>
-                                <div class='logItem'>{{$log['target_type']}} {{$log['target_id']}}  {{$log['action']}}</div>
-                                <div>{{$log['date']}} om {{$log['time']}}</div>
+                            <li class='logItem'>
+                                <div class='hidden logId'>{{$log['id']}}</div>
+                                <div class='logAction'>{{$log['actor']}} {{$log['actor_id']}} {{$log['action']}}</div>
+                                <div class='logDate'>{{$log['date']}} om {{$log['time']}}</div>
+                                <div class='hidden severity'>{{$log['severity']}}</div>
                             </li>
                         @endforeach 
                     </ul>
+                </div>
+                <div id='form-container'>
+                    <form method='GET' action='/admin' id='prev-log-form'>
+                        <input id='prev-log-page' type='hidden' name='cursor' value='{{$previousPage}}'>
+                        <input type='submit' value='Vorige'>
+                    </form>
+                    <form method='GET' action='/admin' id='next-log-form'>
+                        <input id='next-log-page' type='hidden' name='cursor' value='{{$nextPage}}'>
+                        <input type='submit' value='Volgende'>
+                    </form>
                 </div>
             </section>
             <section id='appointments'> 
                 <table id='appointmentInfo'>
                     <tr><th>Student</th><th>Bedrijf</th><th>Tijdslot</th></tr>
                     @foreach ($appointments as $appointment)
-                        <tr class='apointmentList t{{substr(str_replace(':', '-',$appointment['time_slot']), 0, 5)}}'>
+                        <tr class="apointmentList t{{substr(str_replace(':', '-',$appointment['time_slot']), 0, 5)}}">
                             <td class='hidden appointmentId'>{{$appointment['id']}}</td>
                             <td class='appointmentSId'>{{$appointment['student_id']}}</td>
                             <td class='appointmentCId'>{{$appointment['company_id']}}</td>
@@ -255,12 +264,15 @@
                     </div>
                 </table>
             </section>
+            <section id='details'>
+                 <h2>Details:</h2>
+                 <div id='detailList'></div>
+            </section>
         </div>
     </div>
 
     <div id='extra-container'>
         <div id='extra-message-container'>
-            <button id='removePopupButton' class='normalForm'>&times;</button>
             <div id='extra-message'>Found me!</div>
             <button id='abortAction' class='deletionForm tempForm'>Nee</button>
             <form id='deletionForm' class='deletionForm tempForm' method='POST'>

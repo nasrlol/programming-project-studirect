@@ -1,11 +1,6 @@
 'use strict'
-import { dashboard, switchDisplay, popUp, removePopUp, createSearch, createTable, sortAppointment, data, copyArray, filterArray, setDeleteFunctionality, setViewFunctionality, removeForms } from './admin.js'
+import { dashboard, switchDisplay, popUp, removePopUp, createSearch, createTable, sortAppointment, data, copyArray, filterArray, setDeleteFunctionality, setViewFunctionality, removeForms, sortLogs } from './admin.js'
 
-//events
-document.getElementById("nav-dashboard").addEventListener("click", () => {
-    switchDisplay("dashboard")
-}
-);
 document.getElementById("nav-users").addEventListener("click", () => {
     switchDisplay("students")
 }
@@ -35,12 +30,6 @@ document.getElementById("nav-appointments").addEventListener("click", () => {
     switchDisplay("appointments")
 });
 
-document.getElementById('exportLog').addEventListener("click", () => {
-    popUp("Wil je de gegevens van de logs exporteren naar een csv file?")
-    document.getElementById('exportData').style.display = 'block'
-    document.getElementById('abortAction').style.display = 'block'
-})
-
 //Add a 'view more' option for students and companies
 setViewFunctionality()
 
@@ -51,11 +40,6 @@ document.getElementById('abortAction').addEventListener('click', () => {
     removeForms()
     removePopUp();
 })
-
-//For removing popups
-document.getElementById('removePopupButton').addEventListener('click', () => {
-    removePopUp()
-})
 //Popups can also be removed by pressing escape 
 document.addEventListener('keydown', e => {
     if (e.key == "Escape") {
@@ -64,9 +48,21 @@ document.addEventListener('keydown', e => {
     }
 })
 
+document.getElementById('searchType').addEventListener('change', () => {
+    const searchType = document.getElementById('searchType').value;
+    sortLogs(searchType)
+    
+})
+
 window.addEventListener("load", () => {
     dashboard();
-    switchDisplay("dashboard");
+    sortLogs('belang')
+    switchDisplay("logs");
+
+    //Checks if there are new logs to be found. If not, the next Logs button is removed
+    if (document.getElementById('next-log-page').value == '') document.getElementById('next-log-form').style.visibility ='hidden'
+    if (document.getElementById('prev-log-page').value == '') document.getElementById('prev-log-form').style.visibility ='hidden'
+
     const filterElements = document.getElementsByClassName("filter");
     let count = 0;
     for (let element of filterElements)

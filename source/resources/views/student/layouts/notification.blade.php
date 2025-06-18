@@ -4,6 +4,6 @@
         {!!$notification?? '<p>Geen meldingen beschikbaar.</p>'!!}
     </div>
     <div id="groundplan">
-        <img src="images/plattegrondEHB.png">
+        <img src="{{ asset('images/plattegrondEHB.png') }}">
     </div>
 </div>

@@ -1,10 +1,6 @@
-import { dashboard, switchDisplay, popUp, removePopUp, createSearch, createTable, fixAppointment, sortAppointment, data, copyArray, filterArray, setDeleteFunctionality, setViewFunctionality } from './admin.js'
+'use strict'
+import { dashboard, switchDisplay, popUp, removePopUp, createSearch, createTable, sortAppointment, data, copyArray, filterArray, setDeleteFunctionality, setViewFunctionality, removeForms, sortLogs } from './admin.js'
 
-//events
-document.getElementById("nav-dashboard").addEventListener("click", () => {
-    switchDisplay("dashboard")
-}
-);
 document.getElementById("nav-users").addEventListener("click", () => {
     switchDisplay("students")
 }
@@ -33,32 +29,40 @@ document.getElementById("backToStudent").addEventListener("click", () => {
 document.getElementById("nav-appointments").addEventListener("click", () => {
     switchDisplay("appointments")
 });
+
 //Add a 'view more' option for students and companies
 setViewFunctionality()
 
 //Add a 'delete' option for students and companies
 setDeleteFunctionality()
 //To abort the delete process 
-document.getElementById('abortDelete').addEventListener('click', () => {
-    const form = document.getElementById('deletionForm')
-    for (let element of document.getElementsByClassName('deletionForm')) element.style.display = 'none'
-    for (let element of document.getElementsByClassName('normalForm')) element.style.display = 'block'
-    form.action = '';
+document.getElementById('abortAction').addEventListener('click', () => {
+    removeForms()
     removePopUp();
-})
-
-//For removing popups
-document.getElementById('removePopupButton').addEventListener('click', () => {
-    removePopUp()
 })
 //Popups can also be removed by pressing escape 
 document.addEventListener('keydown', e => {
-    if (e.key == "Escape") removePopUp()
+    if (e.key == "Escape") {
+        removePopUp()
+        removeForms()
+    }
+})
+
+document.getElementById('searchType').addEventListener('change', () => {
+    const searchType = document.getElementById('searchType').value;
+    sortLogs(searchType)
+    
 })
 
 window.addEventListener("load", () => {
-    dashboard(),
-    switchDisplay("addStudent");
+    dashboard();
+    sortLogs('belang')
+    switchDisplay("logs");
+
+    //Checks if there are new logs to be found. If not, the next Logs button is removed
+    if (document.getElementById('next-log-page').value == '') document.getElementById('next-log-form').style.visibility ='hidden'
+    if (document.getElementById('prev-log-page').value == '') document.getElementById('prev-log-form').style.visibility ='hidden'
+
     const filterElements = document.getElementsByClassName("filter");
     let count = 0;
     for (let element of filterElements)
@@ -109,5 +113,6 @@ window.addEventListener("load", () => {
         setTimeout(() => {
             document.getElementById('serverResponse').innerHTML = ''
         }, 5000)
+    sortAppointment()
 }
 );

@@ -1,9 +1,11 @@
+'use strict'
 //changes contents of table to arrays for the js functions
 function tableToObjects() {
     let objects = {
         company: new Array,
         student: new Array,
-        appointments:new Array
+        appointments:new Array,
+        logs: new Array
     }
     let ids = document.getElementsByClassName('studentId')
     const activated = document.getElementsByClassName('activated')
@@ -13,17 +15,50 @@ function tableToObjects() {
     const studys = document.getElementsByClassName('study-direction')
     const interests = document.getElementsByClassName('interests')
     const preferences = document.getElementsByClassName('job-preferences')
+    //for logs that a student may have
+    const studentLogIds = document.getElementsByClassName('studentLogId')
+    const studentLogAction = document.getElementsByClassName('studentLogAction')
+    const studentLogTime = document.getElementsByClassName('studentLogTime');
+    const studentSeverity = document.getElementsByClassName('studentSeverity')
     for (let i = 0; i < names.length; i++)
     {
-        objects.student.push({ 
-            id: ids[i].innerHTML,
+
+        let currentId = ids[i].innerHTML
+        //check if the student has any logs
+        let logs = new Array()
+        //add any logs that are necessary
+        for (let i = 0; i < studentLogIds.length; i++) {
+            if (studentLogIds[i].innerHTML == currentId) {
+                let severityInt;
+                switch (studentSeverity[i].innerHTML.trim().toLocaleLowerCase()) {
+                    case 'normal':
+                        severityInt = 0;
+                        break;
+                    case 'critical':
+                        severityInt = 1;
+                        break;
+                    default:
+                        severityInt = 0;
+                        break;
+                }
+                logs.push({
+                    action: studentLogAction[i].innerHTML,
+                    date: studentLogTime[i].innerHTML.trim(),
+                    severity: severityInt
+                });
+            }
+        }
+        objects.student.push({
+            id: currentId,
+
             activated: activated[i].innerHTML,
             name: names[i].innerHTML,
             mail: mails[i].innerHTML,
             login: logins[i].innerHTML,
             studyDirection: studys[i].innerHTML.trim(),
             interests: interests[i].innerHTML.trim(),
-            preferences: preferences[i].innerHTML.trim()
+            preferences: preferences[i].innerHTML.trim(),
+            logs: logs
         });
     }
     //Add companies
@@ -37,8 +72,39 @@ function tableToObjects() {
     const  description = document.getElementsByClassName('description')
     const  boothLocation = document.getElementsByClassName('booth-location')
     const  speeddateDuration = document.getElementsByClassName('speeddate-duration')
+    //for logs that a company may have
+    const companyLogIds = document.getElementsByClassName('companyLogIds')
+    const companyLogAction = document.getElementsByClassName('companyLogAction')
+    const companyLogTime = document.getElementsByClassName('companyLogTime');
+    const companySeverity = document.getElementsByClassName('companySeverity')
 
-    for (let i = 0; i < names.length; i++)
+    for (let i = 0; i < names.length; i++) {
+        let currentId = ids[i].innerHTML;
+        //check if the company has any logs
+        let logs = new Array()
+        //add any logs that are necessary
+        for (let i = 0; i < companyLogIds.length; i++) {
+            if (companyLogIds[i].innerHTML == currentId) {
+                let severityInt;
+                switch (companySeverity[i].innerHTML.trim().toLocaleLowerCase()) {
+                    case 'normal':
+                        severityInt = 0;
+                        break;
+                    case 'critical':
+                        severityInt = 1;
+                        break;
+                    default:
+                        severityInt = 0;
+                        break;
+                }
+                logs.push({
+                    action: companyLogAction[i].innerHTML,
+                    date: companyLogTime[i].innerHTML.trim(),
+                    severity: severityInt
+                });
+            }
+        }
+
         objects.company.push({
             id: ids[i].innerHTML,
             name: names[i].innerHTML,
@@ -49,8 +115,10 @@ function tableToObjects() {
             jobDomain: jobDomain[i].innerHTML.trim(),
             description: description[i].innerHTML.trim(),
             boothLocation: boothLocation[i].innerHTML.trim(),
-            speeddateDuration: speeddateDuration[i].innerHTML.trim()
+            speeddateDuration: speeddateDuration[i].innerHTML.trim(),
+            logs: logs
         });
+    }
 
     //Add apointments
     let studentId = document.getElementsByClassName('appointmentSId')
@@ -62,6 +130,33 @@ function tableToObjects() {
             studentId: studentId[i].innerHTML,
             companyId: companyId[i].innerHTML,
             appointmentTime: appointmentTime[i].innerHTML.trim()
+        });
+    }
+
+    //add logs
+    let logId = document.getElementsByClassName('logId')
+    let logAction = document.getElementsByClassName('logAction')
+    let logDate = document.getElementsByClassName('logDate')
+    let severity = document.getElementsByClassName('severity')
+
+    for (let i = 0; i < logId.length; i++) {
+        let severityInt;
+        switch (severity[i].innerHTML.trim().toLocaleLowerCase()) {
+            case 'normal':
+                severityInt = 0;
+                break;
+            case 'critical':
+                severityInt = 1;
+                break;
+            default:
+                severityInt = 0;
+                break;
+        }
+        objects.logs.push({
+            id: logId[i].innerHTML,
+            action: logAction[i].innerHTML,
+            date: logDate[i].innerHTML.trim(),
+            severity: severityInt
         });
     }
 
@@ -84,26 +179,27 @@ export function createSearch(d, t) {
     return t.innerHTML += '<div class="image-container"><img src="../images/magnifying glass.jpg" style="height: 20px;"></div>',
     d == 0 ? t.innerHTML += '<input type="text" id="nameSearchS">' : t.innerHTML += '<input type="text" id="nameSearchC">',
     t.innerHTML += `<input id="typeSearch" type="hidden" value="${d}">`,
-    t.innerHTML += `<button id=search${d} class='filterAction'>Filter</button>`,
+    t.innerHTML += `<button id=search${d} class='filterAction'>Zoek</button>`,
     t
 }
 export function switchDisplay(element) {
-    const dashboard = document.getElementById("dashboard")
-      , students = document.getElementById("students")
+    const students = document.getElementById("students")
       , companies = document.getElementById("companies")
       , addCompany = document.getElementById("addCompany")
       , addStudent = document.getElementById("addStudent")
       , appointments = document.getElementById('appointments')
-      , logs = document.getElementById('logs');
+      , logs = document.getElementById('logs'),
+      details = document.getElementById('details');
       appointments.style.display = 'none'
-    dashboard.style.display = "none",
     students.style.display = "none",
     companies.style.display = "none",
     addCompany.style.display = "none",
     addStudent.style.display = "none"
     logs.style.display = "none"
+    details.style.display = "none"
     document.getElementById(element).style.display = "block"
 }
+
 
 //creates a popup, with text
 export function popUp (text) {
@@ -128,15 +224,15 @@ export function createTable(input, extra = null) {
     table.innerHTML = "";
     const type = document.getElementById("students").style.display != "none"  ? "S" : "C"
     const legend = document.createElement("tr");
-    legend.innerHTML = "<th>Naam</th><th>Email</th><th>Laatste login</th><th>Acties</th>"
+    legend.innerHTML = "<th>Naam</th><th>Email</th><th class='loginTh'>Laatste login</th><th class='extraTh'>Acties</th>"
     table.appendChild(legend)
     if (extra) {
         for (let e of extra) {
             const a = document.createElement("tr");
-            a.innerHTML = `<td>|${e.name}</td>`,
+            a.innerHTML = `<td class='highlighted'>|${e.name}</td>`,
             a.innerHTML += `<td>${e.mail}</td>`,
-            a.innerHTML += `<td>${e.login}</td>`,
-            a.innerHTML += `<td><span>
+            a.innerHTML += `<td class='extraTd'>${e.login}</td>`,
+            a.innerHTML += `<td class='extraTd'><span>
                                     <img class='extraActions moreInfo' id='eye${type}${e.id}' src='../images/eyeball.png'>
                                 </span>  
                                 <span>
@@ -181,8 +277,8 @@ export function createTable(input, extra = null) {
         const a = document.createElement("tr");
         a.innerHTML = `<td>${e.name}</td>`,
         a.innerHTML += `<td>${e.mail}</td>`,
-        a.innerHTML += `<td>${e.login}</td>`,
-        a.innerHTML += `<td><span>
+        a.innerHTML += `<td class='extraTd'>${e.login}</td>`,
+        a.innerHTML += `<td class='extraTd'><span>
                                     <img class='extraActions moreInfo' id='eye${type}${e.id}' src='../images/eyeball.png'>
                                 </span>  
                                 <span>
@@ -231,23 +327,7 @@ export function copyArray(array) {
         newArray.push(el);
     return newArray
 }
-//Appointment currently takes the ID instead of the name of the students and companies
-//This function fixes that
-export function fixAppointment () {
-    //list of all studentId's in the apointment list
-    const appointmentSId = document.getElementsByClassName('appointmentSId')
-    //list of all companyId's in the apointment list
-    const appointmentCId = document.getElementsByClassName('appointmentCId')
 
-    for (let studentId of appointmentSId) {
-        let name = document.getElementById(`s${studentId.innerHTML}|`).innerHTML
-        studentId.innerHTML = name
-    }
-    for (let companyId of appointmentCId) {
-        let name = document.getElementById(`c${companyId.innerHTML}|`).innerHTML
-        companyId.innerHTML = name
-    }
-}
 //Appointments start of sorted by time instead of ID. This fixes that
 export function sortAppointment () {
     //Table where the appointments are stored
@@ -288,7 +368,7 @@ for (let element of document.getElementsByClassName('delete')) {
         const user =  list.filter(obj => obj.id == id)[0]
 
         const response  = `Ben je er zeker van dat je ${isStudent ? 'student' : 'bedrijf'} ${user.name} wil verwijderen?<br>Deze actie kan niet ongedaan gemaakt worden(klik op nee om te stoppen)`
-        document.getElementById('abortDelete').style.display = 'block'
+        document.getElementById('abortAction').style.display = 'block'
         const form = document.getElementById('deletionForm')
         
         //Set the request URL
@@ -296,11 +376,11 @@ for (let element of document.getElementsByClassName('delete')) {
             form.action = '/companies/' + user.id;
        }
        else {
+            form.action = '/students/' + user.id;
             form.style.display = 'block'
         }
         form.style.display = 'block'
         //Set popup
-        for (let element of document.getElementsByClassName('normalForm')) element.style.display = 'none'
         popUp(response)
     })
 }
@@ -309,9 +389,7 @@ for (let element of document.getElementsByClassName('delete')) {
 export function setViewFunctionality () {
     for (let element of document.getElementsByClassName('moreInfo')) {
     element.addEventListener('click', () => {
-        console.log(element)
         const id = element.id.substring(4);
-        console.log(id)
         //Eye icon has class studentEye or companyEye to make sure right item is called
         const isStudent = (Array.from(element.classList).includes('studentEye'))
         //gets relevant list, based on if it's a student or a company
@@ -321,30 +399,109 @@ export function setViewFunctionality () {
 
         //use filter to find the user we want, based on ID 
         const user =  list.filter(obj => obj.id == id)[0]
-        console.log(user)
         const response = document.createElement('div');
-        response.innerHTML = `Naam: ${user.name}<br>`
-        response.innerHTML += `Email: ${user.mail}<br>`
+        const li = document.createElement('ul');
+        li.innerHTML = `<li>Naam: ${user.name}</li>`
+        li.innerHTML += `<li>Email: ${user.mail}<br>`
         //Extra info if it's a student
         if (isStudent) {
             let geactiveerd = (user.activated == 1) ? 'Ja' : 'Nee'
             
-            response.innerHTML += `Geactiveerd: ${geactiveerd}<br>`
-            response.innerHTML += `Job interesses: ${user.interests}<br>`
-            response.innerHTML += `Studierichting: ${user.studyDirection}<br>`
-            response.innerHTML += `Job voorkeuren: ${user.preferences}`
+            li.innerHTML += `<li>Geactiveerd: ${geactiveerd}</li>`
+            li.innerHTML += `<li>Job interesses: ${user.interests}</li>`
+            li.innerHTML += `<li>Studierichting: ${user.studyDirection}</li>`
+            li.innerHTML += `<li>Job voorkeuren: ${user.preferences}</li>`
         }
         //Extra info if it's a company
         else {
-            response.innerHTML += `Prijs plan: ${user.planType}<br>`
-            response.innerHTML += `Type job: ${user.jobTypes}<br>`
-            response.innerHTML += `Jobdomein: ${user.jobDomain}<br>`
-            response.innerHTML += `Beschrijving: ${user.description}<br>`
-            response.innerHTML += `Locatie booth: ${user.boothLocation}<br>`
-            response.innerHTML += `Duur speeddates: ${user.speeddateDuration}<br>`
-        }
+            li.innerHTML += `<li>Prijs plan: ${user.planType}</li>`
+            li.innerHTML += `<li>Type job: ${user.jobTypes}</li>`
+            li.innerHTML += `<li>Jobdomein: ${user.jobDomain}</li>`
+            li.innerHTML += `<li>Beschrijving: ${user.description}</li>`
+            li.innerHTML += `<li>Locatie booth: ${user.boothLocation}</li>`
+            li.innerHTML += `<li>Duur speeddates: ${user.speeddateDuration}</li>`
 
-        popUp(response.innerHTML)
+        }
+        //Add user logs, if they exist
+        li.innerHTML += `<li>Logs</li>`
+        const logList = document.createElement('ul');
+        if (user.logs.length > 0) {
+            let color;
+            let severity;
+            for (let log of user.logs) {
+                switch (log.severity) {
+                    case 0:
+                        color = 'black';
+                        severity = 'Normaal';
+                        break;
+                    case 1:
+                        color = 'red';
+                        severity = 'Kritiek';
+                        break;
+                    default:
+                        color = 'grey';
+                }
+
+                logList.innerHTML += `<li class='logItem' style='color: ${color}'>
+                <div class='logAction'>${log.action}</div>
+                <div class='logDate'>${log.date}</div>
+                <div class='severity'>Belang: ${severity}</div>
+                </li>`
+            }
+        }
+        //Else say no logs were found
+        else logList.innerHTML = "Geen logs bij deze user"
+        
+        li.appendChild(logList);
+        li.innerHTML += '</li>'
+        
+        response.appendChild(li);
+
+        document.getElementById('detailList').innerHTML = response.innerHTML;
+        switchDisplay('details')
     })
 }
+}
+
+//remove forms from popup
+export function removeForms () {
+    document.getElementById('deletionForm').action = ''
+    for (let element of document.getElementsByClassName('tempForm')) element.style.display = 'none'
+}
+
+export function sortLogs(searchType) {
+    let color;
+    let severity;
+    document.getElementById('log-list').innerHTML = ''
+
+    if (searchType == 'belang') {
+        data.logs.sort((a, b) => {
+        return a.severity - b.severity;
+    })
+    }
+    else if (searchType == 'datum') {
+        data.logs = data.logs.sort((a, b) => {
+            return a.date.localeCompare(b.date);
+        });
+    }
+        for (let log of data.logs) {
+        switch (log.severity) {
+            case 0:
+                color = 'black';
+                severity = 'Normaal';
+                break;
+            case 1:
+                color = 'red';
+                severity = 'Kritiek';
+                break;
+            default:
+                color = 'grey';
+        }
+        document.getElementById('log-list').innerHTML += `<li class='logItem' style='color: ${color}'>
+            <div class='hidden logId'>${log.id}</div>
+            <div class='logAction'>${log.action}</div>
+            <div class='logDate'>${log.date}</div>
+            <div class='severity'>Belang: ${severity}</div>
+            </li>`
+    }
 }

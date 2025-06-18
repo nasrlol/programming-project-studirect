@@ -159,7 +159,7 @@
                                     {{$company['job_domain']}}
                                 </td>
                                 <td class='hidden description'>
-                                    {{$company['description']}}
+                                    {{$company['company_description']}}
                                 </td>
                                 <td class='hidden booth-location'>
                                     {{$company['booth_location']}}

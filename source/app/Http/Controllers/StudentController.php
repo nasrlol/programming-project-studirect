@@ -70,6 +70,7 @@ class StudentController extends Controller
         }
 
         return view('student.html.student', [
+            'id' => $id,
             'student' => $student,
             'companies' => $companies,
             'appointments' => $appointments,

@@ -27,14 +27,12 @@
             ])
         </section>
         <section class="sectionType1">
-            @include('student.layouts.companyinfo', ['
-                <ul>',
-                    'job_domain' => '<li>' . $companies[0]['job_domain'] . '</li>',
-                    'job_type' => '<li>' . $companies[0]['job_types'] . '</li>',
-                    'job_description' => '<li>' . $companies[0]['job_description'] . '</li>
-                </ul>',
-                'job_requirements' => '<ul><li>' . $companies[0]['job_requirements'] . '</li></ul>',
-                'description' => '<p>' . $companies[0]['description'] . '</p>'
+            @include('student.layouts.companyinfo', [
+                'job_domain' => $companies[0]['job_domain'] ?? 'Geen jobdomein opgegeven.',
+                'job_type' => $companies[0]['job_types'] ?? 'Geen functietype opgegeven.',
+                'job_description' => $companies[0]['job_description'] ?? 'Geen omschrijving beschikbaar.',
+                'job_requirements' => $companies[0]['job_requirements'] ?? 'Geen vereisten opgegeven.',
+                'description' => $companies[0]['description'] ?? $companies[0]['company_description'] ?? 'Er is geen informatie beschikbaar over dit bedrijf.'
             ])
         </section>
     </div>

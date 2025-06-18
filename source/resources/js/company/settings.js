@@ -1,5 +1,5 @@
 // settings.js
-
+/*
 export function loadSettingsContent() {
     const content = document.getElementById("content");
     content.innerHTML = "";
@@ -85,3 +85,4 @@ function confirmDeleteAccount() {
         showNotification("Account verwijderd (simulatie).");
     }
 }
+    */

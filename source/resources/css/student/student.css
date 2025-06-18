@@ -199,7 +199,7 @@ body {
 #notifications p {
     background: linear-gradient(135deg, #0046C9 0%, #4A90E2 100%);
     color: white;
-    padding: 1.25rem;
+    padding: 1rem;
     border-radius: 12px;
     margin: 0.75rem 0;
     box-shadow: 0 4px 12px rgba(0, 70, 201, 0.3);

@@ -1,6 +1,6 @@
 <nav class="navbar">
     <div class="nav-logo">
-        <img src="images/studirect.png" alt="StuDirect Logo">
+        <img src="{{ asset('images/studirect.png') }}" alt="StuDirect Logo">
     </div>
     <ul class="nav-links">
         <li><a href="#" id="homeBtn">Home</a></li>

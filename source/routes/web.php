@@ -54,3 +54,15 @@ Route::patch('/connections/{id}', [ConnectionController::class, 'removeConnectio
 //Link code chatGPT: https://chatgpt.com/share/684fd09e-f0c0-8005-90e4-9f3e6d9cbdee
 Route::post('/messages/send', [MessageController::class, 'sendMessage']);
 Route::post('/messages/conversation', [MessageController::class, 'getConversation']);
+
+//bedrijven
+
+
+Route::prefix('company')->group(function () {
+    Route::get('/home', fn() => view('company.layouts.home'));
+    Route::get('/messages', fn() => view('company.layouts.messages'));
+    Route::get('/calendar', fn() => view('company.layouts.calendar'));
+    Route::get('/settings', fn() => view('company.layouts.settings'));
+});
+
+

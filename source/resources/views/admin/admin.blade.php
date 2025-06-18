@@ -47,7 +47,7 @@
 
             <section id='students' class='searchable'>
                 <h2>Studenten</h2>
-                <button class='.add' id='toAddStudent'>Student toevoegen</button>
+                <button class='add' id='toAddStudent'>Student toevoegen</button>
                 <div class='filter' id='student'></div>
                 <div class='list'>
                     <table id='studentTable'>
@@ -129,9 +129,9 @@
 
             <section id='companies' class='searchable'>
                 <h2>Bedrijven</h2>
-                <button class='.add' id='toAddCompany'>Bedrijf toevoegen</button>
+                <button class='add' id='toAddCompany'>Bedrijf toevoegen</button>
+                <div class='filter' id='company'></div>
                 <div class='searchContainer list'>
-                    <div class='filter' id='company'></div>
                         <table id='companyTable'> 
                             <tr><th>Naam</th><th>Email</th><th class='loginTh'>Laatste login</th><th class='extraTh'>Acties</th></tr>
                             @foreach ($companies as $company)

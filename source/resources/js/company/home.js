@@ -1,5 +1,5 @@
 // home.js
-
+/*
 export function loadHomeContent() {
     const content = document.getElementById("content");
     content.innerHTML = "";
@@ -29,4 +29,4 @@ export function loadHomeContent() {
     mainContainer.appendChild(mapSection);
 
     content.appendChild(mainContainer);
-}
+}*/

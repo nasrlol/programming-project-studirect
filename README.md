@@ -56,3 +56,14 @@ Installatieinstructies voor de backend te vinden via https://github.com/nasrlol/
 php artisan serve
 ```
 
+## Bronnen
+
+Voor het maken van deze site hebben we gebruik gemaakt van de volgende bronnen:
+
+Bij aanmaken MessageController.php
+https://chatgpt.com/share/684fd09e-f0c0-8005-90e4-9f3e6d9cbdee
+
+source/resources/js/admin/js lijn 345: 
+https://stackoverflow.com/questions/15843581/how-to-correctly-iterate-through-getelementsbyclassname
+
+Laravel tutorial: https://www.youtube.com/playlist?list=PLqDySLfPKRn5d7WbN9R0yJA9IRgx-XBlU

@@ -18,7 +18,7 @@ Route::post('/students', [StudentController::class, 'store'])->name('students.cr
 Route::get('/company', function () {
     return view('company.company'); // zoekt 'resources/views/home.blade.php'
 });
-
+ 
 //Route for admin to add a company
 Route::post('/companies', [CompanyController::class, 'store'])->name('companies.create');
 
@@ -31,11 +31,21 @@ Route::get('/admin', [AdminController::class, 'show']);
 //route voor login scherm
 // GET loginpagina
 Route::get('/student/login', function () {
-    return view('student.login_register.loginstudent');
+    return view('login.login');
 })->name('student.login.form');
 
 // POST login
 Route::post('/student/login', [LoginController::class, 'submit'])->name('student.login');
+
+Route::get('/student/register', function () {
+    return view('student.register.register1');
+})->name('student.register.form');
+
+
+//login doorsturen naar student pagina
+Route::get('/student', function () {
+    return view('student.html.student');
+})->name('student.html.student');
 
 
 //forgot password for student
@@ -45,7 +55,7 @@ Route::post('/student/password/email', [ForgotPasswordController::class, 'sendRe
 
 // Registratie stap 1
 Route::get('/student/register1', function () {
-    return view('student.login_register.register1');
+    return view('student.register.register1');
 })->name('student.register.step1');
 
 Route::post('/student/register1', [RegistrationStudentController::class, 'step1'])->name('student.register.step1.submit');
@@ -53,14 +63,14 @@ Route::post('/student/register1', [RegistrationStudentController::class, 'step1'
 
 // Registratie stap 2
 Route::get('/student/register2', function () {
-    return view('student.login_register.register2');
+    return view('student.register.register2');
 })->name('student.register.step2');
 
 Route::post('/student/register2', [RegistrationStudentController::class, 'step2'])->name('student.register.step2.submit');
 
 // Registratie stap 3
 Route::get('/student/register3', function () {
-    return view('student.login_register.register3');
+    return view('student.register.register3');
 })->name('student.register.step3');
 
 Route::post('/student/register3', [RegistrationStudentController::class, 'submit'])->name('student.register.step3.submit');

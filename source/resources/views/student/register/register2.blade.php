@@ -2,7 +2,7 @@
 <html lang="nl">
 <head>
     <meta charset="UTF-8">
-    <title>Registratie – Stap 3</title>
+    <title>Registratie – Stap 2</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <style>
         body {
@@ -11,7 +11,7 @@
             padding: 2rem;
         }
 
-        .container {
+        .container { 
             max-width: 450px;
             margin: 0 auto;
             background-color: #fff;
@@ -31,8 +31,8 @@
             font-weight: 500;
         }
 
-        input,
-        textarea {
+        input[type="text"],
+        input[type="file"] {
             width: 100%;
             padding: 0.7rem;
             margin-top: 0.5rem;
@@ -42,6 +42,12 @@
         }
 
         textarea {
+            width: 100%;
+            padding: 0.7rem;
+            margin-top: 0.5rem;
+            border: 1px solid #dfe1e6;
+            border-radius: 8px;
+            background-color: #f9fafc;
             resize: vertical;
         }
 
@@ -70,7 +76,7 @@
 <body>
 
 <div class="container">
-    <h2>Registratie – Stap 3</h2>
+    <h2>Registratie – Stap 2</h2>
 
     @if ($errors->any())
         <div class="alert">
@@ -82,17 +88,24 @@
         </div>
     @endif
 
-    <form method="POST" action="{{ route('student.register.step3.submit') }}">
-        @csrf
+    <form method="POST" action="{{ route('student.register.step2.submit') }}" enctype="multipart/form-data">
+    @csrf
 
-        <label for="job_preferences">Jobvoorkeuren</label>
-        <textarea name="job_preferences" id="job_preferences" rows="4" placeholder="Bijv. webdevelopment, data-analyse">{{ old('job_preferences') }}</textarea>
+    <label for="graduation_track">Afstudeertraject</label>
+    <input type="text" name="graduation_track" id="graduation_track" value="{{ old('graduation_track') }}" required>
 
-        <label for="location">Voorkeurslocatie(s)</label>
-        <input type="text" name="location" id="location" placeholder="Bijv. Brussel, Gent" value="{{ old('location') }}">
+    <label for="interests">Soft skills / vaardigheden</label>
+    <textarea name="interests" id="interests" rows="4" placeholder="Bijv. teamwork, communicatie, probleemoplossend vermogen">{{ old('interests') }}</textarea>
 
-        <button type="submit" class="submit-btn">Registratie voltooien</button>
-    </form>
+    <label for="cv">Upload je CV (optioneel)</label>
+    <input type="file" name="cv" id="cv" accept=".pdf,.doc,.docx">
+
+    <label for="linkedin">LinkedIn-profiel (optioneel)</label>
+    <input type="url" name="linkedin" id="linkedin" placeholder="https://www.linkedin.com/in/jouwnaam" value="{{ old('linkedin') }}">
+
+    <button type="submit" class="submit-btn">next step</button>
+</form>
+
 </div>
 
 </body>

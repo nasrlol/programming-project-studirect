@@ -9,7 +9,7 @@
             background-color: #f4f5f7;
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             margin: 0;
-        }
+        } 
 
         .register-container {
             display: flex;

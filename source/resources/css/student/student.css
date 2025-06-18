@@ -49,15 +49,15 @@ body {
 }
 
 .nav-links a:hover {
-    background: rgba(99, 102, 241, 0.1);
-    color: #6366f1;
+    background: rgba(0, 70, 201, 0.1);
+    color: #0046C9;
     transform: translateY(-2px);
 }
 
 .nav-links a.active {
-    background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+    background: linear-gradient(135deg, #0046C9 0%, #4A90E2 100%);
     color: white;
-    box-shadow: 0 4px 12px rgba(99, 102, 241, 0.4);
+    box-shadow: 0 4px 12px rgba(0, 70, 201, 0.4);
 }
 
 /* nav profile styles */
@@ -75,8 +75,8 @@ body {
 }
 
 .nav-profile:hover {
-    background: rgba(99, 102, 241, 0.1);
-    border-color: #6366f1;
+    background: rgba(0, 70, 201, 0.1);
+    border-color: #0046C9;
     transform: translateY(-1px);
 }
 
@@ -84,9 +84,9 @@ body {
     width: 40px;
     height: 40px;
     border-radius: 50%;
-    background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+    background: linear-gradient(135deg, #0046C9 0%, #4A90E2 100%);
     border: 2px solid white;
-    box-shadow: 0 2px 8px rgba(99, 102, 241, 0.3);
+    box-shadow: 0 2px 8px rgba(0, 70, 201, 0.3);
 }
 
 .profile-name {
@@ -129,8 +129,8 @@ body {
 }
 
 .profile-dropdown a:hover {
-    background: rgba(99, 102, 241, 0.1);
-    color: #6366f1;
+    background: rgba(0, 70, 201, 0.1);
+    color: #0046C9;
 }
 
 .profile-dropdown a:first-child {
@@ -143,8 +143,9 @@ body {
 
 /* studirect logo style */
 .nav-logo img {
-    height: 45px;
+    height: 100px;
     filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.1));
+    margin: -45px 0;
 }
 
 /* main container and section styles */
@@ -196,13 +197,13 @@ body {
 }
 
 #notifications p {
-    background: linear-gradient(135deg, #3b82f6 0%, #6366f1 100%);
+    background: linear-gradient(135deg, #0046C9 0%, #4A90E2 100%);
     color: white;
-    padding: 1.25rem;
+    padding: 1rem;
     border-radius: 12px;
     margin: 0.75rem 0;
-    box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
-    border-left: 4px solid #1d4ed8;
+    box-shadow: 0 4px 12px rgba(0, 70, 201, 0.3);
+    border-left: 4px solid #003A9F;
     font-weight: 500;
 }
 
@@ -347,7 +348,7 @@ body {
 
 #company-info li:before {
     content: "•";
-    color: #6366f1;
+    color: #0046C9;
     font-weight: bold;
     position: absolute;
     left: 0;
@@ -379,17 +380,17 @@ body {
 }
 
 .message-company:hover {
-    background: rgba(99, 102, 241, 0.1);
-    border-color: #6366f1;
+    background: rgba(0, 70, 201, 0.1);
+    border-color: #0046C9;
     transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(99, 102, 241, 0.2);
+    box-shadow: 0 4px 12px rgba(0, 70, 201, 0.2);
 }
 
 .message-company.active {
-    background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+    background: linear-gradient(135deg, #0046C9 0%, #4A90E2 100%);
     color: white;
-    border-color: #6366f1;
-    box-shadow: 0 4px 12px rgba(99, 102, 241, 0.4);
+    border-color: #0046C9;
+    box-shadow: 0 4px 12px rgba(0, 70, 201, 0.4);
 }
 
 .message-company.active * {
@@ -473,8 +474,8 @@ body {
 
 .chat-input textarea:focus {
     outline: none;
-    border-color: #6366f1;
-    box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
+    border-color: #0046C9;
+    box-shadow: 0 0 0 3px rgba(0, 70, 201, 0.1);
     background: white;
 }
 
@@ -485,19 +486,19 @@ body {
 .chat-input input[type="submit"] {
     align-self: flex-end;
     padding: 1rem 2rem;
-    background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+    background: linear-gradient(135deg, #0046C9 0%, #4A90E2 100%);
     border: none;
     border-radius: 12px;
     color: white;
     font-weight: 600;
     cursor: pointer;
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    box-shadow: 0 4px 12px rgba(99, 102, 241, 0.4);
+    box-shadow: 0 4px 12px rgba(0, 70, 201, 0.4);
 }
 
 .chat-input input[type="submit"]:hover {
     transform: translateY(-2px);
-    box-shadow: 0 8px 25px rgba(99, 102, 241, 0.5);
+    box-shadow: 0 8px 25px rgba(0, 70, 201, 0.5);
 }
 
 /* empty chat styles */
@@ -577,11 +578,11 @@ body {
 }
 
 .message.sent .message-content {
-    background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+    background: linear-gradient(135deg, #0046C9 0%, #4A90E2 100%);
     color: white;
     border-bottom-right-radius: 6px;
     border: none;
-    box-shadow: 0 4px 12px rgba(99, 102, 241, 0.3);
+    box-shadow: 0 4px 12px rgba(0, 70, 201, 0.3);
 }
 
 .message.sent .message-content p {
@@ -706,18 +707,18 @@ body {
 }
 
 .settings-btn:hover {
-    background: rgba(99, 102, 241, 0.1);
-    border-color: #6366f1;
-    color: #6366f1;
+    background: rgba(0, 70, 201, 0.1);
+    border-color: #0046C9;
+    color: #0046C9;
     transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(99, 102, 241, 0.2);
+    box-shadow: 0 4px 12px rgba(0, 70, 201, 0.2);
 }
 
 .settings-btn.active {
-    background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+    background: linear-gradient(135deg, #0046C9 0%, #4A90E2 100%);
     color: white;
-    border-color: #6366f1;
-    box-shadow: 0 4px 12px rgba(99, 102, 241, 0.4);
+    border-color: #0046C9;
+    box-shadow: 0 4px 12px rgba(0, 70, 201, 0.4);
 }
 
 .settings-main {
@@ -784,8 +785,8 @@ body {
 .form-group textarea:focus,
 .form-group select:focus {
     outline: none;
-    border-color: #6366f1;
-    box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
+    border-color: #0046C9;
+    box-shadow: 0 0 0 3px rgba(0, 70, 201, 0.1);
     background: white;
 }
 
@@ -827,11 +828,11 @@ body {
     width: 20px;
     height: 20px;
     margin: 0;
-    accent-color: #6366f1;
+    accent-color: #0046C9;
 }
 
 .save-btn {
-    background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+    background: linear-gradient(135deg, #0046C9 0%, #4A90E2 100%);
     border: none;
     color: white;
     padding: 1.25rem 2.5rem;
@@ -841,12 +842,12 @@ body {
     font-weight: 600;
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     align-self: flex-start;
-    box-shadow: 0 4px 12px rgba(99, 102, 241, 0.4);
+    box-shadow: 0 4px 12px rgba(0, 70, 201, 0.4);
 }
 
 .save-btn:hover {
     transform: translateY(-2px);
-    box-shadow: 0 8px 25px rgba(99, 102, 241, 0.5);
+    box-shadow: 0 8px 25px rgba(0, 70, 201, 0.5);
 }
 
 .password-btn {
@@ -865,10 +866,10 @@ body {
 
 .password-btn:hover {
     background: #f8fafc;
-    border-color: #6366f1;
-    color: #6366f1;
+    border-color: #0046C9;
+    color: #0046C9;
     transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(99, 102, 241, 0.2);
+    box-shadow: 0 4px 12px rgba(0, 70, 201, 0.2);
 }
 
 .undo-btn {
@@ -937,8 +938,8 @@ body {
 }
 
 .pdf-upload-zone:hover {
-    border-color: #6366f1;
-    background: rgba(99, 102, 241, 0.05);
+    border-color: #0046C9;
+    background: rgba(0, 70, 201, 0.05);
     transform: translateY(-2px);
 }
 
@@ -985,15 +986,15 @@ body {
 
 .theme-option:hover {
     background: #f8fafc;
-    border-color: #6366f1;
+    border-color: #0046C9;
     transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(99, 102, 241, 0.2);
+    box-shadow: 0 4px 12px rgba(0, 70, 201, 0.2);
 }
 
 .theme-option.active {
-    border-color: #6366f1;
-    background: rgba(99, 102, 241, 0.1);
-    box-shadow: 0 4px 12px rgba(99, 102, 241, 0.3);
+    border-color: #0046C9;
+    background: rgba(0, 70, 201, 0.1);
+    box-shadow: 0 4px 12px rgba(0, 70, 201, 0.3);
 }
 
 .theme-preview {
@@ -1027,7 +1028,7 @@ h1, h2, h3, h4, h5, h6 {
 
 h1 {
     font-size: 2.5rem;
-    background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+    background: linear-gradient(135deg, #0046C9 0%, #4A90E2 100%);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
@@ -1062,7 +1063,7 @@ h3 {
 
 /* Modern focus states */
 *:focus-visible {
-    outline: 2px solid #6366f1;
+    outline: 2px solid #0046C9;
     outline-offset: 2px;
     border-radius: 4px;
 }
@@ -1074,7 +1075,7 @@ html {
 
 /* Modern selection styling */
 ::selection {
-    background: rgba(99, 102, 241, 0.2);
+    background: rgba(0, 70, 201, 0.2);
     color: #1e293b;
 }
 
@@ -1185,9 +1186,9 @@ button:disabled, .btn:disabled {
     border-radius: 999px;
     font-size: 0.875rem;
     font-weight: 500;
-    background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+    background: linear-gradient(135deg, #0046C9 0%, #4A90E2 100%);
     color: white;
-    box-shadow: 0 2px 4px rgba(99, 102, 241, 0.3);
+    box-shadow: 0 2px 4px rgba(0, 70, 201, 0.3);
 }
 
 /* Modern tooltip styles */

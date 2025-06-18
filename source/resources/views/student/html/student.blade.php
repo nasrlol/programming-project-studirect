@@ -15,9 +15,7 @@
 
     <div id="home-content" class="content-container">
         <section class="sectionType1">
-                @include('student.layouts.notification', [
-                'notification' => "<p> Je hebt 3 berichten ontvangen van {$companies[0]['name']}.</p>"
-            ])
+                @include('student.layouts.welcome')
         </section>
         <section class="sectionType1">
             @include('student.layouts.companyswipe', [

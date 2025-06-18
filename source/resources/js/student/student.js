@@ -21,6 +21,9 @@ function renderMatches() {
     document.querySelectorAll('.content-container').forEach(section => section.classList.remove('active'));
     document.getElementById('matches-content').classList.add('active');
 
+    // remove active class from all message list items
+    document.querySelectorAll('.message-company').forEach(item => item.classList.remove('active'));
+
     // show empty state and hide chat
     const chatSection = document.getElementById('chat-section');
     const emptyContainer = chatSection.querySelector('.empty-chat-container');

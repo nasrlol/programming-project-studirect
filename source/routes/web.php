@@ -18,9 +18,11 @@ Route::get('/student/{id}', [StudentController::class, 'index']);
 Route::get('/students/{id}', [StudentController::class, 'index']);
 
 //TestCompany will be used in this get, afterwards second GET with ID will be used
+Route::get("/company/", [CompanyController::class, 'indexTest'])->name('company.index');
 Route::get("/companies/", [CompanyController::class, 'indexTest'])->name('companies.index');
 
-Route::get("/companies/{id}", [CompanyController::class, 'index'])->name('companies.index');
+Route::get("/company/{id}", [CompanyController::class, 'index'])->name('company.show');
+Route::get("/companies/{id}", [CompanyController::class, 'index'])->name('companies.show');
 
 
 //Route for companies to be created
@@ -31,6 +33,7 @@ Route::post('/students', [StudentController::class, 'store'])->name('students.cr
 Route::patch('/students/{id}', [StudentController::class, 'update']);
 Route::patch('/student/{id}', [StudentController::class, 'update']);
 Route::patch('/companies/{id}', [CompanyController::class, 'update']);
+Route::patch('/company/{id}', [CompanyController::class, 'update']);
 
 //route for deleting a company or student
 Route::delete('/companies/{id}', [CompanyController::class, 'destroy'])->name('companies.delete');
@@ -55,5 +58,6 @@ Route::patch('/connections/{id}', [ConnectionController::class, 'removeConnectio
 
 //Routes for messages
 //Link code chatGPT: https://chatgpt.com/share/684fd09e-f0c0-8005-90e4-9f3e6d9cbdee
-Route::post('/messages/send', [MessageController::class, 'sendMessage']);
+Route::post('/messages/send', [MessageController::class, 'sendMessage'])->name('messages.send');
 Route::post('/messages/conversation', [MessageController::class, 'getConversation']);
+Route::post('/companies/{id}/messages/send', [CompanyController::class, 'sendMessage'])->name('company.messages.send');

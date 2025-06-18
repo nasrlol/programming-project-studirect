@@ -195,4 +195,20 @@ try {
 
         return redirect()->back()->with('success', 'Bedrijf succesvol verwijderd!');
     }
+
+
+public function home() {
+    return view('company.layouts.home');
 }
+
+public function messages() {
+    return view('company.layouts.messages');
+}
+
+public function calendar() {
+    return view('company.layouts.calendar');
+}
+
+public function settings() {
+    return view('company.layouts.settings');
+}}

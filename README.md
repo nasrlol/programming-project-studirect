@@ -46,6 +46,7 @@ cd source
 npm install
 npm run build
 composer install
+mv .env.example ./env
 ```
 
 Hierna wordt u verwacht XAMPP te installeren (link: https://sourceforge.net/projects/xampp/), of het op een webserver te runnen.

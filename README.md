@@ -49,7 +49,6 @@ composer install
 mv .env.example ./env
 ```
 
-Hierna wordt u verwacht XAMPP te installeren (link: https://sourceforge.net/projects/xampp/), of het op een webserver te runnen.
 Installatieinstructies voor de backend te vinden via https://github.com/nasrlol/studirect-api.
 
 3. Starten

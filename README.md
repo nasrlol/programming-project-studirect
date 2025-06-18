@@ -22,6 +22,12 @@ De backend van deze applicatie is beschikbaar op [nasrlol/studirect-api](https:/
 - Laravel (PHP Framework)
 - MySQL database
 
+## Frontend Technologie
+
+- Vite.js
+- Blade (via Laravel)
+
+
 ## Installatie
 
 
@@ -33,12 +39,20 @@ De backend van deze applicatie is beschikbaar op [nasrlol/studirect-api](https:/
 git clone https://github.com/nasrlol/programming-project-studirect
 cd programming-project-studirect
 ```
-2. starten
+2. Installatie
 
 ```bash
 cd source 
-npm run install
-npm run dev
+npm install
+npm run build
+composer install
 ```
 
+Hierna wordt u verwacht XAMPP te installeren (link: https://sourceforge.net/projects/xampp/), of het op een webserver te runnen.
+Installatieinstructies voor de backend te vinden via https://github.com/nasrlol/studirect-api.
+
+3. Starten
+```bash
+php artisan serve
+```
 

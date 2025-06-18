@@ -1,5 +1,6 @@
 body {
     margin:0;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
 .image-container {
@@ -52,8 +53,9 @@ form {
 /*Table*/
 
 table {
-    width:100%;
-    border:solid;
+    width:85%;
+    margin-left:5%;
+    border-collapse: collapse; 
     border-width:1px;
 }
 .list {
@@ -62,14 +64,49 @@ table {
     height:100%;
 }
 
+li {
+    margin-bottom:0.5%;
+}
+
 th {
-    text-align: left;
-    width:20%;
+    font-style: normal;
+    text-align: center;
+    margin-right:0px;
+    margin:0px;
+    width:10%;
 }
 
 .th-short {
     width:5%;
     background-color: white;
+}
+/*Here to change the size of some headers*/
+
+.extraTh {
+    width:5%;
+}
+
+.loginTh {
+    width:7.5%;
+}
+
+
+.extraTd {
+    text-align: center;
+}
+
+tr {
+    border: solid;
+    border-width: 1px;
+    border-color: rgb(235, 235, 235);
+}
+
+.highlighted {
+    border-color: red;
+}
+
+td {
+    height:120%;
 }
 
 .studentActivated {
@@ -94,11 +131,10 @@ th {
     background-color: grey;
     height:90vh;
     width:95vw;
-    font-family: Verdana, sans-serif;
 }
 
 /* NAVIGATION ELEMENTS-----------------*/
-nav {
+.nav-container {
     height: 100%;
     width:15%;
     border-radius: 3%;
@@ -116,7 +152,7 @@ nav {
 }
 
 .info-nav {
-    font-size: 200%;
+    font-size: 175%;
 }
 
 .btn-nav {
@@ -125,7 +161,7 @@ nav {
     width:80%;
     background-color: inherit;
     color: inherit;
-    font-size: 150%;
+    font-size: 120%;
     border-radius: 5px;
     background-color: #365B93;
 }
@@ -133,6 +169,23 @@ nav {
 .btn-nav:hover {
     cursor:pointer;
     background-color: #365B93;
+}
+
+/*right navigation elements*/
+.amount-section {
+    border: none;
+    height:15%;
+    width:80%;
+    margin-bottom: 10%;
+    background-color: white;
+    color: black;
+    font-size: 120%;
+    border-radius: 5px;
+}
+
+.section-inside {
+    height:100%;
+    text-align: center  ;
 }
 /*RESULT ELEMENTS---------------------*/
 #result-container {
@@ -155,31 +208,10 @@ h2 {
     padding-left: 4%;
 }
 
-#dashboard {
-    background-color: white;
-    height: 50%;
-    width:95%;
-}
-
 .member-amount {
     display: flex;
-    flex-direction: row;
+    flex-direction: column;
     margin-left:5%;
-}
-
-.amount-section {
-    color:white;
-    font-size: large;
-    background-color: #648EE3;
-
-    width:35%;
-    height:100%;
-
-    margin-right: 7.5%;
-}
-.section-inside {
-    padding-top: 15%;
-    padding-bottom: 15%;
 }
 /*Students and companies*/
 
@@ -197,16 +229,34 @@ h2 {
 
 /*LOGS*/
 
-li {
+.logItem {
+    margin-left:0px;
     padding-bottom:2%;
     display: flex;
     flex-direction: row;
+}
+
+.logAction {
+    width:50%;
+}
+.logDate {
+    width:30%;
+}
+
+#form-container {
+    display: flex;
     justify-content: right;
 }
 
-.logItem {
-    width:80%;
+#next-log-form {
+    align-self: right;
+    width: 50%;
 }
+#prev-log-form {
+    align-self: left;
+    width: 50%;
+}
+
 
 select {
     border:none;

@@ -94,7 +94,7 @@ class CompanyController extends Controller
             'password1' => 'required|string|min:8',
             'password2' => 'required|same:password1',
             // Optional fields
-            'description' => 'nullable|string|max:1000',
+            'company_description' => 'nullable|string|max:1000',
             'job_types' => 'nullable|string|max:255',
             'job_domain' => 'nullable|string|max:255',
             'photo' => 'nullable|image', 
@@ -104,8 +104,8 @@ class CompanyController extends Controller
             return redirect()->back()->with('error', 'Validatie mislukt: ' . $e->getMessage());
         }
 
-        if (isset($validated['description'])) {
-            $validated['description'] = 'Vul dit in';
+        if (isset($validated['company_description'])) {
+            $validated['company_description'] = 'Vul dit in';
         }
         if (isset($validated['job_types'])) {
             $validated['job_types'] = 'Vul dit in';
@@ -152,7 +152,7 @@ try {
             'password1' => 'sometimes|string|min:8',
             'password2' => 'sometimes|same:password1',
             // Optional fields
-            'description' => 'nullable|string|max:1000',
+            'company_description' => 'nullable|string|max:1000',
             'job_types' => 'nullable|string|max:255',
             'job_domain' => 'nullable|string|max:255',
             'photo' => 'nullable|image', 

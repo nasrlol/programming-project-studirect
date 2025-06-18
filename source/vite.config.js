@@ -11,7 +11,11 @@ export default defineConfig({
                 'resources/css/student/student.css',
                 'resources/js/student/student.js',
                 'resources/css/company/company.css',
-                'resources/js/company/company.js'
+                'resources/js/company/company.js',
+                'resources/js/company/home.js',
+                'resources/js/company/messages.js',
+                'resources/js/company/calendar.js',
+                'resources/js/company/settings.js',
             ],
             refresh: true,
         }),

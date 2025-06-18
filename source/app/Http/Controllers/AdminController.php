@@ -76,8 +76,8 @@ class AdminController extends Controller
             }
 
             //setup time
-            $log['date'] = substr($log['created_at'], 8, 2) . "/" . substr($log['created_at'], 5, 2) . "/" . substr($log['created_at'], 0, 4);
-            $log['time'] = substr($log['created_at'], 11, 2) . "u" . substr($log['created_at'], 14, 2);
+            $log['date'] = substr($log['timestamp'], 8, 2) . "/" . substr($log['timestamp'], 5, 2) . "/" . substr($log['timestamp'], 0, 4);
+            $log['time'] = substr($log['timestamp'], 11, 2) . "u" . substr($log['timestamp'], 14, 2);
 
 
             //Set target_type to dutch

@@ -16,7 +16,7 @@
 
         <div id="home-content" class="content-container">
             <section class="sectionType1">
-                @include('company.layouts.notification', [
+                @include('company.layouts.welcome', [
                     'notification' => "Welkom " . ($company['name'] ?? 'Company') . "! U hebt toegang tot alle functionaliteiten van het CareerLaunch platform."
                 ])
             </section>

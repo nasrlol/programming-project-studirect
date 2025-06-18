@@ -215,18 +215,21 @@ body {
 
 /* map styles */
 #groundplan {
-    height: 300px;
-    overflow: auto;
+    flex: 1;
+    overflow: hidden;
     border: 1px solid #e2e8f0;
     background: #f8fafc;
     border-radius: 12px;
-    margin-top: auto;
     box-shadow: inset 0 2px 4px 0 rgba(0, 0, 0, 0.05);
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 #groundplan img {
     width: 100%;
-    height: auto;
+    height: 100%;
+    object-fit: contain;
     border-radius: 12px;
 }
 

@@ -1,5 +1,6 @@
 body {
     margin:0;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
 .image-container {
@@ -130,7 +131,6 @@ td {
     background-color: grey;
     height:90vh;
     width:95vw;
-    font-family: Verdana, sans-serif;
 }
 
 /* NAVIGATION ELEMENTS-----------------*/

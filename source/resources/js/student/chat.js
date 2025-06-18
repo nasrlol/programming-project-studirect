@@ -183,14 +183,18 @@ function addMessageToChat(content, isSent = false) {
 
     const messageContent = document.createElement('div');
     messageContent.className = 'message-content';
-    messageContent.textContent = content;
+
+    const messageText = document.createElement('p');
+    messageText.textContent = content;
 
     const messageTime = document.createElement('div');
     messageTime.className = 'message-time';
     messageTime.textContent = formatTime(new Date().toISOString());
 
+    // Put both text and timestamp inside the message-content bubble
+    messageContent.appendChild(messageText);
+    messageContent.appendChild(messageTime);
     messageDiv.appendChild(messageContent);
-    messageDiv.appendChild(messageTime);
     conversation.appendChild(messageDiv);
 
     scrollToBottom();
@@ -222,11 +226,12 @@ function escapeHtml(text) {
     return div.innerHTML;
 }
 
-// Utility function to format time
+// Utility function to format time in military format (24-hour)
 function formatTime(dateString) {
     const date = new Date(dateString);
-    return date.toLocaleTimeString('en-US', {
+    return date.toLocaleTimeString('en-GB', {
         hour: '2-digit',
-        minute: '2-digit'
+        minute: '2-digit',
+        hour12: false
     });
 }

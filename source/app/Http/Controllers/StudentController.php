@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
 use Illuminate\View\View;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Log;
 use App\Http\Controllers\MessageController;
 
 class StudentController extends Controller
@@ -52,12 +53,30 @@ class StudentController extends Controller
         $messageController = new MessageController();
         $allMessages = $messageController->getAllMessagesForStudent($id);
 
+        // fetch diplomas for graduation track dropdown
+        $diplomasResponse = Http::get($this->diplomasApiUrl);
+        if ($diplomasResponse->successful()) {
+            $diplomasData = $diplomasResponse->json('data');
+
+            // check if the data is nested like companies API
+            $diplomas = isset($diplomasData['data']) ? $diplomasData['data'] : $diplomasData;
+        } else {
+            Log::error('Diplomas API Failed:', [
+                'status' => $diplomasResponse->status(),
+                'body' => $diplomasResponse->body(),
+                'url' => $this->diplomasApiUrl
+            ]);
+            $diplomas = [];
+        }
+
         return view('student.html.student', [
+            'id' => $id,
             'student' => $student,
             'companies' => $companies,
             'appointments' => $appointments,
             'connections' => $connections,
-            'allMessages' => $allMessages
+            'allMessages' => $allMessages,
+            'diplomas' => $diplomas
         ]);
 
     }
@@ -100,12 +119,23 @@ class StudentController extends Controller
         $messageController = new MessageController();
         $allMessages = $messageController->getAllMessagesForStudent($id);
 
+        // fetch diplomas for graduation track dropdown
+        $diplomasResponse = Http::get($this->diplomasApiUrl);
+        if ($diplomasResponse->successful()) {
+            $diplomasData = $diplomasResponse->json('data');
+            // Check if the data is nested like companies API
+            $diplomas = isset($diplomasData['data']) ? $diplomasData['data'] : $diplomasData;
+        } else {
+            $diplomas = [];
+        }
+
         return view('student.html.student', [
             'student' => $student,
             'companies' => $companies,
             'appointments' => $appointments,
             'connections' => $connections,
-            'allMessages' => $allMessages
+            'allMessages' => $allMessages,
+            'diplomas' => $diplomas
         ]);
 
     }
@@ -212,31 +242,52 @@ class StudentController extends Controller
             'email' => 'sometimes|required|email|unique:students,email',
             'password' => 'sometimes|required|string|min:8',
             'study_direction' => 'sometimes|required|string|max:255',
-            'graduation_track' => 'sometimes|required|string|max:255',
+            'graduation_track' => 'sometimes|required|integer',
             'interests' => 'sometimes|required|string',
             'job_preferences' => 'sometimes|required|string',
             'cv' => 'nullable|string',
             'profile_complete' => 'nullable|boolean',
         ]);
         } catch (\Exception $e) {
+            if ($request->expectsJson()) {
+                return response()->json(['error' => 'Validation failed: ' . $e->getMessage()], 422);
+            }
             return redirect()->back()->with('error', 'Validatie mislukt: ' . $e->getMessage());
         }
-        //Current data is taken and merged with the validated data
-        $current = Http::get("{$this->studentsApiUrl}/{$id}");
-        $current = $current->json('data');
 
-        $data = array_merge($current, $validated);
-        unset($data['password']); // Remove password field if it is not set in the request
+        try {
+            //Current data is taken and merged with the validated data
+            $current = Http::get("{$this->studentsApiUrl}/{$id}");
+            if (!$current->successful()) {
+                throw new \Exception('Could not fetch current student data');
+            }
 
-        //Password hashing issue, please fix
+            $currentData = $current->json('data');
+            $data = array_merge($currentData, $validated);
 
-        $response = Http::patch("{$this->studentsApiUrl}/{$id}", $data);
+            // Remove password field if it is not set in the request
+            if (!isset($validated['password'])) {
+                unset($data['password']);
+            }
 
-        if (!$response->successful()) {
+            $response = Http::patch("{$this->studentsApiUrl}/{$id}", $data);
+
+            if (!$response->successful()) {
+                throw new \Exception('API update failed');
+            }
+
+            if ($request->expectsJson()) {
+                return response()->json(['success' => true, 'message' => 'Profile updated successfully']);
+            }
+
+            return redirect()->back()->with('success', 'Account succesvol aangepast');
+
+        } catch (\Exception $e) {
+            if ($request->expectsJson()) {
+                return response()->json(['error' => 'Er is een fout opgetreden bij het bijwerken van het account.'], 500);
+            }
             return redirect()->back()->with('error', 'Er is een fout opgetreden bij het bijwerken van het account.');
         }
-
-        return redirect()->back()->with('success', 'Account succesvol aangepast');
     }
 
     /**

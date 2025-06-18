@@ -1,5 +1,5 @@
 // calendar.js
-
+/*
 const loggedInCompanyId = 5;
 
 function getTimeRowIndex(time) {
@@ -115,3 +115,4 @@ export function loadCalendarContent() {
             appointmentList.innerHTML += "<p>Kon afspraken niet laden.</p>";
         });
 }
+        */

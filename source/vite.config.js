@@ -11,7 +11,8 @@ export default defineConfig({
                 'resources/css/student/student.css',
                 'resources/js/student/student.js',
                 'resources/css/company/company.css',
-                'resources/js/company/company.js'
+                'resources/js/company/company.js',
+                'resources/js/company/chat.js'
             ],
             refresh: true,
         }),

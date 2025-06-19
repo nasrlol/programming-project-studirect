@@ -6,7 +6,6 @@ use App\Http\Controllers\AdminController;
 use App\Http\Controllers\Auth\Student\ForgotPasswordController;
 use App\Http\Controllers\RegistrationStudentController;
 use App\Http\Controllers\loginstudent\LoginController;
-use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AppointmentController;
 use App\Http\Controllers\ConnectionController;
 use App\Http\Controllers\MessageController;

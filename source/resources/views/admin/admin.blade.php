@@ -51,7 +51,7 @@
                 <div class='filter' id='student'></div>
                 <div class='list'>
                     <table id='studentTable'>
-                        <tr><th>Naam</th><th>Email</th><th class='loginTh'>Laatste login</th><th class='extraTh'>Acties</th></tr>
+                        <tr><th>Naam</th><th class="mailTh">Email</th><th class='loginTh'>Laatste login</th><th class='extraTh'>Acties</th></tr>
                         <!--API call-->
                         <!--Last log still needs to be added-->
                         @foreach ($students as $student)
@@ -133,7 +133,9 @@
                 <div class='filter' id='company'></div>
                 <div class='searchContainer list'>
                         <table id='companyTable'> 
-                            <tr><th>Naam</th><th>Email</th><th class='loginTh'>Laatste login</th><th class='extraTh'>Acties</th></tr>
+                            <tr class="tableHead">
+                                <th>Naam</th><th class="mailTh">Email</th><th class='loginTh'>Laatste login</th><th class='extraTh'>Acties</th>
+                            </tr>
                             @foreach ($companies as $company)
                             <tr>
                                 <td class='hidden companyId'>{{$company['id']}}</td>

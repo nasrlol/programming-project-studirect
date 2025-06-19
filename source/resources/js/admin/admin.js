@@ -222,7 +222,7 @@ export function createTable(input, extra = null) {
     table.innerHTML = "";
     const type = document.getElementById("students").style.display != "none"  ? "S" : "C"
     const legend = document.createElement("tr");
-    legend.innerHTML = "<th>Naam</th><th>Email</th><th class='loginTh'>Laatste login</th><th class='extraTh'>Acties</th>"
+    legend.innerHTML = "<th>Naam</th><th class='mailTh'>Email</th><th class='loginTh'>Laatste login</th><th class='extraTh'>Acties</th>"
     table.appendChild(legend)
     if (extra) {
         for (let e of extra) {

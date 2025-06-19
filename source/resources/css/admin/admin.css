@@ -42,6 +42,7 @@ section {
 /*For appointments*/
 .hidden {
     display:none;
+
 }
 /*For adding to company*/
 .addUser {
@@ -134,9 +135,14 @@ td {
 }
 
 .searchable {
-    height:80%;
+    height:77%;
     margin-left:3.5%;
 }
+
+#appointments {
+    height:90%;
+}
+
 .searchable-content {
     width:80%;
     background-color: red;

@@ -250,21 +250,22 @@
                     </form>
                 </div>
             </section>
-            <section id='appointments'> 
-                <table id='appointmentInfo'>
-                    <tr><th>Student</th><th>Bedrijf</th><th>Tijdslot</th></tr>
-                    @foreach ($appointments as $appointment)
-                        <tr class="apointmentList t{{substr(str_replace(':', '-',$appointment['time_slot']), 0, 5)}}">
-                            <td class='hidden appointmentId'>{{$appointment['id']}}</td>
-                            <td class='appointmentSId'>{{$appointment['student_id']}}</td>
-                            <td class='appointmentCId'>{{$appointment['company_id']}}</td>
-                            <td class='appointmentTime'>
-                                {{$appointment['time_slot']}}
-                            </td>
-                        </tr>
-                    @endforeach
-                    </div>
-                </table>
+            <section id='appointments' class="searchable"> 
+                <div class="searchContainer list">
+                    <table id='appointmentInfo'>
+                        <tr><th>Student</th><th>Bedrijf</th><th>Tijdslot</th></tr>
+                        @foreach ($appointments as $appointment)
+                            <tr class="apointmentList t{{substr(str_replace(':', '-',$appointment['time_slot']), 0, 5)}}">
+                                <td class='hidden appointmentId'>{{$appointment['id']}}</td>
+                                <td class='appointmentSId'>{{$appointment['student_id']}}</td>
+                                <td class='appointmentCId'>{{$appointment['company_id']}}</td>
+                                <td class='appointmentTime'>
+                                    {{$appointment['time_slot']}}
+                                </td>
+                            </tr>
+                        @endforeach
+                    </table>
+                </div>
             </section>
             <section id='details'>
                  <h2>Details:</h2>

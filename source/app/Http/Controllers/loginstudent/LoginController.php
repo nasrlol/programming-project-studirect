@@ -1,62 +1,65 @@
 <?php
 
-namespace App\Http\Controllers\Loginstudent;
+namespace App\Http\Controllers\loginstudent;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Log;
 
 class LoginController extends Controller
 {
-    private string $ApiUrlstudent = 'http://10.2.160.208/api/students/login';
-    private string $apiUrlcompany = 'http://10.2.160.208/api/companies/';
+    protected string $apiUrl;
+
+    public function __construct()
+    {
+        $this->apiUrl = config('services.api.base_url', 'http://10.2.160.208/api');
+    }
 
     public function submit(Request $request)
     {
-        // Validatie van invoer
-        $request->validate([
+        $validated = $request->validate([
             'email' => 'required|email',
-            'password' => 'required'
+            'password' => 'required',
         ]);
 
-        // 1. Probeer student API
-        $studentResponse = Http::asForm()->post($this->ApiUrlstudent, [
-            'email' => $request->email,
-            'password' => $request->password
-        ]);
-        \Log::info('Student Login API status: ' . $studentResponse->status());
-        \Log::info('Student Login API body: ' . $studentResponse->body());
+        try {
+            $response = Http::timeout(5)
+                ->acceptJson()
+                ->post("{$this->apiUrl}/login", [
+                    'email' => $validated['email'],
+                    'password' => $validated['password'],
+                ]);
 
-        if ($studentResponse->successful()) {
-            $data = $studentResponse->json();
-            if (is_array($data) && isset($data['user_type']) && $data['user_type'] === 'student') {
-                $companies = [];
-                return view('student.html.student', compact('companies'))->with('status', 'Ingelogd als student (API)!');
+            if ($response->successful()) {
+                $data = $response->json();
+                $token = $data['token'] ?? null;
+                $userType = $data['user_type'] ?? null;
+                $userId = $data['user']['id'] ?? null;
+
+                if (!$token || !$userType || !$userId) {
+                    return back()->withErrors(['email' => 'Ongeldige response van de loginservice.'])->withInput();
+                }
+
+                session(['api_token' => $token]);
+
+                // Doorverwijzen op basis van type
+                if ($userType === 'student') {
+                    return redirect("/student/{$userId}");
+                } elseif ($userType === 'company') {
+                    return redirect("/company/{$userId}");
+                } elseif ($userType === 'admin') {
+                    return redirect("/admin");
+                } else {
+                    return back()->withErrors(['email' => 'Onbekend gebruikerstype.'])->withInput();
+                }
             }
+
+            return back()->withErrors(['email' => 'Ongeldige inloggegevens.'])->withInput();
+
+        } catch (\Exception $e) {
+            Log::error('Login error', ['message' => $e->getMessage()]);
+            return back()->withErrors(['email' => 'Loginservice tijdelijk niet beschikbaar.'])->withInput();
         }
-
-        // 2. Probeer company API
-        $companyResponse = Http::asForm()->post($this->apiUrlcompany . 'login', [
-            'email' => $request->email,
-            'password' => $request->password
-        ]);
-        \Log::info('Company Login API status: ' . $companyResponse->status());
-        \Log::info('Company Login API body: ' . $companyResponse->body());
-
-        if ($companyResponse->successful()) {
-            $data = $companyResponse->json();
-            if (is_array($data) && isset($data['user_type']) && $data['user_type'] === 'company') {
-                $companies = [
-                    [
-                        'name' => $data['company']['name'] ?? 'Onbekend bedrijf',
-                        'photo' => $data['company']['photo'] ?? 'default_logo.png'
-                    ]
-                ];
-                return view('company.company', compact('companies'))->with('status', 'Ingelogd als bedrijf (API)!');
-            }
-        }
-
-        // 3. Nergens gevonden
-        return redirect()->back()->withErrors(['login' => 'Login mislukt.'])->withInput();
     }
 }

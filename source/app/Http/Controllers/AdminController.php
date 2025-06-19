@@ -39,6 +39,10 @@ class AdminController extends Controller
         foreach ($companies as &$company) $company['logs'] = array();
 
         $appointments = $this->getAppointments();   
+        foreach ($appointments as &$appointment) {
+            $appointment['time_slot'] = substr($appointment['time_start'], 0, 5) . ' - '. substr($appointment['time_end'], 0,5);
+        }
+
         $connections = $this->getConnections();
         //Final response for logs
         //Check if the apiURL of the requested logs is active.
@@ -100,6 +104,7 @@ class AdminController extends Controller
                     if ($student['id'] == $id) array_push($student['logs'], $log );
                 }
             } elseif ($log['actor'] === 'Bedrijf') {
+                $log['actor_id'] = $this->translateCompany($id);
                 //This code adds a log to the user 
                 foreach ($companies as &$company) {
                     if ($company['id'] == $id) array_push($company['logs'], $log );

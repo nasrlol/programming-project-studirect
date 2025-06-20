@@ -1,5 +1,181 @@
 'use strict';
 
+// Global variables for company swiping
+let availableCompanies = [];
+let currentCompanyIndex = 0;
+let shownCompanies = new Set();
+let isAnimating = false;
+
+// Initialize company data and randomize
+function initializeCompanies() {
+    if (window.companiesData && window.companiesData.length > 0) {
+        availableCompanies = [...window.companiesData];
+        shuffleArray(availableCompanies);
+        currentCompanyIndex = 0;
+        shownCompanies.clear();
+        showCurrentCompany();
+    }
+}
+
+// Shuffle array function
+function shuffleArray(array) {
+    for (let i = array.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [array[i], array[j]] = [array[j], array[i]];
+    }
+}
+
+// Show current company information
+function showCurrentCompany() {
+    if (availableCompanies.length === 0) return;
+
+    const company = availableCompanies[currentCompanyIndex];
+    if (!company) return;
+
+    // Update company swipe section
+    const companyTitle = document.querySelector('#company-title h2');
+    const jobTitle = document.querySelector('#company-title p');
+    const companyLogo = document.querySelector('#company-logo img');
+
+    if (companyTitle) {
+        companyTitle.textContent = company.name || 'Naam Bedrijf';
+    }
+    if (jobTitle) {
+        jobTitle.textContent = company.job_title || 'Stage Positie';
+    }
+    if (companyLogo) {
+        companyLogo.src = company.photo || '';
+        companyLogo.alt = company.name || 'Company Logo';
+    }
+
+    // Update company info section
+    updateCompanyInfo(company);
+    updateCompanyCounter();
+}
+
+// Update company information section
+function updateCompanyInfo(company) {
+    const companyInfo = document.getElementById('company-info');
+    if (!companyInfo) return;
+
+    const jobDomainLi = companyInfo.querySelector('div:first-child ul li:nth-child(1)');
+    const jobTypeLi = companyInfo.querySelector('div:first-child ul li:nth-child(2)');
+    const jobDescLi = companyInfo.querySelector('div:first-child ul li:nth-child(3)');
+    const jobReqLi = companyInfo.querySelector('div:nth-child(2) ul li');
+    const companyDescP = companyInfo.querySelector('div:nth-child(3) p');
+
+    if (jobDomainLi) {
+        jobDomainLi.textContent = company.job_domain || 'Geen jobdomein opgegeven.';
+    }
+    if (jobTypeLi) {
+        jobTypeLi.textContent = company.job_types || 'Geen functietype opgegeven.';
+    }
+    if (jobDescLi) {
+        jobDescLi.textContent = company.job_description || 'Geen omschrijving beschikbaar.';
+    }
+    if (jobReqLi) {
+        jobReqLi.textContent = company.job_requirements || 'Geen vereisten opgegeven.';
+    }
+    if (companyDescP) {
+        companyDescP.textContent = company.description || company.company_description || 'Er is geen informatie beschikbaar over dit bedrijf.';
+    }
+}
+
+// Handle swipe actions
+function handleSwipe(action) {
+    if (availableCompanies.length === 0 || isAnimating) return;
+
+    isAnimating = true;
+    const currentCompany = availableCompanies[currentCompanyIndex];
+    const companySwipeSection = document.getElementById('company-swipe-section');
+
+    if (companySwipeSection) {
+        companySwipeSection.style.transition = 'transform 0.6s ease-out, opacity 1.4s ease-out';
+        companySwipeSection.style.zIndex = '-10';
+
+        if (action === 'liked') {
+            companySwipeSection.style.transform = 'translateX(420px)';
+        } else {
+            companySwipeSection.style.transform = 'translateX(-420px)';
+        }
+        companySwipeSection.style.opacity = '0';
+    }
+
+    // Reset after animation
+    setTimeout(() => {
+        if (companySwipeSection) {
+            companySwipeSection.style.transition = 'none';
+            companySwipeSection.style.transform = 'translateX(0)';
+            companySwipeSection.style.opacity = '1';
+            companySwipeSection.style.zIndex = '';
+        }
+
+        // Add current company to shown companies
+        shownCompanies.add(currentCompany.id);
+        console.log(`${action} company:`, currentCompany.name);
+
+        nextCompany();
+        isAnimating = false;
+    }, 800);
+}
+
+// Move to next company
+function nextCompany() {
+    currentCompanyIndex++;
+
+    if (currentCompanyIndex >= availableCompanies.length) {
+        const unshownCompanies = window.companiesData.filter(company => !shownCompanies.has(company.id));
+
+        if (unshownCompanies.length > 0) {
+            availableCompanies = [...unshownCompanies];
+            shuffleArray(availableCompanies);
+            currentCompanyIndex = 0;
+        } else {
+            shownCompanies.clear();
+            availableCompanies = [...window.companiesData];
+            shuffleArray(availableCompanies);
+            currentCompanyIndex = 0;
+        }
+    }
+
+    showCurrentCompany();
+}
+
+// Set up swipe button event listeners
+function setupSwipeButtons() {
+    const likeBtn = document.getElementById('like');
+    const dislikeBtn = document.getElementById('dislike');
+
+    if (likeBtn) {
+        likeBtn.addEventListener('click', () => handleSwipe('liked'));
+    }
+    if (dislikeBtn) {
+        dislikeBtn.addEventListener('click', () => handleSwipe('disliked'));
+    }
+
+    // Add keyboard shortcuts
+    document.addEventListener('keydown', (e) => {
+        const homeContent = document.getElementById('home-content');
+        if (!homeContent || !homeContent.classList.contains('active')) return;
+
+        if (e.key === 'ArrowLeft') {
+            e.preventDefault();
+            handleSwipe('disliked');
+        } else if (e.key === 'ArrowRight') {
+            e.preventDefault();
+            handleSwipe('liked');
+        }
+    });
+}
+
+// Add company counter display
+function updateCompanyCounter() {
+    const remainingCompanies = availableCompanies.length - currentCompanyIndex;
+    const totalUnshown = window.companiesData.filter(company => !shownCompanies.has(company.id)).length;
+
+    console.log(`Companies remaining in current batch: ${remainingCompanies}, Total unshown: ${totalUnshown}`);
+}
+
 // function to render home section
 function renderHome() {
     // update active button
@@ -350,6 +526,10 @@ function preventNavigationIfUnsaved(callback) {
 
 // add event listeners when DOM is loaded
 document.addEventListener('DOMContentLoaded', () => {
+    // Initialize company swiping functionality
+    initializeCompanies();
+    setupSwipeButtons();
+
     // home button click handler
     document.getElementById('homeBtn').addEventListener('click', (e) => {
         e.preventDefault();

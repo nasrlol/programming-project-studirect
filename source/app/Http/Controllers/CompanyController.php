@@ -6,18 +6,19 @@ use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
 use Illuminate\View\View;
 use Illuminate\Support\Facades\Http;
+use App\Http\Controllers\MessageController;
 
 class CompanyController extends Controller
 {
     //companiesApiUrls in parent class
 
-    //Index function to shown on the company page, takes the ID and shows the company 
+    //Index function to shown on the company page, takes the ID and shows the company
     public function index(string $id): View
     {
         $response = Http::get("{$this->companiesApiUrl}/{$id}");
         if (!$response->successful()) {
             return view('notfound', ['message' => 'Dit bedrijf lijkt niet te bestaan (error code 404). Contacteer de beheerder van de site voor meer informatie']);
-        } 
+        }
 
         $company = $response->json('data');
 
@@ -31,16 +32,28 @@ class CompanyController extends Controller
             //translate student and company id to names
             $appointment['student_name'] = $this->translateStudent($appointment['student_id']);
 
-            
+
             $appointment['company_name'] = $this->translateCompany($appointment['company_id']);
         }
 
         $connections = $this->get_connections($id, 'company');
 
+        // Fetch students data for messages
+        $studentsResponse = Http::get($this->studentsApiUrl);
+        $students = [];
+        if ($studentsResponse->successful()) {
+            $students = $studentsResponse->json('data');
+        }
+
+        // Get all messages for this company
+        $messageController = new MessageController();
+        $allMessages = $messageController->getAllMessagesForCompany($id);
+
         return view('company.company', [
             'company' => $company,
             'appointments' => $appointments,
-            'connections' => $connections
+            'connections' => $allMessages, // Use messages instead of connections
+            'students' => $students
         ]);
     }
     //Test Function to show a company, this will be replaced by the index function.
@@ -50,7 +63,7 @@ class CompanyController extends Controller
         $response = Http::get("{$this->companiesApiUrl}/{$id}");
         if (!$response->successful()) {
             return view('notfound', ['message' => 'Dit bedrijf lijkt niet te bestaan (error code 404). Contacteer de beheerder van de site voor meer informatie']);
-        } 
+        }
 
         $company = $response->json('data');
 
@@ -64,16 +77,28 @@ class CompanyController extends Controller
             //translate student and company id to names
             $appointment['student_name'] = $this->translateStudent($appointment['student_id']);
 
-            
+
             $appointment['company_name'] = $this->translateCompany($appointment['company_id']);
         }
 
         $connections = $this->get_connections($id, 'company');
 
+        // Fetch students data for messages
+        $studentsResponse = Http::get($this->studentsApiUrl);
+        $students = [];
+        if ($studentsResponse->successful()) {
+            $students = $studentsResponse->json('data');
+        }
+
+        // Get all messages for this company
+        $messageController = new MessageController();
+        $allMessages = $messageController->getAllMessagesForCompany($id);
+
         return view('company.company', [
             'company' => $company,
             'appointments' => $appointments,
-            'connections' => $connections
+            'connections' => $allMessages, // Use messages instead of connections
+            'students' => $students
         ]);
     }
 
@@ -97,7 +122,7 @@ class CompanyController extends Controller
             'company_description' => 'nullable|string|max:1000',
             'job_types' => 'nullable|string|max:255',
             'job_domain' => 'nullable|string|max:255',
-            'photo' => 'nullable|image', 
+            'photo' => 'nullable|image',
             'speeddate_duration' => 'nullable|integer',
             ]);
         } catch (\Exception $e) {
@@ -119,12 +144,12 @@ class CompanyController extends Controller
         if (isset($validated['speeddate_duration'])) {
             $validated['speeddate_duration'] = '1'; // Default value
         }
-        
+
         //Take password 1 for value
         unset($validated['password2']);
         $validated['password'] = $validated['password1'];
         unset($validated['password1']);
-    
+
 try {
     $response = Http::post($this->companiesApiUrl, $validated);
 
@@ -136,7 +161,6 @@ try {
     }
 
 
-    //---------------------------Aanpassingen moeten nog gebeuren aan Update----------------------------------
     /**
      * Update the specified resource in storage.
      */
@@ -155,7 +179,7 @@ try {
             'company_description' => 'nullable|string|max:1000',
             'job_types' => 'nullable|string|max:255',
             'job_domain' => 'nullable|string|max:255',
-            'photo' => 'nullable|image', 
+            'photo' => 'nullable|image',
             'speeddate_duration' => 'nullable|integer',
             ]);
         } catch (\Exception $e) {
@@ -166,7 +190,7 @@ try {
         $current = $current->json('data');
 
         $data = array_merge($current, $validated);
-        
+
         unset($data['password1']); // Remove password field if it is not set in the request
         unset($data['password2']); // Remove password field if it is not set in the request
 
@@ -187,12 +211,40 @@ try {
 
         /**
      * Remove the specified resource from storage.
-     */ 
+     */
     public function destroy(string $id)
     {
         $response = Http::delete("{$this->companiesApiUrl}{$id}");
 
 
         return redirect()->back()->with('success', 'Bedrijf succesvol verwijderd!');
+    }
+
+    /**
+     * Send a message from company to student
+     */
+    public function sendMessage(Request $request, string $id)
+    {
+        // Validate the request
+        $validated = $request->validate([
+            'receiver_id' => 'required|integer',
+            'content' => 'required|string|max:1000'
+        ]);
+
+        // Prepare data for MessageController
+        $messageData = [
+            'sender_id' => (int)$id,
+            'sender_type' => 'App\\Models\\Company',
+            'receiver_id' => $validated['receiver_id'],
+            'receiver_type' => 'App\\Models\\Student',
+            'content' => $validated['content']
+        ];
+
+        // Use MessageController to send the message
+        $messageController = new MessageController();
+        $messageRequest = new Request($messageData);
+        $messageRequest->headers->set('Accept', 'application/json');
+
+        return $messageController->sendMessage($messageRequest);
     }
 }

@@ -1,11 +1,11 @@
 'use strict';
 
-// Chat functionality for student interface - Simplified with pre-loaded messages
+// Chat functionality for company interface - Simplified with pre-loaded messages
 let chatMessages = null;
 let messageForm = null;
 let messageTextarea = null;
-let currentCompanyId = null;
-let studentId = null;
+let currentStudentId = null;
+let companyId = null;
 
 // initialize chat when DOM is ready
 document.addEventListener('DOMContentLoaded', function() {
@@ -18,27 +18,29 @@ function initializeElements() {
     chatMessages = document.getElementById('chat-messages');
     messageForm = document.getElementById('message-form');
     messageTextarea = document.getElementById('message-textarea');
-    currentCompanyId = document.getElementById('current-company-id');
+    currentStudentId = document.getElementById('current-student-id');
 
-    // get student ID from the data attribute
-    const studentIdElement = document.querySelector('[data-student-id]');
-    studentId = studentIdElement?.dataset.studentId;
+    // get company ID from the data attribute
+    const companyIdElement = document.querySelector('[data-company-id]');
+    companyId = companyIdElement?.dataset.companyId;
 
-    if (!studentId) {
-        console.error('Student ID not found.');
+    if (!companyId) {
+        console.error('Company ID not found.');
     }
 }
 
 // set up all event listeners
 function setupEventListeners() {
     // handle form submission
-    messageForm.addEventListener('submit', function(e) {
-        handleMessageSubmit(e);
-    });
+    if (messageForm) {
+        messageForm.addEventListener('submit', function(e) {
+            handleMessageSubmit(e);
+        });
+    }
 
-    // listen for company selection events
-    window.addEventListener('companySelected', function(event) {
-        handleCompanySelection(event.detail.companyId);
+    // listen for student selection events
+    window.addEventListener('studentSelected', function(event) {
+        handleStudentSelection(event.detail.studentId);
     });
 
     // enter key in textarea
@@ -52,16 +54,16 @@ function setupEventListeners() {
     }
 }
 
-// handle company selection
-function handleCompanySelection(companyId) {
-    if (!companyId) return;
+// handle student selection
+function handleStudentSelection(studentId) {
+    if (!studentId) return;
 
-    currentCompanyId.value = companyId;
-    showConversation(companyId);
+    currentStudentId.value = studentId;
+    showConversation(studentId);
 }
 
-// Show conversation for selected company
-function showConversation(companyId) {
+// Show conversation for selected student
+function showConversation(studentId) {
     // Hide all conversations
     document.querySelectorAll('.conversation').forEach(conv => {
         conv.style.display = 'none';
@@ -75,35 +77,35 @@ function showConversation(companyId) {
     }
 
     // Remove any temporary empty states
-    const noMessagesCompany = chatMessages.querySelector('.no-messages-company');
-    if (noMessagesCompany) {
-        noMessagesCompany.remove();
+    const noMessagesStudent = chatMessages.querySelector('.no-messages-student');
+    if (noMessagesStudent) {
+        noMessagesStudent.remove();
     }
 
-    // Show conversation for selected company
-    const conversation = chatMessages.querySelector(`[data-company-id="${companyId}"]`);
+    // Show conversation for selected student
+    const conversation = chatMessages.querySelector(`[data-student-id="${studentId}"]`);
     if (conversation) {
         conversation.style.display = 'block';
         scrollToBottom();
     } else {
-        // No messages for this company yet, show empty state
-        showEmptyStateForCompany();
+        // No messages for this student yet, show empty state
+        showEmptyStateForStudent();
     }
 }
 
-// Show empty state for a company with no messages
-function showEmptyStateForCompany() {
+// Show empty state for a student with no messages
+function showEmptyStateForStudent() {
     // Hide all conversations
     document.querySelectorAll('.conversation').forEach(conv => {
         conv.style.display = 'none';
     });
 
     const emptyDiv = document.createElement('div');
-    emptyDiv.className = 'no-messages-company';
+    emptyDiv.className = 'no-messages-student';
     emptyDiv.innerHTML = '<p>No messages yet. Start the conversation!</p>';
 
     // Remove any existing empty state
-    const existingEmpty = chatMessages.querySelector('.no-messages-company');
+    const existingEmpty = chatMessages.querySelector('.no-messages-student');
     if (existingEmpty) {
         existingEmpty.remove();
     }
@@ -152,8 +154,8 @@ function handleMessageSubmit(e) {
 
 // Add message to chat (for immediate display when sending)
 function addMessageToChat(content, isSent = false) {
-    const companyId = currentCompanyId.value;
-    if (!companyId) return;
+    const studentId = currentStudentId.value;
+    if (!studentId) return;
 
     // Hide and remove any empty state messages
     const noMessages = chatMessages.querySelector('.no-messages');
@@ -162,17 +164,17 @@ function addMessageToChat(content, isSent = false) {
         noMessages.classList.remove('active');
     }
 
-    const noMessagesCompany = chatMessages.querySelector('.no-messages-company');
-    if (noMessagesCompany) {
-        noMessagesCompany.remove();
+    const noMessagesStudent = chatMessages.querySelector('.no-messages-student');
+    if (noMessagesStudent) {
+        noMessagesStudent.remove();
     }
 
-    // Find or create conversation container for this company
-    let conversation = chatMessages.querySelector(`[data-company-id="${companyId}"]`);
+    // Find or create conversation container for this student
+    let conversation = chatMessages.querySelector(`[data-student-id="${studentId}"]`);
     if (!conversation) {
         conversation = document.createElement('div');
         conversation.className = 'conversation';
-        conversation.setAttribute('data-company-id', companyId);
+        conversation.setAttribute('data-student-id', studentId);
         conversation.style.display = 'block';
         chatMessages.appendChild(conversation);
     }
@@ -216,14 +218,9 @@ function showErrorAlert(message) {
 
 // Scroll chat to bottom
 function scrollToBottom() {
-    chatMessages.scrollTop = chatMessages.scrollHeight;
-}
-
-// Utility function to escape HTML
-function escapeHtml(text) {
-    const div = document.createElement('div');
-    div.textContent = text;
-    return div.innerHTML;
+    if (chatMessages) {
+        chatMessages.scrollTop = chatMessages.scrollHeight;
+    }
 }
 
 // Utility function to format time in military format (24-hour)

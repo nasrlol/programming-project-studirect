@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>StuDirect</title>
     <link href="https://fonts.googleapis.com/css2?family=EB+Garamond:wght@400;500;600&display=swap" rel="stylesheet">
     @vite ('resources/css/student/student.css')
@@ -10,11 +11,11 @@
 <body>
     @include('student.layouts.navbar')
 <main class:"container">
+    @include('student.layouts.settings')
+
     <div id="home-content" class="content-container">
         <section class="sectionType1">
-                @include('student.layouts.notification', [
-                'notification' => "<p> Je hebt 3 berichten ontvangen van {$companies[0]['name']}.</p>"
-            ])
+                @include('student.layouts.welcome')
         </section>
         <section class="sectionType1">
             @include('student.layouts.companyswipe', [
@@ -25,30 +26,11 @@
         </section>
         <section class="sectionType1">
             @include('student.layouts.companyinfo', [
-                'company_description' => '
-                    <ul>
-                        <li>Gent, Oost-Vlaanderen</li>
-                        <li>Stage</li>
-                        <li>februari - juni 2025 (duur tijd bespreekbaar)</li>
-                        <li>Loon: n/a</li>
-                        <li>Fulltime positie</li>
-                        <li>Flexibele uren</li>
-                        <li>Jonge, dynamische werkomgeving</li>
-                    </ul>',
-                'company_requirements' => '
-                    <ul>
-                        <li>Bachelor Toegepaste Informatica / Graduaat Systeem- en Netwerkbeheer</li>
-                        <li>Goede communicatieve vaardigheden</li>
-                        <li>Probleemoplossend denken</li>
-                        <li>Teamplayer mentaliteit</li>
-                        <li>Basiskennis netwerken</li>
-                        <li>Kennis van Windows Server en Active Directory is een plus</li>
-                        <li>Rijbewijs B</li>
-                    </ul>',
-                'company_about' => '
-                    <p>ByteForge Solutions is een groeiend softwarebedrijf gespecialiseerd in maatwerkapplicaties voor KMOs. Met een klein maar gedreven team bouwen we weboplossingen, automatisering en business intelligence tools op maat van onze klanten.</p>
-                    <p>We geloven sterk in persoonlijke groei en bieden onze medewerkers veel ruimte voor ontwikkeling en innovatie. Onze moderne kantoren in het hart van Gent zijn uitgerust met de nieuwste technologieën.</p>
-                    <p>Als stagiair(e) word je vanaf dag één beschouwd als volwaardig teamlid en krijg je de kans om mee te werken aan uitdagende projecten voor echte klanten.</p>'
+                'job_domain' => $companies[0]['job_domain'] ?? 'Geen jobdomein opgegeven.',
+                'job_type' => $companies[0]['job_types'] ?? 'Geen functietype opgegeven.',
+                'job_description' => $companies[0]['job_description'] ?? 'Geen omschrijving beschikbaar.',
+                'job_requirements' => $companies[0]['job_requirements'] ?? 'Geen vereisten opgegeven.',
+                'description' => $companies[0]['description'] ?? $companies[0]['company_description'] ?? 'Er is geen informatie beschikbaar over dit bedrijf.'
             ])
         </section>
     </div>
@@ -84,6 +66,7 @@
 
     <div id="calendar-content" class:"content-container">
     </div>
+
 </main>
 @vite ('resources/js/student/student.js')
 @vite ('resources/js/student/chat.js')

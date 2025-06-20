@@ -22,6 +22,7 @@ function tableToObjects() {
     const studentSeverity = document.getElementsByClassName('studentSeverity')
     for (let i = 0; i < names.length; i++)
     {
+
         let currentId = ids[i].innerHTML
         //check if the student has any logs
         let logs = new Array()
@@ -49,6 +50,7 @@ function tableToObjects() {
         }
         objects.student.push({
             id: currentId,
+
             activated: activated[i].innerHTML,
             name: names[i].innerHTML,
             mail: mails[i].innerHTML,

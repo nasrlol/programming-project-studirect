@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Validation\ValidationException;
 
 class MessageController extends Controller
@@ -76,10 +77,16 @@ class MessageController extends Controller
         $response = Http::post("{$this->messagesApiUrl}/send", $validated);
 
         if (!$response->successful()) {
-            if ($request->expectsJson()) {
-                return response()->json(['error' => 'Failed to send message'], 500);
+            $errorMessage = 'Failed to send message';
+            if ($response->status() === 422) {
+                $errorData = $response->json();
+                $errorMessage = $errorData['message'] ?? 'Validation error';
             }
-            return redirect()->back()->withErrors(['error' => 'Failed to send message']);
+
+            if ($request->expectsJson()) {
+                return response()->json(['error' => $errorMessage], 500);
+            }
+            return redirect()->back()->withErrors(['error' => $errorMessage]);
         }
 
         $message = $response->json('data');
@@ -140,6 +147,95 @@ class MessageController extends Controller
                 }
             }
         }
+
+        return $groupedMessages;
+    }
+
+    /**
+     * Haal alle berichten op voor een specifiek bedrijf
+     */
+    public function getAllMessagesForCompany($companyId)
+    {
+        Log::info('getAllMessagesForCompany called', ['companyId' => $companyId]);
+
+        // Get all students instead of just connected ones
+        $response = Http::get($this->studentsApiUrl);
+
+        if (!$response->successful()) {
+            Log::error('Failed to fetch students', [
+                'status' => $response->status(),
+                'url' => $this->studentsApiUrl
+            ]);
+            return [];
+        }
+
+        $studentsData = $response->json('data');
+        $students = $studentsData ?? [];
+
+        Log::info('Students fetched', ['count' => count($students)]);
+
+        if (empty($students)) {
+            Log::warning('No students found');
+            return [];
+        }
+
+        $groupedMessages = [];
+
+        // For each student, fetch the conversation with the company
+        foreach ($students as $student) {
+            $studentId = $student['id'];
+
+            // Prepare data for conversation API call
+            $conversationData = [
+                'user1_id' => (int)$companyId,
+                'user1_type' => 'App\\Models\\Company',
+                'user2_id' => (int)$studentId,
+                'user2_type' => 'App\\Models\\Student',
+            ];
+
+            Log::info('Making conversation API call', [
+                'url' => "{$this->messagesApiUrl}/conversation",
+                'data' => $conversationData
+            ]);
+
+            // API call to get conversation between company and this student
+            $response = Http::post("{$this->messagesApiUrl}/conversation", $conversationData);
+
+            Log::info('Conversation API response', [
+                'student_id' => $studentId,
+                'status' => $response->status(),
+                'successful' => $response->successful(),
+                'body' => $response->body()
+            ]);
+
+            if ($response->successful()) {
+                $responseData = $response->json();
+                $messages = $responseData['conversation'] ?? []; // Use 'conversation' key from API response
+
+                if (!empty($messages)) {
+                    $groupedMessages[$studentId] = [
+                        'user_id' => $studentId,
+                        'messages' => $messages
+                    ];
+                    Log::info('Messages found for student', [
+                        'student_id' => $studentId,
+                        'message_count' => count($messages)
+                    ]);
+                } else {
+                    Log::info('No messages found for student', ['student_id' => $studentId]);
+                }
+            } else {
+                Log::error('Conversation API call failed', [
+                    'student_id' => $studentId,
+                    'status' => $response->status(),
+                    'response' => $response->body()
+                ]);
+            }
+        }
+
+        Log::info('getAllMessagesForCompany result', [
+            'total_conversations' => count($groupedMessages)
+        ]);
 
         return $groupedMessages;
     }

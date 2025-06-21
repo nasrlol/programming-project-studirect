@@ -3,8 +3,6 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use Illuminate\Http\JsonResponse;
-use Illuminate\View\View;
 use Illuminate\Support\Facades\Http;
 
 class AdminController extends Controller
@@ -13,41 +11,50 @@ class AdminController extends Controller
     public function show(Request $request)
 {
     try {
-        if (session('api_token')) {$token = "Bearer " . session("api_token");}
-
         $apiLogs = $this->apiUrl . 'admin/logs';
+        $action = false;
+        $token = "";
+        if (session('api_token')) {
+            $token = "Bearer " . session("api_token");
 
+        }
+        if ($token == "") return redirect("/");
+
+        //get All data
         $response = Http::withHeaders( [
             "Authorization" => $token
         ])->get($this->studentsApiUrl);
-
-
         if (!$response->successful()) {
-            return view('APINotFound', ['message' => "De API is tijdelijk niet beschikbaar. Gelieve even te wachten, en dan opnieuw te proberen",
-            'location' => '/admin'
-        ]);
+            redirect("/");
         }
-
         $students = $response->json('data');
-        foreach ($students as &$student) $student['logs'] = array();
 
         //Second response for companies
         $response = Http::withHeaders( [
             "Authorization" => $token
         ])->get($this->companiesApiUrl);
         if (!$response->successful()) {
-            return view('APINotFound', ['message' => "De API is tijdelijk niet beschikbaar. Gelieve even te wachten, en dan opnieuw te proberen",
-            'location' => '/admin'
-        ]);}
-        $companies = $response->json('data');
-
-        foreach ($companies as &$company) $company['logs'] = array();
-
-        $appointments = $this->getAppointments($token); 
-        $connections = $this->getConnections($token);
-        foreach ($appointments as &$appointment) {
-            $appointment['time_slot'] = substr($appointment['time_start'], 0, 5) . ' - '. substr($appointment['time_end'], 0,5);
+            dd(2);
         }
+        $companies = $response->json('data');
+        //For appointments 
+        $response = Http::withHeaders( [
+            "Authorization" => $token
+        ])->get($this->appointmentApiUrl);
+
+        $appointments = $response->json('data');
+        //For connections
+        $response = Http::withHeaders( [
+            "Authorization" => $token
+        ])->get($this->connectionsApiUrl);
+
+        $connections = $response->json('data');
+
+        //Degrees
+        $degrees = Http::withHeaders( [
+            "Authorization" => $token
+        ])->get($this->apiUrl . 'diplomas')->json('data');
+
 
         //Final response for logs
         //Check if the apiURL of the requested logs is active.
@@ -56,15 +63,35 @@ class AdminController extends Controller
             "Authorization" => $token
         ])->get($this->apiUrl . 'admin/logs?cursor=' . $request['cursor']);
         }
+        
     
         else $response = Http::withHeaders( [
             "Authorization" => $token
         ])->get($apiLogs);
 
         $logs = $response->json('data');
+
+        //Translate the ID's to names
+        $appointments = $this->translateCompanies($appointments, $companies);
+        $appointments = $this->translateStudents($appointments, $students);
+        //Same with connections
+        //Translate the ID's to names
+        $connections = $this->translateCompanies($connections, $companies);
+        $connections = $this->translateStudents($connections, $students);
+
+
+
+        foreach ($students as &$student) $student['logs'] = array();
+
+        foreach ($companies as &$company) $company['logs'] = array();
+
+        foreach ($appointments as &$appointment) {
+            $appointment['time_slot'] = substr($appointment['time_start'], 0, 5) . ' - '. substr($appointment['time_end'], 0,5);
+        }
         //save next page from lgos, to add it seperatly in the view
         $nextPage = isset($logs['next_cursor']) ? $logs['next_cursor'] : null;
         $previousPage = isset($logs['prev_cursor']) ? $logs['prev_cursor'] : null;
+
 
         $logs = $logs['data'];
         //Replace target id with target name
@@ -105,13 +132,13 @@ class AdminController extends Controller
             $id = $log['actor_id'];
 
             if ($log['actor'] === 'Student') {
-                $log['actor_id'] = $this->translateStudent($id);
+                $log['actor_id'] = $this->translateStudent($id, $token);
                 //This code adds a log to the user 
                 foreach ($students as &$student) {
                     if ($student['id'] == $id) array_push($student['logs'], $log );
                 }
             } elseif ($log['actor'] === 'Bedrijf') {
-                $log['actor_id'] = $this->translateCompany($id);
+                $log['actor_id'] = $this->translateCompany($id, $token);
                 //This code adds a log to the user 
                 foreach ($companies as &$company) {
                     if ($company['id'] == $id) array_push($company['logs'], $log );
@@ -122,11 +149,6 @@ class AdminController extends Controller
             }
         
         }
-
-
-        $degrees = Http::withHeaders( [
-            "Authorization" => $token
-        ])->get($this->apiUrl . 'diplomas')->json('data');
         
         return view('/admin/admin', [
             'students' => $students, 
@@ -192,24 +214,6 @@ try {
 } catch (\Exception $e) {
     return redirect()->back()->with('error', 'Er is een fout opgetreden: ' . $e->getMessage());
 }
-    }
-
-
-    //
-    protected function getAppointments($token) {
-        $response = Http::withHeaders( [
-            "Authorization" => $token
-        ])->get($this->appointmentApiUrl);
-
-        $data = $response->json('data');
-        foreach ($data as &$appointment) {
-            //translate student and company id to names
-            $appointment['student_id'] = $this->translateStudent($appointment['student_id']);
-
-            
-            $appointment['company_id'] = $this->translateCompany($appointment['company_id']);
-        }
-        return $data;
     }
 
     protected function getConnections($token) {

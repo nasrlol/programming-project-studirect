@@ -13,9 +13,14 @@ class AdminController extends Controller
     public function show(Request $request): View
 {
     try {
+        if (session('api_token')) {$token = "Bearer " . session("api_token");}
+
         $apiLogs = $this->apiUrl . 'admin/logs';
 
-        $response = Http::get($this->studentsApiUrl);
+        $response = Http::withHeaders( [
+            "Authorization" => $token
+        ])->get($this->studentsApiUrl);
+
 
         if (!$response->successful()) {
             return view('APINotFound', ['message' => "De API is tijdelijk niet beschikbaar. Gelieve even te wachten, en dan opnieuw te proberen",
@@ -27,33 +32,35 @@ class AdminController extends Controller
         foreach ($students as &$student) $student['logs'] = array();
 
         //Second response for companies
-        $response = Http::get($this->companiesApiUrl);
+        $response = Http::withHeaders( [
+            "Authorization" => $token
+        ])->get($this->companiesApiUrl);
         if (!$response->successful()) {
             return view('APINotFound', ['message' => "De API is tijdelijk niet beschikbaar. Gelieve even te wachten, en dan opnieuw te proberen",
             'location' => '/admin'
         ]);}
-        
         $companies = $response->json('data');
 
-
         foreach ($companies as &$company) $company['logs'] = array();
-
-        $appointments = $this->getAppointments();   
-        $connections = $this->getConnections();
+        $appointments = $this->getAppointments($token); 
+        $connections = $this->getConnections($token);
+        
         //Final response for logs
         //Check if the apiURL of the requested logs is active.
         if (isset($request['cursor'])) {
-            $response = Http::get($this->apiUrl . 'admin/logs?cursor=' . $request['cursor']);
+            $response = Http::withHeaders( [
+            "Authorization" => $token
+        ])->get($this->apiUrl . 'admin/logs?cursor=' . $request['cursor']);
         }
     
-        else $response = Http::get($apiLogs);
+        else $response = Http::withHeaders( [
+            "Authorization" => $token
+        ])->get($apiLogs);
 
         $logs = $response->json('data');
         //save next page from lgos, to add it seperatly in the view
         $nextPage = isset($logs['next_cursor']) ? $logs['next_cursor'] : null;
         $previousPage = isset($logs['prev_cursor']) ? $logs['prev_cursor'] : null;
-
-        
 
         $logs = $logs['data'];
         //Replace target id with target name
@@ -111,7 +118,10 @@ class AdminController extends Controller
         
         }
 
-        $degrees = Http::get($this->apiUrl . 'diplomas')->json('data');
+
+        $degrees = Http::withHeaders( [
+            "Authorization" => $token
+        ])->get($this->apiUrl . 'diplomas')->json('data');
         
         return view('/admin/admin', [
             'students' => $students, 
@@ -145,6 +155,8 @@ public function storeS(Request $request)
         } catch (\Exception $e) {
             return redirect()->back()->with('error', 'Validatie mislukt: ' . $e->getMessage());
         }
+
+        $token = $request['token'];
         
 
     // Prepare data for API (use password2 as password)
@@ -162,7 +174,9 @@ public function storeS(Request $request)
     ];
 
 try {
-    $response = Http::post($this->apiUrl . 'students', $data);
+    $response = Http::withHeaders( [
+            "Authorization" => $token
+        ])->post($this->apiUrl . 'students', $data);
 
     if ($response->successful()) {
         return redirect()->back()->with('success', 'Student succesvol toegevoegd!');
@@ -177,8 +191,10 @@ try {
 
 
     //
-    protected function getAppointments() {
-        $response = Http::get($this->appointmentApiUrl);
+    protected function getAppointments($token) {
+        $response = Http::withHeaders( [
+            "Authorization" => $token
+        ])->get($this->appointmentApiUrl);
 
         $data = $response->json('data');
         foreach ($data as &$appointment) {
@@ -191,8 +207,10 @@ try {
         return $data;
     }
 
-    protected function getConnections() {
-        $response = Http::get($this->connectionsApiUrl);
+    protected function getConnections($token) {
+        $response = Http::withHeaders( [
+            "Authorization" => $token
+        ])->get($this->connectionsApiUrl);
 
         $data = $response->json('data');
         foreach ($data as &$connection) {

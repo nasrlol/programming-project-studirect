@@ -71,6 +71,16 @@ class AdminController extends Controller
 
         $logs = $response->json('data');
 
+        foreach ($students as &$student) {
+            foreach ($degrees as $degree) {
+                if ($student['graduation_track'] == $degree['id']) {
+                    $student['graduation_track'] = $degree['type'];
+                    break;
+                }
+            }
+        }
+
+
         //Translate the ID's to names
         $appointments = $this->translateCompanies($appointments, $companies);
         $appointments = $this->translateStudents($appointments, $students);

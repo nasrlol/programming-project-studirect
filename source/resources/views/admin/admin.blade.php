@@ -70,6 +70,9 @@
                             </td>
                             <!--Hidden info used by javascript-->
                             <td class='hidden activated'>{{$student['profile_complete']}}</td>
+                            <td class='hidden graduation-track'>
+                                {{$student['graduation_track']}}
+                            </td>
                             <td class='hidden study-direction'>
                                 {{$student['study_direction']}}
                             </td>

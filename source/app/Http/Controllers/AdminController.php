@@ -14,10 +14,16 @@ class AdminController extends Controller
         $apiLogs = $this->apiUrl . 'admin/logs';
         $action = false;
         $token = "";
+        //If user just logged in, create session
         if (session('api_token')) {
             $token = "Bearer " . session("api_token");
-
+            $action = true;
         }
+        else if ($request['token']) {
+            $token = $request['token'];
+        }
+
+
         if ($token == "") return redirect("/");
 
         //get All data
@@ -168,7 +174,8 @@ class AdminController extends Controller
             'logs' => $logs,
             'degrees' => $degrees,
             'nextPage' => $nextPage,
-            'previousPage' => $previousPage
+            'previousPage' => $previousPage,
+            'action' => $action
     ]);
     } catch (\Exception $e) {
         dd('failure: ' . $e->getMessage());

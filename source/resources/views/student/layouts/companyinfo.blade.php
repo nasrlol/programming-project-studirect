@@ -2,19 +2,19 @@
     <div>
         <h5>Omschrijving</h5>
         <ul>
-            <li>{{ $job_domain ?? 'Geen jobdomein opgegeven.' }}</li>
-            <li>{{ $job_type ?? 'Geen functietype opgegeven.' }}</li>
-            <li>{{ $job_description ?? 'Geen omschrijving beschikbaar.' }}</li>
+            <li id="job-domain">{{ $job_domain ?? 'Geen jobdomein opgegeven.' }}</li>
+            <li id="job-type">{{ $job_type ?? 'Geen functietype opgegeven.' }}</li>
+            <li id="job-description">{{ $job_description ?? 'Geen omschrijving beschikbaar.' }}</li>
         </ul>
     </div>
     <div>
         <h5>Vereisten</h5>
         <ul>
-            <li>{{ $job_requirements ?? 'Geen vereisten opgegeven.' }}</li>
+            <li id="job-requirements">{{ $job_requirements ?? 'Geen vereisten opgegeven.' }}</li>
         </ul>
     </div>
     <div>
         <h5>Over dit bedrijf</h5>
-        <p>{{ $description ?? 'Er is geen informatie beschikbaar over dit bedrijf.' }}</p>
+        <p id="company-description">{{ $description ?? 'Er is geen informatie beschikbaar over dit bedrijf.' }}</p>
     </div>
 </div>

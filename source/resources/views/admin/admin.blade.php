@@ -7,6 +7,13 @@
     <title>document</title>
 </head>
 <body>
+    @if ($action == true) 
+        <script>
+            localStorage.setItem('token', "{{ session('api_token') }}")
+            localStorage.setItem('user_type', 'admin')
+        </script> 
+    @endif
+
     <span id='serverResponse'>
     @if ( session('error'))
         {{session('error') }}
@@ -16,6 +23,7 @@
     </span>
     <div id='main-container'>
         <nav id="navigation" class='nav-container'>
+            <button class="btn-nav" id="logout">Log out</button>
             <span class='info-nav nav-element'>Admin</span><br>
             <button class="btn-nav nav-element" id="nav-users">Studenten</button>
             <button class="btn-nav nav-element" id="nav-companies">Bedrijven</button>
@@ -70,6 +78,9 @@
                             </td>
                             <!--Hidden info used by javascript-->
                             <td class='hidden activated'>{{$student['profile_complete']}}</td>
+                            <td class='hidden graduation-track'>
+                                {{$student['graduation_track']}}
+                            </td>
                             <td class='hidden study-direction'>
                                 {{$student['study_direction']}}
                             </td>
@@ -104,6 +115,7 @@
                     <!-- Action to add a company must be added-->
                     <form method='post' action="{{ route('students.create') }}">
                         @csrf <!-- CSRF token for security (concept genomen via Github Copilot)-->
+                        <input type="hidden" class="token" name="token">
                         <input class='addInput' type='text'name='first_name' placeholder='Voornaam'>
                         <input class='addInput' type='text'name='last_name' placeholder='Achternaam'>
                         <input class='addInput' type='text' name='email' placeholder='E-mail'>
@@ -196,6 +208,7 @@
                     <!-- Action to add a company must be added-->
                     <form method='post' action="{{ route('companies.create') }}">
                         @csrf <!-- CSRF token for security -->
+                        <input type="hidden" class="token" name="token">
                         <input class='addInput' type='text' name='name' placeholder='Naam'>
                         <input class='addInput' type='text' name='email' placeholder='E-mail'>
                         <div class='addInput' style='border: solid; border-width:1px'>
@@ -242,11 +255,13 @@
                 <div id='form-container'>
                     <form method='GET' action='/admin' id='prev-log-form'>
                         @csrf
+                        <input type="hidden" class="token" name="token">
                         <input id='prev-log-page' type='hidden' name='cursor' value='{{$previousPage}}'>
                         <input type='submit' value='Vorige'>
                     </form>
                     <form method='GET' action='/admin' id='next-log-form'>
                         @csrf
+                        <input type="hidden" class="token" name="token">
                         <input id='next-log-page' type='hidden' name='cursor' value='{{$nextPage}}'>
                         <input type='submit' value='Volgende'>
                     </form>
@@ -283,6 +298,7 @@
             <form id='deletionForm' class='deletionForm tempForm' method='POST'>
                 @csrf
                 @method('DELETE')
+                <input type="hidden" class="token" name="token">
                 <input type='submit' value='Ja, ik ben zeker'>
             </form>
         </div>

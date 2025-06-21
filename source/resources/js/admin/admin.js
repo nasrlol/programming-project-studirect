@@ -12,6 +12,7 @@ function tableToObjects() {
     let names = document.getElementsByClassName("studentName")
     let mails = document.getElementsByClassName("studentMail")
     let logins = document.getElementsByClassName("studentLogin");
+    const graduation_tracks = document.getElementsByClassName("graduation-track");
     const studys = document.getElementsByClassName('study-direction')
     const interests = document.getElementsByClassName('interests')
     const preferences = document.getElementsByClassName('job-preferences')
@@ -55,6 +56,7 @@ function tableToObjects() {
             name: names[i].innerHTML,
             mail: mails[i].innerHTML,
             login: logins[i].innerHTML,
+            graduation_track: graduation_tracks[i].innerHTML.trim(),
             studyDirection: studys[i].innerHTML.trim(),
             interests: interests[i].innerHTML.trim(),
             preferences: preferences[i].innerHTML.trim(),
@@ -409,6 +411,7 @@ export function setViewFunctionality () {
             
             li.innerHTML += `<li>Geactiveerd: ${geactiveerd}</li>`
             li.innerHTML += `<li>Job interesses: ${user.interests}</li>`
+            li.innerHTML += `<li>Type diploma: ${user.graduation_track}</li>`
             li.innerHTML += `<li>Studierichting: ${user.studyDirection}</li>`
             li.innerHTML += `<li>Job voorkeuren: ${user.preferences}</li>`
         }

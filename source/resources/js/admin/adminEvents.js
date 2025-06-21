@@ -51,7 +51,11 @@ document.addEventListener('keydown', e => {
 document.getElementById('searchType').addEventListener('change', () => {
     const searchType = document.getElementById('searchType').value;
     sortLogs(searchType)
-    
+})
+
+document.getElementById('logout').addEventListener('click', () => {
+    localStorage.clear('token')
+    location.href = '/'
 })
 
 window.addEventListener("load", () => {
@@ -114,5 +118,8 @@ window.addEventListener("load", () => {
             document.getElementById('serverResponse').innerHTML = ''
         }, 5000)
     sortAppointment()
+    for (let element of document.getElementsByClassName('token')) {
+        element.value = localStorage.getItem('token');
+    }
 }
 );

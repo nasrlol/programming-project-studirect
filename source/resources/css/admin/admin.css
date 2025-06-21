@@ -176,6 +176,7 @@ td {
     background-color: #252D3C;
     font: Verdana, sans-serif;
 }
+
 /*Nav element is both info-nav and btn-nav*/
 .nav-element {
     margin-left:10%;
@@ -200,6 +201,16 @@ td {
 .btn-nav:hover {
     cursor:pointer;
     background-color: #365B93;
+}
+
+#logout {
+    border:none;
+    margin-top: 5%;
+    width:45%;
+    background-color: grey;
+}
+#logout:hover {
+    background-color: darkgrey;
 }
 
 /*right navigation elements*/

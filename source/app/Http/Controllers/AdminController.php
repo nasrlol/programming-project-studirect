@@ -3,8 +3,6 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use Illuminate\Http\JsonResponse;
-use Illuminate\View\View;
 use Illuminate\Support\Facades\Http;
 
 class AdminController extends Controller
@@ -14,50 +12,102 @@ class AdminController extends Controller
 {
     try {
         $apiLogs = $this->apiUrl . 'admin/logs';
-
-        $response = Http::get($this->studentsApiUrl);
-
-        if (!$response->successful()) {
-            return view('APINotFound', ['message' => "De API is tijdelijk niet beschikbaar. Gelieve even te wachten, en dan opnieuw te proberen",
-            'location' => '/admin'
-        ]);
+        $action = false;
+        $token = "";
+        //If user just logged in, create session
+        if (session('api_token')) {
+            $token = "Bearer " . session("api_token");
+            $action = true;
+        }
+        else if ($request['token']) {
+            $token = $request['token'];
         }
 
+
+        if ($token == "") return redirect("/");
+
+        //get All data
+        $response = Http::withHeaders( [
+            "Authorization" => $token
+        ])->get($this->studentsApiUrl);
+        if (!$response->successful()) {
+            redirect("/");
+        }
         $students = $response->json('data');
-        foreach ($students as &$student) $student['logs'] = array();
 
         //Second response for companies
-        $response = Http::get($this->companiesApiUrl);
+        $response = Http::withHeaders( [
+            "Authorization" => $token
+        ])->get($this->companiesApiUrl);
         if (!$response->successful()) {
-            return view('APINotFound', ['message' => "De API is tijdelijk niet beschikbaar. Gelieve even te wachten, en dan opnieuw te proberen",
-            'location' => '/admin'
-        ]);}
-        
-        $companies = $response->json('data');
-
-
-        foreach ($companies as &$company) $company['logs'] = array();
-
-        $appointments = $this->getAppointments();   
-        foreach ($appointments as &$appointment) {
-            $appointment['time_slot'] = substr($appointment['time_start'], 0, 5) . ' - '. substr($appointment['time_end'], 0,5);
+            dd(2);
         }
+        $companies = $response->json('data');
+        //For appointments 
+        $response = Http::withHeaders( [
+            "Authorization" => $token
+        ])->get($this->appointmentApiUrl);
 
-        $connections = $this->getConnections();
+        $appointments = $response->json('data');
+        //For connections
+        $response = Http::withHeaders( [
+            "Authorization" => $token
+        ])->get($this->connectionsApiUrl);
+
+        $connections = $response->json('data');
+
+        //Degrees
+        $degrees = Http::withHeaders( [
+            "Authorization" => $token
+        ])->get($this->apiUrl . 'diplomas')->json('data');
+
+
         //Final response for logs
         //Check if the apiURL of the requested logs is active.
         if (isset($request['cursor'])) {
-            $response = Http::get($this->apiUrl . 'admin/logs?cursor=' . $request['cursor']);
+            $response = Http::withHeaders( [
+            "Authorization" => $token
+        ])->get($this->apiUrl . 'admin/logs?cursor=' . $request['cursor']);
         }
+        
     
-        else $response = Http::get($apiLogs);
+        else $response = Http::withHeaders( [
+            "Authorization" => $token
+        ])->get($apiLogs);
 
         $logs = $response->json('data');
+
+        foreach ($students as &$student) {
+            foreach ($degrees as $degree) {
+                if ($student['graduation_track'] == $degree['id']) {
+                    $student['graduation_track'] = $degree['type'];
+                    break;
+                }
+            }
+        }
+
+
+        //Translate the ID's to names
+        $appointments = $this->translateCompanies($appointments, $companies);
+        $appointments = $this->translateStudents($appointments, $students);
+        //Same with connections
+        //Translate the ID's to names
+        $connections = $this->translateCompanies($connections, $companies);
+        $connections = $this->translateStudents($connections, $students);
+
+
+
+        foreach ($students as &$student) $student['logs'] = array();
+
+        foreach ($companies as &$company) $company['logs'] = array();
+
+        foreach ($appointments as &$appointment) {
+            $appointment['time_slot'] = substr($appointment['time_start'], 0, 5) . ' - '. substr($appointment['time_end'], 0,5);
+        }
         //save next page from lgos, to add it seperatly in the view
         $nextPage = isset($logs['next_cursor']) ? $logs['next_cursor'] : null;
         $previousPage = isset($logs['prev_cursor']) ? $logs['prev_cursor'] : null;
 
-        
 
         $logs = $logs['data'];
         //Replace target id with target name
@@ -98,13 +148,13 @@ class AdminController extends Controller
             $id = $log['actor_id'];
 
             if ($log['actor'] === 'Student') {
-                $log['actor_id'] = $this->translateStudent($id);
+                $log['actor_id'] = $this->translateStudent($id, $token);
                 //This code adds a log to the user 
                 foreach ($students as &$student) {
                     if ($student['id'] == $id) array_push($student['logs'], $log );
                 }
             } elseif ($log['actor'] === 'Bedrijf') {
-                $log['actor_id'] = $this->translateCompany($id);
+                $log['actor_id'] = $this->translateCompany($id, $token);
                 //This code adds a log to the user 
                 foreach ($companies as &$company) {
                     if ($company['id'] == $id) array_push($company['logs'], $log );
@@ -115,8 +165,6 @@ class AdminController extends Controller
             }
         
         }
-
-        $degrees = Http::get($this->apiUrl . 'diplomas')->json('data');
         
         return view('/admin/admin', [
             'students' => $students, 
@@ -126,78 +174,19 @@ class AdminController extends Controller
             'logs' => $logs,
             'degrees' => $degrees,
             'nextPage' => $nextPage,
-            'previousPage' => $previousPage
+            'previousPage' => $previousPage,
+            'action' => $action
     ]);
     } catch (\Exception $e) {
         dd('failure: ' . $e->getMessage());
         return view('voorbeeld.index', ['error' => 'Er is een fout opgetreden', 'students' => []]);
     }
 }
-#Code created by copilot
-#Function to store students the admin created
-public function storeS(Request $request)
-    {
-        try {
-            $validated = $request->validate([
-            'firstName' => 'required|string|max:255',
-            'lastName' => 'required|string|max:255',
-            'email' => 'required|email|max:255',
-            'graduation_track' => 'required|string|max:255',
-            'study_direction' => 'required|string|max:255',
-            'password1' => 'required|string|min:8',
-            'password2' => 'required|same:password1'
-            ]);
-        } catch (\Exception $e) {
-            return redirect()->back()->with('error', 'Validatie mislukt: ' . $e->getMessage());
-        }
-        
 
-    // Prepare data for API (use password2 as password)
-    $data = [
-        'firstName' => $validated['firstName'],
-        'lastName' => $validated['lastName'],
-        'email' => $validated['email'],
-        'password' => $validated['password2'],
-        'graduation_track' => $validated['graduation_track'],
-        'study_direction' => $validated['study_direction'],
-        'interests' => 'Ik heb interesse in...',
-        'job_preferences' => 'Ik heb voorkeuren voor...',
-        'cv' => 'cv.pdf',
-        'profile_complete' => '0',
-    ];
-
-try {
-    $response = Http::post($this->apiUrl . 'students', $data);
-
-    if ($response->successful()) {
-        return redirect()->back()->with('success', 'Student succesvol toegevoegd!');
-    } else {
-        // Voeg de response body toe aan de foutmelding voor debugging
-        return redirect()->back()->with('error', 'Fout bij toevoegen van Student: ' . $response->body());
-    }
-} catch (\Exception $e) {
-    return redirect()->back()->with('error', 'Er is een fout opgetreden: ' . $e->getMessage());
-}
-    }
-
-
-    //
-    protected function getAppointments() {
-        $response = Http::get($this->appointmentApiUrl);
-
-        $data = $response->json('data');
-        foreach ($data as &$appointment) {
-            //translate student and company id to names
-            $appointment['student_id'] = $this->translateStudent($appointment['student_id']);
-
-            
-            $appointment['company_id'] = $this->translateCompany($appointment['company_id']);
-        }
-        return $data;
-    }
-
-    protected function getConnections() {
-        $response = Http::get($this->connectionsApiUrl);
+    protected function getConnections($token) {
+        $response = Http::withHeaders( [
+            "Authorization" => $token
+        ])->get($this->connectionsApiUrl);
 
         $data = $response->json('data');
         foreach ($data as &$connection) {

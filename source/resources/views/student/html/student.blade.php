@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>StuDirect</title>
-    <link href="https://fonts.googleapis.com/css2?family=EB+Garamond:wght@400;500;600&display=swap" rel="stylesheet">
     @vite ('resources/css/student/student.css')
 </head>
 <body>
@@ -17,20 +16,20 @@
         <section class="sectionType1">
                 @include('student.layouts.welcome')
         </section>
-        <section class="sectionType1">
+        <section class="sectionType1" id="company-swipe-section">
             @include('student.layouts.companyswipe', [
-                'company_name' => $companies[0]['name'],
-                'job_title' => 'IT Support Intern',
-                'company_logo' => $companies[0]['photo'] ?? ''
+                'company_name' => 'Loading...',
+                'job_title' => 'Loading...',
+                'company_logo' => ''
             ])
         </section>
-        <section class="sectionType1">
+        <section class="sectionType1" id="company-info-section">
             @include('student.layouts.companyinfo', [
-                'job_domain' => $companies[0]['job_domain'] ?? 'Geen jobdomein opgegeven.',
-                'job_type' => $companies[0]['job_types'] ?? 'Geen functietype opgegeven.',
-                'job_description' => $companies[0]['job_description'] ?? 'Geen omschrijving beschikbaar.',
-                'job_requirements' => $companies[0]['job_requirements'] ?? 'Geen vereisten opgegeven.',
-                'description' => $companies[0]['description'] ?? $companies[0]['company_description'] ?? 'Er is geen informatie beschikbaar over dit bedrijf.'
+                'job_domain' => 'Loading...',
+                'job_type' => 'Loading...',
+                'job_description' => 'Loading...',
+                'job_requirements' => 'Loading...',
+                'description' => 'Loading...'
             ])
         </section>
     </div>
@@ -68,6 +67,11 @@
     </div>
 
 </main>
+<script>
+    // Pass companies data to JavaScript
+    window.companiesData = @json($companies);
+    window.studentId = @json($student['id']);
+</script>
 @vite ('resources/js/student/student.js')
 @vite ('resources/js/student/chat.js')
 </body>

@@ -1061,6 +1061,23 @@ h3 {
     animation: slideUp 0.6s ease-out;
 }
 
+/* Enhanced section animation styles */
+#company-swipe-section,
+#company-info-section {
+    will-change: transform, opacity;
+    transform-origin: center;
+}
+
+/* Smooth transitions for swipe animations */
+.sectionType1 {
+    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.3s ease-out;
+}
+
+/* Add subtle shadow during animation */
+.sectionType1.animating {
+    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+}
+
 /* Modern focus states */
 *:focus-visible {
     outline: 2px solid #0046C9;

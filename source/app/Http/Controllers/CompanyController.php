@@ -122,6 +122,9 @@ class CompanyController extends Controller
             'company_description' => 'nullable|string|max:1000',
             'job_types' => 'nullable|string|max:255',
             'job_domain' => 'nullable|string|max:255',
+            'job_title' => 'nullable|string|max:255',
+            'job_description' => 'nullable|string|max:255',
+            'job_requirements' => 'nullable|string|max:255',
             'photo' => 'nullable|image',
             'speeddate_duration' => 'nullable|integer',
             ]);
@@ -179,6 +182,9 @@ try {
             'company_description' => 'nullable|string|max:1000',
             'job_types' => 'nullable|string|max:255',
             'job_domain' => 'nullable|string|max:255',
+            'job_title' => 'nullable|string|max:255',
+            'job_description' => 'nullable|string|max:255',
+            'job_requirements' => 'nullable|string|max:255',
             'photo' => 'nullable|image',
             'speeddate_duration' => 'nullable|integer',
             ]);

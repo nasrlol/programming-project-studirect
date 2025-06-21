@@ -1,65 +1,273 @@
 'use strict';
 
-// function to render home section
-function renderHome() {
-    // update active button
-    document.querySelectorAll('.nav-links a').forEach(button => button.classList.remove('active'));
-    document.getElementById('homeBtn').classList.add('active');
+// Global variables for company swiping
+let availableCompanies = [];
+let currentCompanyIndex = 0;
+let shownCompanies = new Set();
+let isAnimating = false;
 
-    // show home content, hide others
-    document.querySelectorAll('.content-container').forEach(section => section.classList.remove('active'));
-    document.getElementById('home-content').classList.add('active');
+// Initialize company data and randomize
+function initializeCompanies() {
+    if (window.companiesData && window.companiesData.length > 0) {
+        availableCompanies = [...window.companiesData];
+        shuffleArray(availableCompanies);
+        currentCompanyIndex = 0;
+        shownCompanies.clear();
+        showCurrentCompany();
+    }
 }
 
-// function to render matches section
-function renderMatches() {
-    // update active button
+// Shuffle array function
+function shuffleArray(array) {
+    for (let i = array.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [array[i], array[j]] = [array[j], array[i]];
+    }
+}
+
+// Show current company information
+function showCurrentCompany() {
+    if (availableCompanies.length === 0) return;
+
+    const company = availableCompanies[currentCompanyIndex];
+    if (!company) return;
+
+    updateCompanySwipeSection(company);
+    updateCompanyInfo(company);
+    updateCompanyCounter();
+}
+
+// Update the company swipe card display
+function updateCompanySwipeSection(company) {
+    const elements = {
+        title: document.querySelector('#company-title h2'),
+        jobTitle: document.querySelector('#company-title p'),
+        logo: document.querySelector('#company-logo img')
+    };
+
+    if (elements.title) {
+        elements.title.textContent = company.name || 'Naam Bedrijf';
+    }
+    if (elements.jobTitle) {
+        elements.jobTitle.textContent = company.job_title || 'Stage Positie';
+    }
+    if (elements.logo) {
+        elements.logo.src = company.photo || '';
+        elements.logo.alt = company.name || 'Company Logo';
+    }
+}
+
+// Update company information section
+function updateCompanyInfo(company) {
+    const elements = {
+        jobDomain: document.getElementById('job-domain'),
+        jobType: document.getElementById('job-type'),
+        jobDescription: document.getElementById('job-description'),
+        jobRequirements: document.getElementById('job-requirements'),
+        companyDescription: document.getElementById('company-description')
+    };
+
+    const updates = [
+        { element: elements.jobDomain, value: company.job_domain, fallback: 'Geen jobdomein opgegeven.' },
+        { element: elements.jobType, value: company.job_types, fallback: 'Geen functietype opgegeven.' },
+        { element: elements.jobDescription, value: company.job_description, fallback: 'Geen omschrijving beschikbaar.' },
+        { element: elements.jobRequirements, value: company.job_requirements, fallback: 'Geen vereisten opgegeven.' },
+        { element: elements.companyDescription, value: company.description || company.company_description, fallback: 'Er is geen informatie beschikbaar over dit bedrijf.' }
+    ];
+
+    updates.forEach(({ element, value, fallback }) => {
+        if (element) {
+            element.textContent = value || fallback;
+        }
+    });
+}
+
+// Handle swipe actions with animation
+function handleSwipe(action) {
+    if (availableCompanies.length === 0 || isAnimating) return;
+
+    isAnimating = true;
+    const currentCompany = availableCompanies[currentCompanyIndex];
+    const swipeSection = document.getElementById('company-swipe-section');
+
+    if (swipeSection) {
+        animateSwipe(swipeSection, action);
+    }
+
+    // Save the connection to database
+    saveConnection(currentCompany.id, action);
+
+    // Complete swipe after animation
+    setTimeout(() => {
+        resetSwipeAnimation(swipeSection);
+        shownCompanies.add(currentCompany.id);
+        nextCompany();
+        isAnimating = false;
+    }, 800);
+}
+
+// Save connection (like/dislike) to database
+async function saveConnection(companyId, action) {
+    const status = action === 'liked'; // true for like, false for dislike
+    
+    try {
+        const response = await fetch('/connections', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') || ''
+            },
+            body: JSON.stringify({
+                student_id: window.studentId,
+                company_id: companyId,
+                status: status
+            })
+        });
+
+        if (response.ok) {
+            console.log(`Connection ${action} saved successfully for company ${companyId}`);
+        } else {
+            console.error('Failed to save connection:', response.statusText);
+        }
+    } catch (error) {
+        console.error('Error saving connection:', error);
+    }
+}
+
+// Animate the swipe card movement
+function animateSwipe(element, action) {
+    const translateX = action === 'liked' ? '420px' : '-420px';
+
+    element.style.transition = 'transform 0.6s ease-out, opacity 1.4s ease-out';
+    element.style.zIndex = '-10';
+    element.style.transform = `translateX(${translateX})`;
+    element.style.opacity = '0';
+}
+
+// Reset swipe animation styles
+function resetSwipeAnimation(element) {
+    if (!element) return;
+
+    element.style.transition = 'none';
+    element.style.transform = 'translateX(0)';
+    element.style.opacity = '1';
+    element.style.zIndex = '';
+}
+
+// Move to next company in the queue
+function nextCompany() {
+    currentCompanyIndex++;
+
+    // Check if we need to refresh the company queue
+    if (currentCompanyIndex >= availableCompanies.length) {
+        refreshCompanyQueue();
+    }
+
+    showCurrentCompany();
+}
+
+// Refresh the company queue when all companies have been shown
+function refreshCompanyQueue() {
+    const unshownCompanies = window.companiesData.filter(company => !shownCompanies.has(company.id));
+
+    if (unshownCompanies.length > 0) {
+        // Show remaining unshown companies
+        availableCompanies = [...unshownCompanies];
+    } else {
+        // All companies have been shown, reset and start over
+        shownCompanies.clear();
+        availableCompanies = [...window.companiesData];
+    }
+
+    shuffleArray(availableCompanies);
+    currentCompanyIndex = 0;
+}
+
+// Set up swipe button event listeners and keyboard shortcuts
+function setupSwipeButtons() {
+    const buttons = {
+        like: document.getElementById('like'),
+        dislike: document.getElementById('dislike')
+    };
+
+    // Button click handlers
+    if (buttons.like) {
+        buttons.like.addEventListener('click', () => handleSwipe('liked'));
+    }
+    if (buttons.dislike) {
+        buttons.dislike.addEventListener('click', () => handleSwipe('disliked'));
+    }
+
+    // Keyboard shortcuts (only when on home page)
+    document.addEventListener('keydown', (e) => {
+        const homeContent = document.getElementById('home-content');
+        if (!homeContent?.classList.contains('active')) return;
+
+        const keyActions = {
+            'ArrowLeft': () => handleSwipe('disliked'),
+            'ArrowRight': () => handleSwipe('liked')
+        };
+
+        if (keyActions[e.key]) {
+            e.preventDefault();
+            keyActions[e.key]();
+        }
+    });
+}
+
+// Add company counter display
+function updateCompanyCounter() {
+    const remainingCompanies = availableCompanies.length - currentCompanyIndex;
+    const totalUnshown = window.companiesData.filter(company => !shownCompanies.has(company.id)).length;
+
+    // Optional: Display counter in UI if needed
+    // For now, just track the counts internally
+}
+
+// Generic function to render any section
+function renderSection(sectionId, buttonId) {
+    // Update active navigation button
     document.querySelectorAll('.nav-links a').forEach(button => button.classList.remove('active'));
-    document.getElementById('matchesBtn').classList.add('active');
+    if (buttonId) {
+        document.getElementById(buttonId)?.classList.add('active');
+    }
 
-    // show matches content, hide others
+    // Show target section, hide others
     document.querySelectorAll('.content-container').forEach(section => section.classList.remove('active'));
-    document.getElementById('matches-content').classList.add('active');
+    document.getElementById(sectionId)?.classList.add('active');
+}
 
-    // remove active class from all message list items
+// Specific render functions
+function renderHome() {
+    renderSection('home-content', 'homeBtn');
+}
+
+function renderMatches() {
+    renderSection('matches-content', 'matchesBtn');
+
+    // Additional matches-specific setup
     document.querySelectorAll('.message-company').forEach(item => item.classList.remove('active'));
 
-    // show empty state and hide chat
     const chatSection = document.getElementById('chat-section');
-    const emptyContainer = chatSection.querySelector('.empty-chat-container');
-    const chatContainer = chatSection.querySelector('.chat-container');
+    const emptyContainer = chatSection?.querySelector('.empty-chat-container');
+    const chatContainer = chatSection?.querySelector('.chat-container');
 
-    emptyContainer.classList.add('active');
-    chatContainer.classList.remove('active');
+    emptyContainer?.classList.add('active');
+    chatContainer?.classList.remove('active');
 }
 
-// function to render calendar section
 function renderCalendar() {
-    // update active button
-    document.querySelectorAll('.nav-links a').forEach(button => button.classList.remove('active'));
-    document.getElementById('calendarBtn').classList.add('active');
-
-    // show calendar content, hide others
-    document.querySelectorAll('.content-container').forEach(section => section.classList.remove('active'));
-    document.getElementById('calendar-content').classList.add('active');
+    renderSection('calendar-content', 'calendarBtn');
 }
 
-// function to render settings section
 function renderSettings() {
-    // hide all content containers
-    document.querySelectorAll('.content-container').forEach(section => section.classList.remove('active'));
-    document.getElementById('settings-content').classList.add('active');
-
-    // remove active class from nav links
-    document.querySelectorAll('.nav-links a').forEach(button => button.classList.remove('active'));
+    renderSection('settings-content', null);
 }
 
 // function to handle company selection in chat
 function handleCompanySelection() {
     document.querySelectorAll('.message-company').forEach(companyMatch => {
         companyMatch.addEventListener('click', () => {
-            console.log('Company clicked:', companyMatch);
-
             // remove active class from all matches
             document.querySelectorAll('.message-company').forEach(company => {
                 company.classList.remove('active');
@@ -131,7 +339,6 @@ function handleProfileDropdown() {
                 e.preventDefault();
                 profileDropdown.classList.remove('show');
                 // TODO: Implement logout functionality
-                console.log('Logout clicked');
                 if (confirm('Are you sure you want to log out?')) {
                     // Redirect to logout route or home page
                     window.location.href = '/logout';
@@ -350,6 +557,10 @@ function preventNavigationIfUnsaved(callback) {
 
 // add event listeners when DOM is loaded
 document.addEventListener('DOMContentLoaded', () => {
+    // Initialize company swiping functionality
+    initializeCompanies();
+    setupSwipeButtons();
+
     // home button click handler
     document.getElementById('homeBtn').addEventListener('click', (e) => {
         e.preventDefault();

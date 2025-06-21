@@ -7,10 +7,17 @@ let messageTextarea = null;
 let currentStudentId = null;
 let companyId = null;
 
+// Smart polling variables
+let pollingInterval = null;
+let isUserActive = true;
+let lastMessageTime = null;
+let currentPollingStudentId = null;
+
 // initialize chat when DOM is ready
 document.addEventListener('DOMContentLoaded', function() {
     initializeElements();
     setupEventListeners();
+    setupSmartPolling();
 });
 
 // initialize all DOM elements
@@ -60,6 +67,9 @@ function handleStudentSelection(studentId) {
 
     currentStudentId.value = studentId;
     showConversation(studentId);
+
+    // Start polling for this student
+    startMessagePolling(studentId);
 }
 
 // Show conversation for selected student
@@ -140,7 +150,10 @@ function handleMessageSubmit(e) {
     .then(data => {
         if (data.success) {
             messageTextarea.value = '';
-            // Message already added to chat, no need to do anything else
+            // Trigger immediate polling to get the confirmed message
+            if (currentPollingStudentId) {
+                setTimeout(() => fetchNewMessages(currentPollingStudentId), 500);
+            }
         } else {
             throw new Error(data.message || 'Failed to send message');
         }
@@ -232,3 +245,218 @@ function formatTime(dateString) {
         hour12: false
     });
 }
+
+// Set up smart polling system
+function setupSmartPolling() {
+    // Track user activity to adjust polling frequency
+    document.addEventListener('visibilitychange', () => {
+        isUserActive = !document.hidden;
+        if (isUserActive && currentPollingStudentId) {
+            startMessagePolling(currentPollingStudentId);
+        } else if (!isUserActive) {
+            // Reduce polling frequency when tab is inactive
+            startMessagePolling(currentPollingStudentId, true);
+        }
+    });
+
+    // Track user interaction to determine activity
+    ['mousedown', 'mousemove', 'keypress', 'scroll', 'touchstart'].forEach(event => {
+        document.addEventListener(event, () => {
+            isUserActive = true;
+        }, { passive: true });
+    });
+}
+
+// Start smart polling for messages
+function startMessagePolling(studentId, isInactive = false) {
+    // Clear any existing interval
+    if (pollingInterval) {
+        clearInterval(pollingInterval);
+        pollingInterval = null;
+    }
+
+    if (!studentId) return;
+
+    currentPollingStudentId = studentId;
+
+    // Determine polling interval based on user activity
+    const interval = isInactive ? 10000 : (isUserActive ? 3000 : 7000); // 3s active, 7s semi-active, 10s inactive
+
+    pollingInterval = setInterval(() => {
+        if (currentPollingStudentId === studentId) {
+            fetchNewMessages(studentId);
+        }
+    }, interval);
+
+    // Also fetch immediately
+    fetchNewMessages(studentId);
+}
+
+// Fetch new messages from server
+function fetchNewMessages(studentId) {
+    if (!studentId || !companyId) return;
+
+    const conversationData = {
+        user1_id: parseInt(companyId),
+        user1_type: 'App\\Models\\Company',
+        user2_id: parseInt(studentId),
+        user2_type: 'App\\Models\\Student'
+    };
+
+    fetch('/messages/conversation', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json',
+            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') ||
+                           document.querySelector('input[name="_token"]')?.value || ''
+        },
+        body: JSON.stringify(conversationData)
+    })
+    .then(response => {
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        return response.json();
+    })
+    .then(data => {
+        if (data.success && data.data) {
+            updateConversationWithNewMessages(studentId, data.data);
+        }
+    })
+    .catch(error => {
+        console.error('Error fetching messages:', error);
+        // Don't stop polling on error, just log it
+    });
+}
+
+// Update conversation with new messages
+function updateConversationWithNewMessages(studentId, messages) {
+    if (!messages || messages.length === 0) return;
+
+    const conversation = chatMessages.querySelector(`[data-student-id="${studentId}"]`);
+
+    // If no conversation exists, create one
+    if (!conversation) {
+        createNewConversation(studentId, messages);
+        return;
+    }
+
+    // Get current messages in the conversation
+    const currentMessages = conversation.querySelectorAll('.message');
+    const currentMessageCount = currentMessages.length;
+
+    // If we have new messages, update the conversation
+    if (messages.length > currentMessageCount) {
+        // Clear and rebuild conversation to ensure proper order
+        conversation.innerHTML = '';
+
+        messages.forEach(message => {
+            const messageDiv = createMessageElement(message);
+            conversation.appendChild(messageDiv);
+        });
+
+        // Update last message time
+        if (messages.length > 0) {
+            const lastMessage = messages[messages.length - 1];
+            lastMessageTime = lastMessage.created_at;
+        }
+
+        // Scroll to bottom if this is the active conversation
+        if (currentPollingStudentId === studentId) {
+            scrollToBottom();
+        }
+
+        // Show notification for new messages if tab is not active
+        if (!isUserActive && messages.length > currentMessageCount) {
+            showNewMessageNotification();
+        }
+    }
+}
+
+// Create a new conversation element
+function createNewConversation(studentId, messages) {
+    // Hide no messages state
+    const noMessages = chatMessages.querySelector('.no-messages');
+    if (noMessages) {
+        noMessages.style.display = 'none';
+        noMessages.classList.remove('active');
+    }
+
+    const noMessagesStudent = chatMessages.querySelector('.no-messages-student');
+    if (noMessagesStudent) {
+        noMessagesStudent.remove();
+    }
+
+    // Create new conversation
+    const conversation = document.createElement('div');
+    conversation.className = 'conversation';
+    conversation.setAttribute('data-student-id', studentId);
+    conversation.style.display = currentPollingStudentId === studentId ? 'block' : 'none';
+
+    messages.forEach(message => {
+        const messageDiv = createMessageElement(message);
+        conversation.appendChild(messageDiv);
+    });
+
+    chatMessages.appendChild(conversation);
+
+    if (currentPollingStudentId === studentId) {
+        scrollToBottom();
+    }
+}
+
+// Create a message element
+function createMessageElement(message) {
+    const messageDiv = document.createElement('div');
+    messageDiv.className = `message ${message.sender_type === 'App\\Models\\Company' ? 'sent' : 'received'}`;
+
+    const messageContent = document.createElement('div');
+    messageContent.className = 'message-content';
+
+    const messageText = document.createElement('p');
+    messageText.textContent = message.content;
+
+    const messageTime = document.createElement('div');
+    messageTime.className = 'message-time';
+    messageTime.textContent = formatTime(message.created_at);
+
+    messageContent.appendChild(messageText);
+    messageContent.appendChild(messageTime);
+    messageDiv.appendChild(messageContent);
+
+    return messageDiv;
+}
+
+// Show notification for new messages
+function showNewMessageNotification() {
+    if ('Notification' in window && Notification.permission === 'granted') {
+        new Notification('New message received', {
+            body: 'You have a new message in your chat.',
+            icon: '/favicon.ico'
+        });
+    } else if ('Notification' in window && Notification.permission !== 'denied') {
+        Notification.requestPermission().then(permission => {
+            if (permission === 'granted') {
+                new Notification('New message received', {
+                    body: 'You have a new message in your chat.',
+                    icon: '/favicon.ico'
+                });
+            }
+        });
+    }
+}
+
+// Stop polling when leaving the chat
+function stopMessagePolling() {
+    if (pollingInterval) {
+        clearInterval(pollingInterval);
+        pollingInterval = null;
+    }
+    currentPollingStudentId = null;
+}
+
+// Cleanup polling when page is unloaded
+window.addEventListener('beforeunload', () => {
+    stopMessagePolling();
+});

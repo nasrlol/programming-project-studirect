@@ -43,7 +43,7 @@ abstract class Controller
             }
             return $id;
     }
-    protected function translateCompany($id)
+    protected function translateCompany($id, $token= '')
     {
         $company = Http::get("{$this->companiesApiUrl}/{$id}")->json('data');
         if (isset($company['name'])) {

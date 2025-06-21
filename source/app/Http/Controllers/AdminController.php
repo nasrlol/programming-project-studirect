@@ -182,56 +182,6 @@ class AdminController extends Controller
         return view('voorbeeld.index', ['error' => 'Er is een fout opgetreden', 'students' => []]);
     }
 }
-#Code created by copilot
-#Function to store students the admin created
-public function storeS(Request $request)
-    {
-        try {
-            $validated = $request->validate([
-            'firstName' => 'required|string|max:255',
-            'lastName' => 'required|string|max:255',
-            'email' => 'required|email|max:255',
-            'graduation_track' => 'required|string|max:255',
-            'study_direction' => 'required|string|max:255',
-            'password1' => 'required|string|min:8',
-            'password2' => 'required|same:password1'
-            ]);
-        } catch (\Exception $e) {
-            return redirect()->back()->with('error', 'Validatie mislukt: ' . $e->getMessage());
-        }
-
-        $token = $request['token'];
-        
-
-    // Prepare data for API (use password2 as password)
-    $data = [
-        'firstName' => $validated['firstName'],
-        'lastName' => $validated['lastName'],
-        'email' => $validated['email'],
-        'password' => $validated['password2'],
-        'graduation_track' => $validated['graduation_track'],
-        'study_direction' => $validated['study_direction'],
-        'interests' => 'Ik heb interesse in...',
-        'job_preferences' => 'Ik heb voorkeuren voor...',
-        'cv' => 'cv.pdf',
-        'profile_complete' => '0',
-    ];
-
-try {
-    $response = Http::withHeaders( [
-            "Authorization" => $token
-        ])->post($this->apiUrl . 'students', $data);
-
-    if ($response->successful()) {
-        return redirect()->back()->with('success', 'Student succesvol toegevoegd!');
-    } else {
-        // Voeg de response body toe aan de foutmelding voor debugging
-        return redirect()->back()->with('error', 'Fout bij toevoegen van Student: ' . $response->body());
-    }
-} catch (\Exception $e) {
-    return redirect()->back()->with('error', 'Er is een fout opgetreden: ' . $e->getMessage());
-}
-    }
 
     protected function getConnections($token) {
         $response = Http::withHeaders( [

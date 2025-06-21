@@ -10,6 +10,7 @@
     @if ($action == true) 
         <script>
             localStorage.setItem('token', "{{ session('api_token') }}")
+            localStorage.setItem('user_type', 'admin')
         </script> 
     @endif
 

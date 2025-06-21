@@ -3,8 +3,16 @@ body {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
+button:hover {
+    cursor: pointer;
+}
+
 .image-container {
     height:20px;
+}
+/*For maginfying glass image only*/
+.glass {
+    border-width: 1px solid black;
 }
 
 h2 {
@@ -16,12 +24,17 @@ section {
     display: none;
     background-color: white;
     margin-left: 3.5%;
+    width:95%;
     margin-top: 1%;
 }
 /*Companies and students*/
 
+.nameSearch {
+    border-left:none;
+}
 
 .filter {
+    margin-left: 3.5%;
     display: flex;
     flex-direction: row;
 }
@@ -29,6 +42,7 @@ section {
 /*For appointments*/
 .hidden {
     display:none;
+
 }
 /*For adding to company*/
 .addUser {
@@ -38,6 +52,9 @@ section {
 }
 
 .add {
+    border:none;
+    font-weight: bold;
+    background-color: inherit;
     margin-left:80%;
 }
 
@@ -54,7 +71,7 @@ form {
 
 table {
     width:85%;
-    margin-left:5%;
+    margin-left:3.5%;
     border-collapse: collapse; 
     border-width:1px;
 }
@@ -90,6 +107,10 @@ th {
     width:7.5%;
 }
 
+.mailTh {
+    width:1%;
+}
+
 
 .extraTd {
     text-align: center;
@@ -106,7 +127,7 @@ tr {
 }
 
 td {
-    height:120%;
+    height:8vh;
 }
 
 .studentActivated {
@@ -114,7 +135,17 @@ td {
 }
 
 .searchable {
-    height:80%;
+    height:77%;
+    margin-left:3.5%;
+}
+
+#appointments {
+    height:90%;
+}
+
+.searchable-content {
+    width:80%;
+    background-color: red;
 }
 
 #main-container 

@@ -10,7 +10,7 @@ use Illuminate\Support\Facades\Http;
 class AdminController extends Controller
 {
 
-    public function show(Request $request): View
+    public function show(Request $request)
 {
     try {
         if (session('api_token')) {$token = "Bearer " . session("api_token");}
@@ -42,9 +42,13 @@ class AdminController extends Controller
         $companies = $response->json('data');
 
         foreach ($companies as &$company) $company['logs'] = array();
+
         $appointments = $this->getAppointments($token); 
         $connections = $this->getConnections($token);
-        
+        foreach ($appointments as &$appointment) {
+            $appointment['time_slot'] = substr($appointment['time_start'], 0, 5) . ' - '. substr($appointment['time_end'], 0,5);
+        }
+
         //Final response for logs
         //Check if the apiURL of the requested logs is active.
         if (isset($request['cursor'])) {
@@ -83,8 +87,8 @@ class AdminController extends Controller
             }
 
             //setup time
-            $log['date'] = substr($log['created_at'], 8, 2) . "/" . substr($log['created_at'], 5, 2) . "/" . substr($log['created_at'], 0, 4);
-            $log['time'] = substr($log['created_at'], 11, 2) . "u" . substr($log['created_at'], 14, 2);
+            $log['date'] = substr($log['timestamp'], 8, 2) . "/" . substr($log['timestamp'], 5, 2) . "/" . substr($log['timestamp'], 0, 4);
+            $log['time'] = substr($log['timestamp'], 11, 2) . "u" . substr($log['timestamp'], 14, 2);
 
 
             //Set target_type to dutch
@@ -107,6 +111,7 @@ class AdminController extends Controller
                     if ($student['id'] == $id) array_push($student['logs'], $log );
                 }
             } elseif ($log['actor'] === 'Bedrijf') {
+                $log['actor_id'] = $this->translateCompany($id);
                 //This code adds a log to the user 
                 foreach ($companies as &$company) {
                     if ($company['id'] == $id) array_push($company['logs'], $log );

@@ -174,10 +174,10 @@ export function dashboard() {
     const l = document.getElementById("appointment-amount");
     l.innerHTML = data.appointments.length
 }
-
+//Code was once lost, and refound by taking it from uglyfied code
 export function createSearch(d, t) {
-    return t.innerHTML += '<div class="image-container"><img src="../images/magnifying glass.jpg" style="height: 20px;"></div>',
-    d == 0 ? t.innerHTML += '<input type="text" id="nameSearchS">' : t.innerHTML += '<input type="text" id="nameSearchC">',
+    return t.innerHTML += '<div class="image-container glass"><img src="../images/magnifying glass.jpg" style="height: 20px;"></div>',
+    d == 0 ? t.innerHTML += '<input type="text" class="nameSearch" id="nameSearchS">' : t.innerHTML += '<input type="text" class="nameSearch" id="nameSearchC">',
     t.innerHTML += `<input id="typeSearch" type="hidden" value="${d}">`,
     t.innerHTML += `<button id=search${d} class='filterAction'>Zoek</button>`,
     t
@@ -224,7 +224,7 @@ export function createTable(input, extra = null) {
     table.innerHTML = "";
     const type = document.getElementById("students").style.display != "none"  ? "S" : "C"
     const legend = document.createElement("tr");
-    legend.innerHTML = "<th>Naam</th><th>Email</th><th class='loginTh'>Laatste login</th><th class='extraTh'>Acties</th>"
+    legend.innerHTML = "<th>Naam</th><th class='mailTh'>Email</th><th class='loginTh'>Laatste login</th><th class='extraTh'>Acties</th>"
     table.appendChild(legend)
     if (extra) {
         for (let e of extra) {

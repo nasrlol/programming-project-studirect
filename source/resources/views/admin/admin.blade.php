@@ -47,11 +47,11 @@
 
             <section id='students' class='searchable'>
                 <h2>Studenten</h2>
-                <button class='.add' id='toAddStudent'>Student toevoegen</button>
+                <button class='add' id='toAddStudent'>Student toevoegen</button>
                 <div class='filter' id='student'></div>
                 <div class='list'>
                     <table id='studentTable'>
-                        <tr><th>Naam</th><th>Email</th><th class='loginTh'>Laatste login</th><th class='extraTh'>Acties</th></tr>
+                        <tr><th>Naam</th><th class="mailTh">Email</th><th class='loginTh'>Laatste login</th><th class='extraTh'>Acties</th></tr>
                         <!--API call-->
                         <!--Last log still needs to be added-->
                         @foreach ($students as $student)
@@ -129,11 +129,13 @@
 
             <section id='companies' class='searchable'>
                 <h2>Bedrijven</h2>
-                <button class='.add' id='toAddCompany'>Bedrijf toevoegen</button>
+                <button class='add' id='toAddCompany'>Bedrijf toevoegen</button>
+                <div class='filter' id='company'></div>
                 <div class='searchContainer list'>
-                    <div class='filter' id='company'></div>
                         <table id='companyTable'> 
-                            <tr><th>Naam</th><th>Email</th><th class='loginTh'>Laatste login</th><th class='extraTh'>Acties</th></tr>
+                            <tr class="tableHead">
+                                <th>Naam</th><th class="mailTh">Email</th><th class='loginTh'>Laatste login</th><th class='extraTh'>Acties</th>
+                            </tr>
                             @foreach ($companies as $company)
                             <tr>
                                 <td class='hidden companyId'>{{$company['id']}}</td>
@@ -239,30 +241,33 @@
                 </div>
                 <div id='form-container'>
                     <form method='GET' action='/admin' id='prev-log-form'>
+                        @csrf
                         <input id='prev-log-page' type='hidden' name='cursor' value='{{$previousPage}}'>
                         <input type='submit' value='Vorige'>
                     </form>
                     <form method='GET' action='/admin' id='next-log-form'>
+                        @csrf
                         <input id='next-log-page' type='hidden' name='cursor' value='{{$nextPage}}'>
                         <input type='submit' value='Volgende'>
                     </form>
                 </div>
             </section>
-            <section id='appointments'> 
-                <table id='appointmentInfo'>
-                    <tr><th>Student</th><th>Bedrijf</th><th>Tijdslot</th></tr>
-                    @foreach ($appointments as $appointment)
-                        <tr class="apointmentList t{{substr(str_replace(':', '-',$appointment['time_slot']), 0, 5)}}">
-                            <td class='hidden appointmentId'>{{$appointment['id']}}</td>
-                            <td class='appointmentSId'>{{$appointment['student_id']}}</td>
-                            <td class='appointmentCId'>{{$appointment['company_id']}}</td>
-                            <td class='appointmentTime'>
-                                {{$appointment['time_slot']}}
-                            </td>
-                        </tr>
-                    @endforeach
-                    </div>
-                </table>
+            <section id='appointments' class="searchable"> 
+                <div class="searchContainer list">
+                    <table id='appointmentInfo'>
+                        <tr><th>Student</th><th>Bedrijf</th><th>Tijdslot</th></tr>
+                        @foreach ($appointments as $appointment)
+                            <tr class="apointmentList t{{substr(str_replace(':', '-',$appointment['time_slot']), 0, 5)}}">
+                                <td class='hidden appointmentId'>{{$appointment['id']}}</td>
+                                <td class='appointmentSId'>{{$appointment['student_id']}}</td>
+                                <td class='appointmentCId'>{{$appointment['company_id']}}</td>
+                                <td class='appointmentTime'>
+                                    {{$appointment['time_slot']}}
+                                </td>
+                            </tr>
+                        @endforeach
+                    </table>
+                </div>
             </section>
             <section id='details'>
                  <h2>Details:</h2>
@@ -279,9 +284,6 @@
                 @csrf
                 @method('DELETE')
                 <input type='submit' value='Ja, ik ben zeker'>
-            </form>
-            <form id='exportData' class='tempForm'>
-                <input type='submit' value='Ja, exporteer als CSV'>
             </form>
         </div>
     </div>

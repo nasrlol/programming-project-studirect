@@ -241,10 +241,12 @@
                 </div>
                 <div id='form-container'>
                     <form method='GET' action='/admin' id='prev-log-form'>
+                        @csrf
                         <input id='prev-log-page' type='hidden' name='cursor' value='{{$previousPage}}'>
                         <input type='submit' value='Vorige'>
                     </form>
                     <form method='GET' action='/admin' id='next-log-form'>
+                        @csrf
                         <input id='next-log-page' type='hidden' name='cursor' value='{{$nextPage}}'>
                         <input type='submit' value='Volgende'>
                     </form>
@@ -282,9 +284,6 @@
                 @csrf
                 @method('DELETE')
                 <input type='submit' value='Ja, ik ben zeker'>
-            </form>
-            <form id='exportData' class='tempForm'>
-                <input type='submit' value='Ja, exporteer als CSV'>
             </form>
         </div>
     </div>

@@ -8,6 +8,6 @@
 <body>
     {{$message}}
     <br>
-    <button onclick='location.href="{{$location}}"'>Terug naar de startpagina</button>
+    <button onclick='location.href="{{$location}}"'>Terug</button>
 </body>
 </html>

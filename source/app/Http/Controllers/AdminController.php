@@ -10,7 +10,7 @@ use Illuminate\Support\Facades\Http;
 class AdminController extends Controller
 {
 
-    public function show(Request $request): View
+    public function show(Request $request)
 {
     try {
         $apiLogs = $this->apiUrl . 'admin/logs';

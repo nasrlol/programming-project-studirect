@@ -10,7 +10,7 @@ use Illuminate\Support\Facades\Log;
 
 class RegistrationStudentController extends Controller
 {
-    private string $studentsApiUrl = 'http://10.2.160.208/api/students';
+    protected string $studentsApiUrl = 'http://10.2.160.208/api/students';
 
     public function debug()
     {

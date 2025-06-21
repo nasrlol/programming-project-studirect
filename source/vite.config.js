@@ -10,6 +10,7 @@ export default defineConfig({
                 'resources/js/admin/admin.js',
                 'resources/css/student/student.css',
                 'resources/js/student/student.js',
+                'resources/js/student/chat.js',
                 'resources/css/company/company.css',
                 'resources/js/company/company.js'
             ],

@@ -107,7 +107,7 @@
 <div class="login-container">
     <div class="login-box">
 
-        <h2>Student Login</h2>
+        <h2>StuDirect Login</h2>
 
         @if (session('error'))
             <div class="alert">{{ session('error') }}</div>

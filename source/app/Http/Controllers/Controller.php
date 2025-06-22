@@ -6,11 +6,12 @@ use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
 use Illuminate\View\View;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Log;
 
 
 abstract class Controller
 {
-    protected string $apiUrl = 'http://10.2.160.208/api/';
+    protected string $apiUrl;
     // API URLs for appointments, students, and companies, based on the provided URL structure
     protected string $appointmentApiUrl;
     protected string $studentsApiUrl;
@@ -20,6 +21,8 @@ abstract class Controller
     protected string $diplomasApiUrl;
 
     public function __construct() {
+        $this->apiUrl = config('api.ip_address');
+
         $this->appointmentApiUrl = $this->apiUrl . 'appointments';
         $this->studentsApiUrl = $this->apiUrl . 'students';
         $this->companiesApiUrl = $this->apiUrl .'companies';
@@ -77,16 +80,5 @@ abstract class Controller
             }
         }
         return $array;
-    }
-
-    protected function get_connections($id, $type)
-    {
-        $type = strtolower($type . '_id');
-        $response = Http::get("{$this->connectionsApiUrl}");
-
-        $response = $response->json('data');
-        // Filter connections based on the provided ID and type
-        $connections = collect($response)->where($type, $id)->all();
-        return $connections;
     }
 }

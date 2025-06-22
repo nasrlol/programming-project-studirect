@@ -12,6 +12,7 @@ use App\Http\Controllers\RegistrationStudentController;
 use App\Http\Controllers\AppointmentController;
 use App\Http\Controllers\ConnectionController;
 use App\Http\Controllers\MessageController;
+use App\Http\Controllers\MatchController;
 
 /*
 |--------------------------------------------------------------------------
@@ -82,7 +83,7 @@ Route::post('/students', [StudentController::class, 'store'])->name('students.cr
 Route::post('/companies', [CompanyController::class, 'store'])->name('companies.create');
 
 Route::patch('/student/{id}', [StudentController::class, 'update']);
-Route::patch('/students/{id}', [StudentController::class, 'update']);
+Route::patch('/students/{id}', [StudentController::class, 'update'])->name('students.change');
 Route::patch('/company/{id}', [CompanyController::class, 'update']);
 Route::patch('/companies/{id}', [CompanyController::class, 'update']);
 
@@ -108,7 +109,6 @@ Route::delete('/appointments/{id}', [AppointmentController::class, 'destroy']);
 Route::post('/connections', [ConnectionController::class, 'makeConnection']);
 Route::patch('/connections/{id}', [ConnectionController::class, 'removeConnection']);
 
-
 // =======================
 // MESSAGES
 // =======================
@@ -117,6 +117,12 @@ Route::post('/messages/send', [MessageController::class, 'sendMessage'])->name('
 Route::post('/messages/conversation', [MessageController::class, 'getConversation']);
 Route::post('/companies/{id}/messages/send', [CompanyController::class, 'sendMessage'])->name('company.messages.send');
 
+// =======================
+// MATCH API
+// =======================
+
+Route::get('/api/match/{student_id}/{company_id}', [MatchController::class, 'getMatchPercentage']);
+Route::post('/api/matches/{student_id}', [MatchController::class, 'getMultipleMatches']);
 
 // =======================
 // PASSWORD RESET (student)
@@ -126,10 +132,3 @@ Route::get('/student/password/reset', [ForgotPasswordController::class, 'showLin
 Route::post('/student/password/email', [ForgotPasswordController::class, 'sendResetLinkEmail'])->name('student.password.email');
 
 
-// =======================
-// TEST ROUTES
-// =======================
-
-Route::get('/test-controller', [RegistrationStudentController::class, 'debug']);
-Route::get('/test-class-load', fn () => "Controller loaded: " . get_class(new \App\Http\Controllers\RegistrationStudentController()));
-Route::get('/test-notfound', fn () => view('notfound', ['message' => 'Testmelding werkt.']));

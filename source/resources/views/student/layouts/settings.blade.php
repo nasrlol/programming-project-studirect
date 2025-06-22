@@ -4,7 +4,6 @@
             <h3>Settings</h3>
             <div class="settings-menu">
                 <button id="profileSettingsBtn" class="settings-btn active">Profile</button>
-                <button id="preferencesBtn" class="settings-btn">Preferences</button>
                 <button id="themeBtn" class="settings-btn">Theme</button>
             </div>
         </div>
@@ -13,18 +12,22 @@
     <section class="sectionType2 settings-main">
         <div id="profile-settings" class="settings-panel active">
             <h2>Profile Settings</h2>
-            <div class="settings-form">
+            <form method='post' action="{{  route('students.change', ['id' => $student['id']]) }}">
+                @csrf
+                @method('PATCH')
+                <input type="hidden" name="Authorization" value="{{ $token }}">
+                <div class="settings-form">
                 <div class="form-group">
                     <label for="firstName">First Name</label>
-                    <input type="text" id="firstName" value="{{ $student['first_name'] ?? '' }}" />
+                    <input type="text" id="firstName" name='first_name' value="{{ $student['first_name'] ?? '' }}" />
                 </div>
                 <div class="form-group">
                     <label for="lastName">Last Name</label>
-                    <input type="text" id="lastName" value="{{ $student['last_name'] ?? '' }}" />
+                    <input type="text" id="lastName" name="last_name" value="{{ $student['last_name'] ?? '' }}" />
                 </div>
                 <div class="form-group">
                     <label for="email">Email</label>
-                    <input type="email" id="email" value="{{ $student['email'] ?? '' }}" readonly class="readonly-input" />
+                    <input type="email" id="email" name="email" value="{{ $student['email'] ?? '' }}" readonly class="readonly-input" />
                 </div>
                 <div class="form-group">
                     <label>Password</label>
@@ -32,11 +35,11 @@
                 </div>
                 <div class="form-group">
                     <label for="studyDirection">Study Direction</label>
-                    <input type="text" id="studyDirection" placeholder="Enter your study direction (e.g., Toegepaste Informatica, Bedrijfsmanagement, etc.)" value="{{ $student['study_direction'] ?? '' }}" />
+                    <input type="text" id="studyDirection" name='study_direction' placeholder="Enter your study direction (e.g., Toegepaste Informatica, Bedrijfsmanagement, etc.)" value="{{ $student['study_direction'] ?? '' }}" />
                 </div>
                 <div class="form-group">
                     <label for="graduationTrack">Graduation Track</label>
-                    <select id="graduationTrack">
+                    <select id="graduationTrack" name="graduation_track">
                         <option value="">Select Graduation Track</option>
                         @if(isset($diplomas) && is_array($diplomas))
                             @foreach($diplomas as $diploma)
@@ -55,11 +58,20 @@
                         @endif
                     </select>
                 </div>
+                <div class="form-group">
+                    <label for="skills">Add skill</label>
+                    <select name="skills">
+                        @foreach ($skills as $skill) 
+                            <option value="{{ $skill['id'] }}">{{ $skill['name'] }}</option>
+                        @endforeach
+                    </select>
+                </div>
+                </form>
                 <div class="button-group">
-                    <button class="save-btn">Save Changes</button>
+                    <input type="submit" class="save-btn" value="Save Changes"></input>
                     <button class="undo-btn" id="undoChangesBtn" style="display: none;">Undo Changes</button>
                 </div>
-            </div>
+            </form>
         </div>
 
         <div id="preferences-settings" class="settings-panel">
@@ -76,7 +88,8 @@
                 <div class="form-group">
                     <label for="cvUpload">Upload CV (PDF)</label>
                     <div class="pdf-upload-zone">
-                        <input type="file" id="cvUpload" accept=".pdf" />
+                        <!--Disable for testing purposes-->
+                    <!--    <input type="file" id="cvUpload" accept=".pdf" /> -->
                         <div class="pdf-upload-text">Click to upload or drag and drop your CV</div>
                         @if(isset($student['cv_filename']) && $student['cv_filename'])
                             <div class="pdf-upload-current">Current: {{ $student['cv_filename'] }}</div>

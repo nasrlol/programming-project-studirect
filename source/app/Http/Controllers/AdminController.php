@@ -22,6 +22,7 @@ class AdminController extends Controller
         else if ($request['token']) {
             $token = $request['token'];
         }
+        dd($token);
 
 
         if ($token == "") return redirect("/");

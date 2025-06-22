@@ -367,7 +367,9 @@ function handleProfileDropdown() {
                 // TODO: Implement logout functionality
                 if (confirm('Are you sure you want to log out?')) {
                     // Redirect to logout route or home page
-                    window.location.href = '/logout';
+                    localStorage.clear('token')
+                    localStorage.clear('user_type')
+                    window.location.href = '/';
                 }
             });
         }

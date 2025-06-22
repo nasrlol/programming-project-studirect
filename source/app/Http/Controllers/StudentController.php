@@ -33,6 +33,11 @@ class StudentController extends Controller
         //One student exists, so Array just consists of all the keys and their values
         $student = $response->json('data');
 
+        $skills = Http::withHeaders([
+            "Authorization" => $token
+        ])->get("{$this->apiUrl}skills")->json('data');
+        
+
         $response = Http::withHeaders([
             "Authorization" => $token
         ])->get($this->companiesApiUrl);
@@ -99,7 +104,8 @@ class StudentController extends Controller
             'connections' => $connections,
             'allMessages' => $allMessages,
             'token' => $token,
-            'diplomas' => $diplomas
+            'diplomas' => $diplomas,
+            'skills' => $skills
         ]);
 
     }
@@ -268,19 +274,32 @@ class StudentController extends Controller
             'graduation_track' => 'sometimes|required|integer',
             'interests' => 'sometimes|required|string',
             'job_preferences' => 'sometimes|required|string',
+            'skills' => 'sometimes',
             'Authorization' => 'required'
         ]);
             $token = $validated['Authorization'];
             unset($validated['Authorization']);
         } catch (\Exception $e) {
-            dd($e->getMessage());
             if ($request->expectsJson()) {
                 return response()->json(['error' => 'Validation failed: ' . $e->getMessage()], 422);
             }
             return redirect()->back()->with('error', 'Validatie mislukt: ' . $e->getMessage());
         }
+        //Get skills for a student
+        try {
+            $skills = Http::withHeaders([
+                "Authorization" => $token
+            ])->get("{$this->apiUrl}skills/{$validated['skills']}")->json('data');
+
+            $validated['skills'] = $skills;
+        }
+        catch (\Exception $e) {
+            dd($e->getMessage());
+        }
+
 
         try {
+            
             //Current data is taken and merged with the validated data
             $current = Http::withHeaders([
                 "Authorization" => $token
@@ -392,4 +411,5 @@ class StudentController extends Controller
             return [];
         }
     }
+    
 }

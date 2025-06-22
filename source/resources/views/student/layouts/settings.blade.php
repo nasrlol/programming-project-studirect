@@ -4,7 +4,6 @@
             <h3>Settings</h3>
             <div class="settings-menu">
                 <button id="profileSettingsBtn" class="settings-btn active">Profile</button>
-                <button id="preferencesBtn" class="settings-btn">Preferences</button>
                 <button id="themeBtn" class="settings-btn">Theme</button>
             </div>
         </div>
@@ -59,12 +58,20 @@
                         @endif
                     </select>
                 </div>
+                <div class="form-group">
+                    <label for="skills">Add skill</label>
+                    <select name="skills">
+                        @foreach ($skills as $skill) 
+                            <option value="{{ $skill['id'] }}">{{ $skill['name'] }}</option>
+                        @endforeach
+                    </select>
+                </div>
+                </form>
                 <div class="button-group">
                     <input type="submit" class="save-btn" value="Save Changes"></input>
                     <button class="undo-btn" id="undoChangesBtn" style="display: none;">Undo Changes</button>
                 </div>
             </form>
-            
         </div>
 
         <div id="preferences-settings" class="settings-panel">

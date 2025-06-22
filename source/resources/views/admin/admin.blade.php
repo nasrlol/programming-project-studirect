@@ -231,15 +231,6 @@
 
             <section id='logs' class='searchable'>
                 <h2>Logs</h2>
-                <div id='events'>
-                    <div >
-                        <label for='searchType'>Sorteer op</label>
-                        <select id='searchType' style='border:none;'>
-                            <option value='belang'>Belang</option>
-                            <option value='datum'>Datum</option>
-                        </select>
-                    </div>
-                </div>
                 <div class='list'>
                     <ul id='log-list'>
                         @foreach ($logs as $log)

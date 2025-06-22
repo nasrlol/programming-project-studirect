@@ -121,30 +121,39 @@ body {
     display: flex;
 }
 
-.profile-dropdown a {
+.profile-dropdown form {
+    display: contents;
+}
+
+.profile-dropdown a,
+.profile-dropdown button {
+    width: 100%;
     padding: 0.875rem 1.25rem;
-    text-decoration: none;
+    text-align: left;
+    background: none;
+    border: none;
+    outline: none;
     color: #475569;
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    border-bottom: 1px solid #f1f5f9;
     font-weight: 500;
+    font-family: inherit;
+    font-size: inherit;
+    cursor: pointer;
+    border-bottom: 1px solid #f1f5f9;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    text-decoration: none;
+    display: block;
 }
 
-.profile-dropdown a:last-child {
+.profile-dropdown a:last-child,
+.profile-dropdown button:last-child {
     border-bottom: none;
+    border-radius: 0 0 12px 12px;
 }
 
-.profile-dropdown a:hover {
+.profile-dropdown a:hover,
+.profile-dropdown button:hover {
     background: rgba(0, 70, 201, 0.1);
     color: #0046C9;
-}
-
-.profile-dropdown a:first-child {
-    border-radius: 12px 12px 0 0;
-}
-
-.profile-dropdown a:last-child {
-    border-radius: 0 0 12px 12px;
 }
 
 /* studirect logo style */

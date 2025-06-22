@@ -55,7 +55,9 @@
 
             <section id='students' class='searchable'>
                 <h2>Studenten</h2>
-                <button class='add' id='toAddStudent'>Student toevoegen</button>
+                <div class="add-btn-container">
+                    <button class='add' id='toAddStudent'>Student toevoegen &#43</button>
+                </div>
                 <div class='filter' id='student'></div>
                 <div class='list'>
                     <table id='studentTable'>
@@ -141,7 +143,9 @@
 
             <section id='companies' class='searchable'>
                 <h2>Bedrijven</h2>
-                <button class='add' id='toAddCompany'>Bedrijf toevoegen</button>
+                <div class="add-btn-container">
+                    <button class='add' id='toAddCompany'>Bedrijf toevoegen &#43</button>
+                </div>
                 <div class='filter' id='company'></div>
                 <div class='searchContainer list'>
                         <table id='companyTable'> 
@@ -231,15 +235,6 @@
 
             <section id='logs' class='searchable'>
                 <h2>Logs</h2>
-                <div id='events'>
-                    <div >
-                        <label for='searchType'>Sorteer op</label>
-                        <select id='searchType' style='border:none;'>
-                            <option value='belang'>Belang</option>
-                            <option value='datum'>Datum</option>
-                        </select>
-                    </div>
-                </div>
                 <div class='list'>
                     <ul id='log-list'>
                         @foreach ($logs as $log)

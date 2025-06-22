@@ -47,7 +47,7 @@ npm install
 npm run build
 (zie dat PHP geïnstalleerd is, en dat in php.ini extension=gd en extension=fileinfo geïnstalleerd zijn.)
 composer install
-mv .env.example ./env
+mv .env.example ./.env
 ```
 
 Installatieinstructies voor de backend te vinden via https://github.com/nasrlol/studirect-api.

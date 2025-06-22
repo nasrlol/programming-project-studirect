@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="nl">
 <head>
@@ -32,7 +33,8 @@
         }
 
         input[type="text"],
-        input[type="file"] {
+        input[type="file"],
+        select {
             width: 100%;
             padding: 0.7rem;
             margin-top: 0.5rem;
@@ -76,7 +78,7 @@
 <body>
 
 <div class="container">
-    <h2>Registratie – Stap 2</h2>
+    <h2>Registratie – school info</h2>
 
     @if ($errors->any())
         <div class="alert">
@@ -89,23 +91,33 @@
     @endif
 
     <form method="POST" action="{{ route('student.register.step2.submit') }}" enctype="multipart/form-data">
-    @csrf
+        @csrf
 
-    <label for="graduation_track">Afstudeertraject</label>
-    <input type="text" name="graduation_track" id="graduation_track" value="{{ old('graduation_track') }}" required>
+        <label for="study_direction">Studierichting</label>
+        <input type="text" name="study_direction" id="study_direction" 
+            value="{{ old('study_direction', session('registration.step1.study_direction', '')) }}" required>
 
-    <label for="interests">Soft skills / vaardigheden</label>
-    <textarea name="interests" id="interests" rows="4" placeholder="Bijv. teamwork, communicatie, probleemoplossend vermogen">{{ old('interests') }}</textarea>
+<label for="graduation_track">Afstudeertraject</label>
+<select name="graduation_track" id="graduation_track" required>
+    <option value="" disabled selected>Selecteer afstudeertraject</option>
+    
 
-    <label for="cv">Upload je CV (optioneel)</label>
-    <input type="file" name="cv" id="cv" accept=".pdf,.doc,.docx">
+        @foreach ($diplomas as $diploma)
+            <option value="{{ $diploma['id'] }}" {{ old('graduation_track') == $diploma['id'] ? 'selected' : '' }}>
+                {{ $diploma['type'] }}
+            </option>
+        @endforeach
+</select>
 
-    <label for="linkedin">LinkedIn-profiel (optioneel)</label>
-    <input type="url" name="linkedin" id="linkedin" placeholder="https://www.linkedin.com/in/jouwnaam" value="{{ old('linkedin') }}">
 
-    <button type="submit" class="submit-btn">next step</button>
-</form>
+        <label for="cv">Upload je CV (optioneel)</label>
+        <input type="file" name="cv" id="cv" accept=".pdf,.doc,.docx">
 
+        <label for="linkedin">LinkedIn-profiel (optioneel)</label>
+        <input type="url" name="linkedin" id="linkedin" placeholder="https://www.linkedin.com/in/jouwnaam" value="{{ old('linkedin') }}">
+
+        <button type="submit" class="submit-btn">next step</button>
+    </form>
 </div>
 
 </body>

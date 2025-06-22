@@ -24,12 +24,11 @@
     <div id='main-container'>
         <nav id="navigation" class='nav-container'>
             <button class="btn-nav" id="logout">Log out</button>
-            <span class='info-nav nav-element'>Admin</span><br>
+            <span class='info-nav nav-element'>Admin</span>
             <button class="btn-nav nav-element" id="nav-users">Studenten</button>
             <button class="btn-nav nav-element" id="nav-companies">Bedrijven</button>
             <button class="btn-nav nav-element" id="nav-appointments">Afspraken</button>
             <button class="btn-nav nav-element" id="nav-logs">Logs</button>
-
             <div class='info-nav nav-element'>Dashboard</div>
             <div class='amount-section nav-element'>
                 <div class='section-inside'>
@@ -85,9 +84,6 @@
                             </td>
                             <td class='hidden study-direction'>
                                 {{$student['study_direction']}}
-                            </td>
-                            <td class='hidden interests'>
-                                {{$student['interests']}}
                             </td>
                             <td class='hidden job-preferences'>
                                 {{$student['job_preferences']}}

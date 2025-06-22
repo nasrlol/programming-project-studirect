@@ -1,3 +1,7 @@
+html,body {
+    height:100%;
+}
+
 body {
     margin:0;
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -25,6 +29,8 @@ section {
     background-color: white;
     margin-left: 3.5%;
     width:95%;
+    height: auto;
+    height: 85%;
     margin-top: 1%;
 }
 /*Companies and students*/
@@ -159,12 +165,12 @@ td {
 }
 
 .searchable {
-    height:77%;
+    height:76%;
     margin-left:3.5%;
 }
 
 #appointments {
-    height:90%;
+    height:96.1%;
 }
 
 .searchable-content {
@@ -203,11 +209,10 @@ td {
 /*Nav element is both info-nav and btn-nav*/
 .nav-element {
     margin-left:10%;
-    margin-top: 10%;
 }
 
 .info-nav {
-    font-size: 175%;
+    font-size: 160%;
 }
 
 .btn-nav {
@@ -230,7 +235,7 @@ td {
     border:none;
     margin-top: 5%;
     margin-left: 5%;
-    width:45%;
+    width:55%;
     background-color: grey;
 }
 #logout:hover {
@@ -295,11 +300,27 @@ h2 {
 
 /*LOGS*/
 
+#logs {
+    height:82%;
+}
+
+#form-container {
+    display: flex;
+    justify-content: right;
+    background-color: white;
+    border-top:solid black 1px;
+}
+
 .logItem {
-    margin-left:0px;
+    margin-left:0;
     padding-bottom:2%;
+    width:100%;
     display: flex;
     flex-direction: row;
+
+    
+    border: lightgrey 1px solid; 
+    margin-bottom: 0;
 }
 
 .logAction {
@@ -307,11 +328,6 @@ h2 {
 }
 .logDate {
     width:30%;
-}
-
-#form-container {
-    display: flex;
-    justify-content: right;
 }
 
 #next-log-form {

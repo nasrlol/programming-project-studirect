@@ -1,3 +1,7 @@
+html,body {
+    height:100%;
+}
+
 body {
     margin:0;
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -25,6 +29,8 @@ section {
     background-color: white;
     margin-left: 3.5%;
     width:95%;
+    height: auto;
+    height: 85%;
     margin-top: 1%;
 }
 /*Companies and students*/
@@ -71,8 +77,15 @@ section {
 /*For adding to company*/
 .addUser {
     width:40%;
+    height:80%;
     margin-left:30%;
-    align-content:center;
+    background-color: rgb(202, 202, 202);
+}
+
+.useradd-label {
+    margin-top: 0px;
+    font-size: 200%;
+    text-align: center;
 }
 
 .add {
@@ -86,9 +99,38 @@ form {
     display: flex;
     flex-direction: column;
 }
+.back {
+    border:none;
+    background-color: inherit;
+    font-weight: bold;
+}
 
-.addInput {
-    margin-bottom: 2%;
+.addInput  {
+    border-width: 1.5px;
+    border-radius: 5%;
+    border-color:lightgrey;
+    background-color: white;
+    box-sizing: border-box;
+    height:fit-content;
+    width:35%;
+    margin-left: 32.5%;
+    margin-top: 5%;
+}
+
+.save-container {
+    height:max-content;
+    margin-top: 5%;
+    height:200%;
+}
+
+.save {
+    width:35%;
+    margin-left: 32.5%;
+    background-color: #252D3C;
+    color:white;
+    font-weight: lighter;
+    border:none;
+    border-radius: 5px;
 }
 
 /*Table*/
@@ -159,12 +201,12 @@ td {
 }
 
 .searchable {
-    height:77%;
+    height:76%;
     margin-left:3.5%;
 }
 
 #appointments {
-    height:90%;
+    height:96.1%;
 }
 
 .searchable-content {
@@ -203,11 +245,10 @@ td {
 /*Nav element is both info-nav and btn-nav*/
 .nav-element {
     margin-left:10%;
-    margin-top: 10%;
 }
 
 .info-nav {
-    font-size: 175%;
+    font-size: 160%;
 }
 
 .btn-nav {
@@ -230,7 +271,7 @@ td {
     border:none;
     margin-top: 5%;
     margin-left: 5%;
-    width:45%;
+    width:55%;
     background-color: grey;
 }
 #logout:hover {
@@ -295,11 +336,27 @@ h2 {
 
 /*LOGS*/
 
+#logs {
+    height:82%;
+}
+
+#form-container {
+    display: flex;
+    justify-content: right;
+    background-color: white;
+    border-top:solid black 1px;
+}
+
 .logItem {
-    margin-left:0px;
+    margin-left:0;
     padding-bottom:2%;
+    width:100%;
     display: flex;
     flex-direction: row;
+
+    
+    border: lightgrey 1px solid; 
+    margin-bottom: 0;
 }
 
 .logAction {
@@ -307,11 +364,6 @@ h2 {
 }
 .logDate {
     width:30%;
-}
-
-#form-container {
-    display: flex;
-    justify-content: right;
 }
 
 #next-log-form {

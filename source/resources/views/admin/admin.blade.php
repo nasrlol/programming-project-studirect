@@ -24,12 +24,11 @@
     <div id='main-container'>
         <nav id="navigation" class='nav-container'>
             <button class="btn-nav" id="logout">Log out</button>
-            <span class='info-nav nav-element'>Admin</span><br>
+            <span class='info-nav nav-element'>Admin</span>
             <button class="btn-nav nav-element" id="nav-users">Studenten</button>
             <button class="btn-nav nav-element" id="nav-companies">Bedrijven</button>
             <button class="btn-nav nav-element" id="nav-appointments">Afspraken</button>
             <button class="btn-nav nav-element" id="nav-logs">Logs</button>
-
             <div class='info-nav nav-element'>Dashboard</div>
             <div class='amount-section nav-element'>
                 <div class='section-inside'>
@@ -86,9 +85,6 @@
                             <td class='hidden study-direction'>
                                 {{$student['study_direction']}}
                             </td>
-                            <td class='hidden interests'>
-                                {{$student['interests']}}
-                            </td>
                             <td class='hidden job-preferences'>
                                 {{$student['job_preferences']}}
                             </td>
@@ -110,10 +106,10 @@
             </section>
 
             <section id='addStudent'>
-                <button id='backToStudent'>Terug</button>
-                <h2>Student toevoegen</h2>
+                <button class="back" id='backToStudent'>&#8617; Terug</button>
+                <h2 class="useradd-label-left">Student toevoegen</h2>
                 <div class='addUser'>
-                    <h2>Student gegevens</h2>
+                    <h2 class="useradd-label">Student gegevens</h2>
                     <!-- Action to add a company must be added-->
                     <form method='post' action="{{ route('students.create') }}">
                         @csrf <!-- CSRF token for security (concept genomen via Github Copilot)-->
@@ -136,7 +132,9 @@
                         <input class='addInput' type='password' name='password2' placeholder='Bevestig wachtwoord'>
                         <!--Responses for wrong inputs will be put here--> 
                         <div id='formResponse'></div>
-                        <input type='submit' value='opslaan'>
+                        <div class="save-container">
+                            <input class='save' type='submit' value='opslaan'>
+                        </div>
                     </form>
                 </div>
             </section>
@@ -205,10 +203,10 @@
 
 
             <section id='addCompany'>
-                <button id='backToCompanies'>Terug</button>
-                <h2>Bedrijf toevoegen</h2>
+                <button class="back" id='backToCompanies'>&#8617; Terug</button>
+                <h2 class="useradd-label-left">Bedrijf toevoegen</h2>
                 <div class='addUser'>
-                    <h2>Bedrijf gegevens</h2>
+                    <h2 class="useradd-label">Bedrijf gegevens</h2>
                     <!-- Action to add a company must be added-->
                     <form method='post' action="{{ route('companies.create') }}">
                         @csrf <!-- CSRF token for security -->
@@ -228,7 +226,9 @@
                         <input class='addInput' type='password' name='password2' placeholder='Bevestig wachtwoord'>
                         <!--Responses for wrong inputs will be put here--> 
                         <div id='formResponse'></div>
-                        <input type='submit' value='opslaan'>
+                        <div class="save-container">
+                            <input class='save' type='submit' value='opslaan'>
+                        </div>
                     </form>
                 </div>
             </section>

@@ -98,6 +98,7 @@ class StudentController extends Controller
             'appointments' => $appointments,
             'connections' => $connections,
             'allMessages' => $allMessages,
+            'token' => $token,
             'diplomas' => $diplomas
         ]);
 

@@ -8,6 +8,12 @@
     @vite ('resources/css/student/student.css')
 </head>
 <body>
+    @if (session('api_token')) 
+    <script>
+        localStorage.setItem('token', "{{ $token }}")
+        localStorage.setItem('user_type', 'student')
+    </script>
+    @endif
     @include('student.layouts.navbar')
 <main class:"container">
     @include('student.layouts.settings')
@@ -75,6 +81,8 @@
             </div>
         </section>
     </div>
+
+    <div class='hidden' id='studentPath'>{{ route("students.change", ['id' => $student['id']]) }}</div>
 
     <div id="calendar-content" class:"content-container">
     </div>

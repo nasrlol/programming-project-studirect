@@ -83,7 +83,7 @@ Route::post('/students', [StudentController::class, 'store'])->name('students.cr
 Route::post('/companies', [CompanyController::class, 'store'])->name('companies.create');
 
 Route::patch('/student/{id}', [StudentController::class, 'update']);
-Route::patch('/students/{id}', [StudentController::class, 'update']);
+Route::patch('/students/{id}', [StudentController::class, 'update'])->name('students.change');
 Route::patch('/company/{id}', [CompanyController::class, 'update']);
 Route::patch('/companies/{id}', [CompanyController::class, 'update']);
 

@@ -502,21 +502,20 @@ function handleProfileSave(e) {
     // Get current student ID from URL or data attribute
     const currentUrl = window.location.pathname;
     const studentId = currentUrl.split('/').pop();
-
     // Collect form data
     const formData = {
         first_name: document.getElementById('firstName').value,
         last_name: document.getElementById('lastName').value,
         study_direction: document.getElementById('studyDirection').value,
-        graduation_track: document.getElementById('graduationTrack').value
+        graduation_track: document.getElementById('graduationTrack').value,
+        Authorization: localStorage.getItem('token')
     };
 
     // Send PATCH request
-    fetch(`/student/${studentId}`, {
+    fetch(document.getElementById("studentPath").innerHTML, {
         method: 'PATCH',
         headers: {
-            'Content-Type': 'application/json',
-            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') || ''
+            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') || '',
         },
         body: JSON.stringify(formData)
     })

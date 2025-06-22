@@ -100,6 +100,15 @@
         .link-group a:hover {
             text-decoration: underline;
         }
+
+        .alert.success {
+            background-color: #e3fcef;
+            color: #006644;
+            padding: 0.75rem 1rem;
+            margin-top: 1rem;
+            border-radius: 6px;
+            font-size: 0.9rem;
+        }
     </style>
 </head>
 <body>
@@ -108,6 +117,10 @@
     <div class="login-box">
 
         <h2>StuDirect Login</h2>
+
+        @if (session('status'))
+            <div class="alert success">{{ session('status') }}</div>
+        @endif
 
         @if (session('error'))
             <div class="alert">{{ session('error') }}</div>
@@ -123,7 +136,7 @@
             </div>
         @endif
 
-        <form method="POST" action="{{ route('student.login') }}">
+        <form method="POST" action="{{ route('login.login') }}">
             @csrf
 
             <label for="email">E-mail</label>

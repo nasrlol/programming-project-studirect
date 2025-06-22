@@ -7,13 +7,13 @@ let shownCompanies = new Set();
 let isAnimating = false;
 let companiesWithMatchPercentage = [];
 
-// Initialize company data and fetch match percentages
+// Initialize company data and fetch match percentages for sorting
 async function initializeCompanies() {
     if (window.companiesData && window.companiesData.length > 0) {
         // First filter out any companies already shown/swiped
         const unswipedCompanies = window.companiesData.filter(company => !shownCompanies.has(company.id));
 
-        // Fetch match percentages for all companies
+        // Fetch match percentages for sorting (not displayed)
         companiesWithMatchPercentage = await fetchMatchPercentages(unswipedCompanies);
 
         // Sort by match percentage (highest first)
@@ -47,21 +47,7 @@ function updateCompanySwipeSection(company) {
     };
 
     if (elements.title) {
-        let matchPercentageHtml = '';
-        if (company.match_percentage !== undefined) {
-            const percentage = Math.round(company.match_percentage);
-            let matchClass = 'low-match';
-
-            if (percentage >= 80) {
-                matchClass = 'high-match';
-            } else if (percentage >= 60) {
-                matchClass = 'medium-match';
-            }
-
-            matchPercentageHtml = `<span class="match-percentage ${matchClass}">${percentage}% Match</span>`;
-        }
-
-        elements.title.innerHTML = `${company.name || 'Naam Bedrijf'} ${matchPercentageHtml}`;
+        elements.title.innerHTML = `${company.name || 'Naam Bedrijf'}`;
     }
     if (elements.jobTitle) {
         elements.jobTitle.textContent = company.job_title || 'Stage Positie';
@@ -595,7 +581,7 @@ function preventNavigationIfUnsaved(callback) {
     return true;
 }
 
-// Fetch match percentages for companies
+// Fetch match percentages for companies (used for sorting only)
 async function fetchMatchPercentages(companies) {
     try {
         // Extract company IDs

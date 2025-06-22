@@ -117,7 +117,6 @@ Route::post('/messages/send', [MessageController::class, 'sendMessage'])->name('
 Route::post('/messages/conversation', [MessageController::class, 'getConversation']);
 Route::post('/companies/{id}/messages/send', [CompanyController::class, 'sendMessage'])->name('company.messages.send');
 
-
 // =======================
 // MATCH API
 // =======================

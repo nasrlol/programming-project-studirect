@@ -39,7 +39,7 @@ abstract class Controller
         if (isset($student['first_name']) && isset($student['last_name'])) {
                 $id = $student['first_name'] . ' ' . $student['last_name'];
             } else {
-                $id = 'Onbekende student';
+                $id = '*verwijderde student*';
             }
             return $id;
     }
@@ -49,7 +49,7 @@ abstract class Controller
         if (isset($company['name'])) {
             $id = $company['name'];
         } else {
-            $id = 'Onbekend bedrijf';
+            $id = '*verwijderd bedrijf*';
         }
         return $id;
     }

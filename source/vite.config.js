@@ -12,7 +12,8 @@ export default defineConfig({
                 'resources/js/student/student.js',
                 'resources/js/student/chat.js',
                 'resources/css/company/company.css',
-                'resources/js/company/company.js'
+                'resources/js/company/company.js',
+                'resources/js/company/chat.js'
             ],
             refresh: true,
         }),

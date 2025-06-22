@@ -148,6 +148,8 @@ function handleSettingsNavigation() {
         option.addEventListener('click', function() {
             document.querySelectorAll('.theme-option').forEach(opt => opt.classList.remove('active'));
             this.classList.add('active');
+            const selectedTheme = this.dataset.theme;
+            applyTheme(selectedTheme);
         });
     });
 }
@@ -300,6 +302,28 @@ function preventNavigationIfUnsaved(callback) {
     return true;
 }
 
+// Theme selection and persistence
+function applyTheme(theme) {
+    if (theme === 'dark') {
+        document.body.classList.add('dark-theme');
+    } else {
+        document.body.classList.remove('dark-theme');
+    }
+    localStorage.setItem('company-theme', theme);
+}
+
+function loadTheme() {
+    const savedTheme = localStorage.getItem('company-theme') || 'light';
+    applyTheme(savedTheme);
+    // Set active class on theme options
+    document.querySelectorAll('.theme-option').forEach(opt => {
+        opt.classList.remove('active');
+        if (opt.dataset.theme === savedTheme) {
+            opt.classList.add('active');
+        }
+    });
+}
+
 // add event listeners when DOM is loaded
 document.addEventListener('DOMContentLoaded', () => {
     // home button click handler
@@ -339,6 +363,7 @@ document.addEventListener('DOMContentLoaded', () => {
     handleProfileDropdown();
     handleSettingsNavigation();
     profileChangeTracking();
+    loadTheme();
 
     // start with home view
     renderHome();

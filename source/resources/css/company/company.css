@@ -1470,3 +1470,83 @@ body.dark-theme .theme-options,
 body.dark-theme .theme-option span {
     color: #fff !important;
 }
+
+/* Calendar Table Styles (moved from calendarTable.blade.php) */
+.calendar-table {
+    overflow: visible !important;
+    max-width: 100% !important;
+    max-height: 100% !important;
+    scrollbar-width: none !important;
+    -ms-overflow-style: none !important;
+    width: 100%;
+    max-width: 500px;
+    margin: 2rem auto;
+    background: #f5f8fa;
+    border-radius: 18px;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.08);
+    padding: 1.5rem 1rem;
+}
+.calendar-table::-webkit-scrollbar {
+    display: none !important;
+}
+.calendar-table:parent, .calendar-table:parent * {
+    overflow: visible !important;
+    scrollbar-width: none !important;
+}
+body, html {
+    overflow-x: hidden !important;
+}
+#calendar-table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+    font-family: 'Segoe UI', Arial, sans-serif;
+    font-size: 1rem;
+    background: #f5f8fa;
+    border-radius: 14px;
+    table-layout: fixed;
+}
+#calendar-table th, #calendar-table td {
+    padding: 0.7rem 0.5rem;
+    text-align: center;
+    border-bottom: 1px solid #d0e3f7;
+    border-right: 1px solid #d0e3f7;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    border-radius: 0;
+}
+#calendar-table th {
+    background: #1976d2;
+    color: #fff;
+    font-weight: 600;
+    border-right: 1px solid #1565c0;
+}
+#calendar-table tr:last-child td {
+    border-bottom: none;
+}
+#calendar-table tr td:first-child {
+    background: #e3f0fc;
+    font-weight: 500;
+    color: #1565c0;
+    border-left: 1px solid #d0e3f7;
+}
+#calendar-table td {
+    background: #fff;
+    transition: background 0.2s, color 0.2s;
+    min-width: 48px;
+    border-left: none;
+}
+#calendar-table td:not(:first-child):hover {
+    background: #e3f0fc;
+    cursor: pointer;
+}
+#calendar-table td[style*="background-color: #4CAF50"],
+#calendar-table td[style*="background-color: #388e3c"] {
+    background: #1976d2 !important;
+    color: #fff !important;
+}
+#calendar-table th:first-child { border-top-left-radius: 14px; }
+#calendar-table th:last-child { border-top-right-radius: 14px; }
+#calendar-table tr:last-child td:first-child { border-bottom-left-radius: 14px; }
+#calendar-table tr:last-child td:last-child { border-bottom-right-radius: 14px; }

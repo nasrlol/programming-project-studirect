@@ -269,10 +269,10 @@ class StudentController extends Controller
             'graduation_track' => 'sometimes|required|integer',
             'interests' => 'sometimes|required|string',
             'job_preferences' => 'sometimes|required|string',
-            'cv' => 'nullable|string',
             'profile_complete' => 'nullable|boolean',
         ]);
         } catch (\Exception $e) {
+            dd($e->getMessage());
             if ($request->expectsJson()) {
                 return response()->json(['error' => 'Validation failed: ' . $e->getMessage()], 422);
             }
@@ -285,6 +285,7 @@ class StudentController extends Controller
             if (!$current->successful()) {
                 throw new \Exception('Could not fetch current student data');
             }
+            dd($current);
 
             $currentData = $current->json('data');
             $data = array_merge($currentData, $validated);

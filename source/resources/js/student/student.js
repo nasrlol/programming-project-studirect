@@ -454,12 +454,7 @@ function profileChangeTracking() {
         }
     });
 
-    // Add save button handler
-    const saveBtn = document.querySelector('#profile-settings .save-btn');
-    if (saveBtn) {
-        saveBtn.addEventListener('click', handleProfileSave);
-    }
-
+    
     // Add undo button handler
     const undoBtn = document.getElementById('undoChangesBtn');
     if (undoBtn) {
@@ -496,51 +491,7 @@ function handleProfileChange() {
     }
 }
 
-function handleProfileSave(e) {
-    e.preventDefault();
 
-    // Get current student ID from URL or data attribute
-    const currentUrl = window.location.pathname;
-    const studentId = currentUrl.split('/').pop();
-    // Collect form data
-    const formData = {
-        first_name: document.getElementById('firstName').value,
-        last_name: document.getElementById('lastName').value,
-        study_direction: document.getElementById('studyDirection').value,
-        graduation_track: document.getElementById('graduationTrack').value,
-        Authorization: localStorage.getItem('token')
-    };
-
-    // Send PATCH request
-    fetch(document.getElementById("studentPath").innerHTML, {
-        method: 'PATCH',
-        headers: {
-            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') || '',
-        },
-        body: JSON.stringify(formData)
-    })
-    .then(response => {
-        if (response.ok) {
-            // Update original data and reset change tracking
-            Object.keys(formData).forEach(key => {
-                const fieldId = key === 'first_name' ? 'firstName' :
-                               key === 'last_name' ? 'lastName' :
-                               key === 'study_direction' ? 'studyDirection' :
-                               key === 'graduation_track' ? 'graduationTrack' : key;
-                originalProfileData[fieldId] = formData[key];
-            });
-
-            resetProfileChangeTracking();
-            alert('Profile updated successfully!');
-        } else {
-            throw new Error('Failed to update profile');
-        }
-    })
-    .catch(error => {
-        console.error('Error updating profile:', error);
-        alert('Error updating profile. Please try again.');
-    });
-}
 
 function handleProfileUndo() {
     // Restore original values

@@ -82,7 +82,6 @@
         </section>
     </div>
 
-    <div class='hidden' id='studentPath'>{{ route("students.change", ['id' => $student['id']]) }}</div>
 
     <div id="calendar-content" class:"content-container">
     </div>

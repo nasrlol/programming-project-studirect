@@ -122,8 +122,8 @@
             <label for="password">Wachtwoord</label>
             <input type="password" name="password" id="password" required>
 
-            <label for="study_direction">Studierichting</label>
-            <input type="text" name="study_direction" id="study_direction" required>
+            <label for="password_confirmation">Bevestig Wachtwoord</label>
+            <input type="password" name="password_confirmation" id="password_confirmation" required>
 
             <button type="submit" class="submit-btn">next step</button>
         </form>

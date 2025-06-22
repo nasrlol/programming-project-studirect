@@ -30,6 +30,13 @@ section {
 /*Companies and students*/
 
 .nameSearch {
+    background-color: inherit;
+    border-right:none;
+    height:100%;
+}
+
+.filterAction {
+    background-color: inherit;
     border-left:none;
 }
 
@@ -37,6 +44,7 @@ section {
     margin-left: 3.5%;
     display: flex;
     flex-direction: row;
+    margin-bottom: 1%;
 }
 
 /*For appointments*/

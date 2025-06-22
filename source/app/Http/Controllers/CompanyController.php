@@ -15,9 +15,10 @@ class CompanyController extends Controller
     //Index function to shown on the company page, takes the ID and shows the company
     public function index(string $id): View
     {
-        $response = Http::get("{$this->companiesApiUrl}/{$id}");
+        $token = session('api_token');
+        $response = Http::withToken($token)->get("{$this->companiesApiUrl}/{$id}");
         if (!$response->successful()) {
-            return view('notfound', ['message' => 'Dit bedrijf lijkt niet te bestaan (error code 404). Contacteer de beheerder van de site voor meer informatie']);
+            return view('notfound', ['message' => 'Dit bedrijf lijkt niet te bestaan of je hebt geen toegang (error code ' . $response->status() . '). Contacteer de beheerder van de site voor meer informatie']);
         }
 
         $company = $response->json('data');
@@ -110,6 +111,8 @@ class CompanyController extends Controller
     public function store(Request $request)
     {
         try {
+            $token = "Bearer " . $request['token'];
+
             $validated = $request->validate([
             'name' => 'required|string|max:255',
             'email' => 'required|email|max:255',
@@ -154,8 +157,10 @@ class CompanyController extends Controller
         unset($validated['password1']);
 
 try {
-    $response = Http::post($this->companiesApiUrl, $validated);
-
+    dd($validated);
+    $response = Http::withHeaders( [
+            "Authorization" => $token
+        ])->post($this->companiesApiUrl, $validated);
     return redirect()->back()->with('success', 'Bedrijf succesvol toegevoegd!');
 
 } catch (\Exception $e) {
@@ -218,9 +223,14 @@ try {
         /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
+    public function destroy(string $id, Request $request)
     {
-        $response = Http::delete("{$this->companiesApiUrl}{$id}");
+        $token = "Bearer " . $request['token'];
+        $response = Http::withHeaders( [
+            "Authorization" => $token
+        ])->delete("{$this->companiesApiUrl}{$id}");
+
+        dd($response);
 
 
         return redirect()->back()->with('success', 'Bedrijf succesvol verwijderd!');

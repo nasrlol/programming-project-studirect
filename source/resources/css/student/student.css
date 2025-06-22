@@ -1236,3 +1236,50 @@ button:disabled, .btn:disabled {
     visibility: visible;
     transform: translateX(-50%) translateY(-4px);
 }
+
+/* Match percentage styling */
+.match-percentage {
+    color: #10b981;
+    font-weight: 600;
+    font-size: 0.9em;
+    background: linear-gradient(135deg, #ecfdf5, #d1fae5);
+    padding: 0.25rem 0.5rem;
+    border-radius: 8px;
+    border: 1px solid #10b981;
+    margin-left: 0.5rem;
+}
+
+.match-percentage.high-match {
+    background: linear-gradient(135deg, #ecfdf5, #d1fae5);
+    border-color: #10b981;
+    color: #065f46;
+}
+
+.match-percentage.medium-match {
+    background: linear-gradient(135deg, #fef3c7, #fde68a);
+    border-color: #f59e0b;
+    color: #92400e;
+}
+
+.match-percentage.low-match {
+    background: linear-gradient(135deg, #fee2e2, #fecaca);
+    border-color: #ef4444;
+    color: #991b1b;
+}
+
+/* No matches message styling */
+.no-matches-message, .no-chat-available {
+    text-align: center;
+    padding: 2rem;
+    color: #64748b;
+    background: rgba(255, 255, 255, 0.5);
+    border-radius: 12px;
+    border: 1px solid #e2e8f0;
+    margin: 1rem 0;
+}
+
+.no-matches-message p, .no-chat-available p {
+    margin: 0;
+    font-size: 1rem;
+    line-height: 1.6;
+}

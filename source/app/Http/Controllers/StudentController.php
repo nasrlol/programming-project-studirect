@@ -7,7 +7,6 @@ use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
 use Illuminate\View\View;
 use Illuminate\Support\Facades\Http;
-use Illuminate\Support\Facades\Log;
 use App\Http\Controllers\MessageController;
 
 class StudentController extends Controller
@@ -43,6 +42,9 @@ class StudentController extends Controller
 
         $companies = $response->json('data');
 
+        // Get liked companies for the message list
+        $likedCompanies = $this->getLikedCompanies($id, $token);
+
         $response = Http::withHeaders([
             "Authorization" => $token
         ])->get("{$this->appointmentApiUrl}");
@@ -60,7 +62,8 @@ class StudentController extends Controller
             $appointment['company_name'] = $this->translateCompany($appointment['company_id'], $token);
         }
 
-        $connections = $this->get_connections($id, 'student');
+        $connectionController = new \App\Http\Controllers\ConnectionController();
+        $connections = $connectionController->getConnections($id, 'student');
 
         // get all messages for this student
         $messageController = new MessageController();
@@ -76,18 +79,14 @@ class StudentController extends Controller
             // check if the data is nested like companies API
             $diplomas = isset($diplomasData['data']) ? $diplomasData['data'] : $diplomasData;
         } else {
-            Log::error('Diplomas API Failed:', [
-                'status' => $diplomasResponse->status(),
-                'body' => $diplomasResponse->body(),
-                'url' => $this->diplomasApiUrl
-            ]);
             $diplomas = [];
         }
 
         return view('student.html.student', [
             'id' => $id,
             'student' => $student,
-            'companies' => $companies,
+            'companies' => $companies, // All companies for swiping
+            'likedCompanies' => $likedCompanies, // Only liked companies for message list
             'appointments' => $appointments,
             'connections' => $connections,
             'allMessages' => $allMessages,
@@ -128,7 +127,8 @@ class StudentController extends Controller
             $appointment['company_name'] = $this->translateCompany($appointment['company_id']);
         }
 
-        $connections = $this->get_connections($id, 'student');
+        $connectionController = new \App\Http\Controllers\ConnectionController();
+        $connections = $connectionController->getConnections($id, 'student');
 
         // Get all messages for this student
         $messageController = new MessageController();
@@ -316,5 +316,66 @@ class StudentController extends Controller
         ])->delete("{$this->studentsApiUrl}/{$id}");
 
         return redirect()->back()->with('success', 'Account succesvol verwijderd!');
+    }
+
+    /**
+     * Get companies that the student has liked (status = true in connections)
+     *
+     * @param string $student_id
+     * @param string $token
+     * @return array
+     */
+    protected function getLikedCompanies(string $student_id, string $token): array
+    {
+        try {
+            // Get all connections for this student using ConnectionController
+            $connectionController = new \App\Http\Controllers\ConnectionController();
+            $connections = $connectionController->getConnections($student_id, 'student');
+
+            // If no connections from API, try session backup
+            $likedCompanyIds = [];
+
+            if (empty($connections)) {
+                // Fallback to session storage
+                $sessionKey = "liked_companies_student_{$student_id}";
+                $likedCompanyIds = session($sessionKey, []);
+            } else {
+                // Filter to only liked connections (status = true)
+                $likedConnections = collect($connections)->where('status', true)->all();
+
+                if (empty($likedConnections)) {
+                    return [];
+                }
+
+                // Get company IDs that were liked
+                $likedCompanyIds = collect($likedConnections)->pluck('company_id')->toArray();
+            }
+
+            if (empty($likedCompanyIds)) {
+                return [];
+            }
+
+            // Fetch all companies
+            $response = Http::withHeaders([
+                "Authorization" => $token
+            ])->get($this->companiesApiUrl);
+
+            if (!$response->successful()) {
+                return [];
+            }
+
+            $allCompanies = $response->json('data');
+
+            // Filter companies to only include liked ones
+            $likedCompanies = collect($allCompanies)
+                ->whereIn('id', $likedCompanyIds)
+                ->values()
+                ->toArray();
+
+            return $likedCompanies;
+
+        } catch (\Exception $e) {
+            return [];
+        }
     }
 }

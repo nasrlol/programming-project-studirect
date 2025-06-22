@@ -12,6 +12,7 @@ use App\Http\Controllers\RegistrationStudentController;
 use App\Http\Controllers\AppointmentController;
 use App\Http\Controllers\ConnectionController;
 use App\Http\Controllers\MessageController;
+use App\Http\Controllers\MatchController;
 
 /*
 |--------------------------------------------------------------------------
@@ -108,7 +109,6 @@ Route::delete('/appointments/{id}', [AppointmentController::class, 'destroy']);
 Route::post('/connections', [ConnectionController::class, 'makeConnection']);
 Route::patch('/connections/{id}', [ConnectionController::class, 'removeConnection']);
 
-
 // =======================
 // MESSAGES
 // =======================
@@ -119,6 +119,13 @@ Route::post('/companies/{id}/messages/send', [CompanyController::class, 'sendMes
 
 
 // =======================
+// MATCH API
+// =======================
+
+Route::get('/api/match/{student_id}/{company_id}', [MatchController::class, 'getMatchPercentage']);
+Route::post('/api/matches/{student_id}', [MatchController::class, 'getMultipleMatches']);
+
+// =======================
 // PASSWORD RESET (student)
 // =======================
 
@@ -126,10 +133,3 @@ Route::get('/student/password/reset', [ForgotPasswordController::class, 'showLin
 Route::post('/student/password/email', [ForgotPasswordController::class, 'sendResetLinkEmail'])->name('student.password.email');
 
 
-// =======================
-// TEST ROUTES
-// =======================
-
-Route::get('/test-controller', [RegistrationStudentController::class, 'debug']);
-Route::get('/test-class-load', fn () => "Controller loaded: " . get_class(new \App\Http\Controllers\RegistrationStudentController()));
-Route::get('/test-notfound', fn () => view('notfound', ['message' => 'Testmelding werkt.']));

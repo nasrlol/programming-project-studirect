@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
 use Illuminate\View\View;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Log;
 
 
 abstract class Controller
@@ -77,16 +78,5 @@ abstract class Controller
             }
         }
         return $array;
-    }
-
-    protected function get_connections($id, $type)
-    {
-        $type = strtolower($type . '_id');
-        $response = Http::get("{$this->connectionsApiUrl}");
-
-        $response = $response->json('data');
-        // Filter connections based on the provided ID and type
-        $connections = collect($response)->where($type, $id)->all();
-        return $connections;
     }
 }

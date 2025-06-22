@@ -38,13 +38,19 @@
         <section class="sectionType1">
             <h2>Matches</h2>
             <div id="message-list">
-                @foreach($companies as $company)
-                    @include('student.layouts.messageList', [
-                        'photo' => $company['photo'] ?? '',
-                        'name' => $company['name'],
-                        'id' => $company['id'],
-                    ])
-                @endforeach
+                @if(count($likedCompanies) > 0)
+                    @foreach($likedCompanies as $company)
+                        @include('student.layouts.messageList', [
+                            'photo' => $company['photo'] ?? '',
+                            'name' => $company['name'],
+                            'id' => $company['id'],
+                        ])
+                    @endforeach
+                @else
+                    <div class="no-matches-message">
+                        <p>Je hebt nog geen bedrijven geliked. Ga naar Home om bedrijven te bekijken en te liken!</p>
+                    </div>
+                @endif
             </div>
         </section>
         <section class="sectionType2" id="chat-section">
@@ -55,9 +61,16 @@
                 </div>
             </div>
             <div class="chat-container">
-                @include('student.layouts.chat', [
-                    'student_id' => $student['id'],
-                    'company_id' => $companies[0]['id'],
+                @if(count($likedCompanies) > 0)
+                    @include('student.layouts.chat', [
+                        'student_id' => $student['id'],
+                        'company_id' => $likedCompanies[0]['id'],
+                    ])
+                @else
+                    <div class="no-chat-available">
+                        <p>Geen bedrijven beschikbaar voor chat.</p>
+                    </div>
+                @endif
                 ])
             </div>
         </section>

@@ -5,26 +5,27 @@ let availableCompanies = [];
 let currentCompanyIndex = 0;
 let shownCompanies = new Set();
 let isAnimating = false;
+let companiesWithMatchPercentage = [];
 
-// Initialize company data and randomize
-function initializeCompanies() {
+// Initialize company data and fetch match percentages
+async function initializeCompanies() {
     if (window.companiesData && window.companiesData.length > 0) {
-        availableCompanies = [...window.companiesData];
-        shuffleArray(availableCompanies);
+        // First filter out any companies already shown/swiped
+        const unswipedCompanies = window.companiesData.filter(company => !shownCompanies.has(company.id));
+
+        // Fetch match percentages for all companies
+        companiesWithMatchPercentage = await fetchMatchPercentages(unswipedCompanies);
+
+        // Sort by match percentage (highest first)
+        companiesWithMatchPercentage.sort((a, b) => (b.match_percentage || 0) - (a.match_percentage || 0));
+
+        availableCompanies = [...companiesWithMatchPercentage];
         currentCompanyIndex = 0;
-        shownCompanies.clear();
         showCurrentCompany();
     }
 }
 
 // Shuffle array function
-function shuffleArray(array) {
-    for (let i = array.length - 1; i > 0; i--) {
-        const j = Math.floor(Math.random() * (i + 1));
-        [array[i], array[j]] = [array[j], array[i]];
-    }
-}
-
 // Show current company information
 function showCurrentCompany() {
     if (availableCompanies.length === 0) return;
@@ -46,7 +47,21 @@ function updateCompanySwipeSection(company) {
     };
 
     if (elements.title) {
-        elements.title.textContent = company.name || 'Naam Bedrijf';
+        let matchPercentageHtml = '';
+        if (company.match_percentage !== undefined) {
+            const percentage = Math.round(company.match_percentage);
+            let matchClass = 'low-match';
+
+            if (percentage >= 80) {
+                matchClass = 'high-match';
+            } else if (percentage >= 60) {
+                matchClass = 'medium-match';
+            }
+
+            matchPercentageHtml = `<span class="match-percentage ${matchClass}">${percentage}% Match</span>`;
+        }
+
+        elements.title.innerHTML = `${company.name || 'Naam Bedrijf'} ${matchPercentageHtml}`;
     }
     if (elements.jobTitle) {
         elements.jobTitle.textContent = company.job_title || 'Stage Positie';
@@ -100,8 +115,23 @@ function handleSwipe(action) {
     // Complete swipe after animation
     setTimeout(() => {
         resetSwipeAnimation(swipeSection);
+
+        // Remove the company from available companies (no longer in queue)
         shownCompanies.add(currentCompany.id);
-        nextCompany();
+        availableCompanies.splice(currentCompanyIndex, 1);
+
+        // Adjust index if we removed the last item
+        if (currentCompanyIndex >= availableCompanies.length) {
+            currentCompanyIndex = 0;
+        }
+
+        // Check if we need to refresh the company queue
+        if (availableCompanies.length === 0) {
+            refreshCompanyQueue();
+        } else {
+            showCurrentCompany();
+        }
+
         isAnimating = false;
     }, 800);
 }
@@ -109,28 +139,45 @@ function handleSwipe(action) {
 // Save connection (like/dislike) to database
 async function saveConnection(companyId, action) {
     const status = action === 'liked'; // true for like, false for dislike
-    
+
+    const connectionData = {
+        student_id: window.studentId,
+        company_id: companyId,
+        status: status
+    };
+
     try {
         const response = await fetch('/connections', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
+                'Accept': 'application/json',
                 'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') || ''
             },
-            body: JSON.stringify({
-                student_id: window.studentId,
-                company_id: companyId,
-                status: status
-            })
+            body: JSON.stringify(connectionData)
         });
 
         if (response.ok) {
-            console.log(`Connection ${action} saved successfully for company ${companyId}`);
+            const result = await response.json();
+
+            // Optionally refresh the matches list if we're on that page
+            const matchesContent = document.getElementById('matches-content');
+            if (matchesContent && matchesContent.classList.contains('active')) {
+                // We could trigger a page reload or fetch updated liked companies here
+            }
         } else {
-            console.error('Failed to save connection:', response.statusText);
+            const errorText = await response.text();
+            console.error('Failed to save connection. Response text:', errorText);
+
+            try {
+                const errorJson = JSON.parse(errorText);
+                console.error('Connection error details:', errorJson);
+            } catch (parseError) {
+                console.error('Could not parse error response as JSON');
+            }
         }
     } catch (error) {
-        console.error('Error saving connection:', error);
+        console.error('Network error saving connection:', error);
     }
 }
 
@@ -155,32 +202,25 @@ function resetSwipeAnimation(element) {
 }
 
 // Move to next company in the queue
-function nextCompany() {
-    currentCompanyIndex++;
-
-    // Check if we need to refresh the company queue
-    if (currentCompanyIndex >= availableCompanies.length) {
-        refreshCompanyQueue();
-    }
-
-    showCurrentCompany();
-}
-
 // Refresh the company queue when all companies have been shown
-function refreshCompanyQueue() {
+async function refreshCompanyQueue() {
     const unshownCompanies = window.companiesData.filter(company => !shownCompanies.has(company.id));
 
     if (unshownCompanies.length > 0) {
-        // Show remaining unshown companies
-        availableCompanies = [...unshownCompanies];
+        // Fetch match percentages for remaining companies and sort them
+        companiesWithMatchPercentage = await fetchMatchPercentages(unshownCompanies);
+        companiesWithMatchPercentage.sort((a, b) => (b.match_percentage || 0) - (a.match_percentage || 0));
+        availableCompanies = [...companiesWithMatchPercentage];
     } else {
         // All companies have been shown, reset and start over
         shownCompanies.clear();
-        availableCompanies = [...window.companiesData];
+        companiesWithMatchPercentage = await fetchMatchPercentages(window.companiesData);
+        companiesWithMatchPercentage.sort((a, b) => (b.match_percentage || 0) - (a.match_percentage || 0));
+        availableCompanies = [...companiesWithMatchPercentage];
     }
 
-    shuffleArray(availableCompanies);
     currentCompanyIndex = 0;
+    showCurrentCompany();
 }
 
 // Set up swipe button event listeners and keyboard shortcuts
@@ -555,8 +595,93 @@ function preventNavigationIfUnsaved(callback) {
     return true;
 }
 
+// Fetch match percentages for companies
+async function fetchMatchPercentages(companies) {
+    try {
+        // Extract company IDs
+        const companyIds = companies.map(company => company.id);
+
+        // Make a single request for all matches
+        const response = await fetch(`/api/matches/${window.studentId}`, {
+            method: 'POST',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json',
+                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') || ''
+            },
+            body: JSON.stringify({
+                company_ids: companyIds
+            })
+        });
+
+        if (response.ok) {
+            const matchData = await response.json();
+            const matches = matchData.matches || {};
+
+            // Add match percentages to companies
+            const companiesWithMatch = companies.map(company => ({
+                ...company,
+                match_percentage: matches[company.id] || 0
+            }));
+
+            return companiesWithMatch;
+        } else {
+            console.warn('Failed to fetch match percentages, using fallback method');
+            // Fallback to individual requests if bulk request fails
+            return await fetchMatchPercentagesIndividual(companies);
+        }
+    } catch (error) {
+        console.error('Error fetching match percentages:', error);
+        // Fallback to individual requests on error
+        return await fetchMatchPercentagesIndividual(companies);
+    }
+}
+
+// Fallback function for individual match requests
+async function fetchMatchPercentagesIndividual(companies) {
+    const companiesWithMatch = [];
+
+    for (const company of companies) {
+        try {
+            const response = await fetch(`/api/match/${window.studentId}/${company.id}`, {
+                method: 'GET',
+                headers: {
+                    'Accept': 'application/json',
+                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') || ''
+                }
+            });
+
+            if (response.ok) {
+                const matchData = await response.json();
+                companiesWithMatch.push({
+                    ...company,
+                    match_percentage: matchData.match_percentage || 0
+                });
+            } else {
+                companiesWithMatch.push({
+                    ...company,
+                    match_percentage: 0
+                });
+            }
+        } catch (error) {
+            console.error(`Error fetching match for company ${company.id}:`, error);
+            companiesWithMatch.push({
+                ...company,
+                match_percentage: 0
+            });
+        }
+    }
+
+    return companiesWithMatch;
+}
+
 // add event listeners when DOM is loaded
 document.addEventListener('DOMContentLoaded', () => {
+    // Check if student ID is available
+    if (!window.studentId) {
+        console.error('WARNING: window.studentId is not set! Connections will not work.');
+    }
+
     // Initialize company swiping functionality
     initializeCompanies();
     setupSwipeButtons();

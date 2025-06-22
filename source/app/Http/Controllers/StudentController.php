@@ -293,9 +293,12 @@ class StudentController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
+    public function destroy(string $id, Request $request)
     {
-        $response = Http::delete("{$this->studentsApiUrl}/{$id}");
+        $token = "Bearer " . $request['token'];
+        $response = Http::withHeaders( [
+            "Authorization" => $token
+        ])->delete("{$this->studentsApiUrl}/{$id}");
 
         return redirect()->back()->with('success', 'Account succesvol verwijderd!');
     }

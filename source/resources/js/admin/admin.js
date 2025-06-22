@@ -178,7 +178,7 @@ export function dashboard() {
 }
 //Code was once lost, and refound by taking it from uglyfied code
 export function createSearch(d, t) {
-    return t.innerHTML += '<div class="image-container glass"><img src="../images/magnifying glass.jpg" style="height: 20px;"></div>',
+    return t.innerHTML += 
     d == 0 ? t.innerHTML += '<input type="text" class="nameSearch" id="nameSearchS">' : t.innerHTML += '<input type="text" class="nameSearch" id="nameSearchC">',
     t.innerHTML += `<input id="typeSearch" type="hidden" value="${d}">`,
     t.innerHTML += `<button id=search${d} class='filterAction'>Zoek</button>`,
@@ -225,6 +225,7 @@ export function createTable(input, extra = null) {
     document.getElementById("students").style.display != "none" ? table = document.getElementById("studentTable") : table = document.getElementById("companyTable"),
     table.innerHTML = "";
     const type = document.getElementById("students").style.display != "none"  ? "S" : "C"
+    const eye = type == "S" ? "studentEye" : "companyEye"
     const legend = document.createElement("tr");
     legend.innerHTML = "<th>Naam</th><th class='mailTh'>Email</th><th class='loginTh'>Laatste login</th><th class='extraTh'>Acties</th>"
     table.appendChild(legend)
@@ -235,7 +236,7 @@ export function createTable(input, extra = null) {
             a.innerHTML += `<td>${e.mail}</td>`,
             a.innerHTML += `<td class='extraTd'>${e.login}</td>`,
             a.innerHTML += `<td class='extraTd'><span>
-                                    <img class='extraActions moreInfo' id='eye${type}${e.id}' src='../images/eyeball.png'>
+                                    <img class='extraActions moreInfo ${eye}' id='eye${type}${e.id}' src='../images/eyeball.png'>
                                 </span>  
                                 <span>
                                     <img class='extraActions delete' id='eye${type}${e.id}' src='../images/delete.png'>
@@ -281,7 +282,7 @@ export function createTable(input, extra = null) {
         a.innerHTML += `<td>${e.mail}</td>`,
         a.innerHTML += `<td class='extraTd'>${e.login}</td>`,
         a.innerHTML += `<td class='extraTd'><span>
-                                    <img class='extraActions moreInfo' id='eye${type}${e.id}' src='../images/eyeball.png'>
+                                    <img class='extraActions moreInfo ${eye}' id='eye${type}${e.id}' src='../images/eyeball.png'>
                                 </span>  
                                 <span>
                                     <img class='extraActions delete' id='eye${type}${e.id}' src='../images/delete.png'>
@@ -393,16 +394,21 @@ export function setViewFunctionality () {
     element.addEventListener('click', () => {
         const id = element.id.substring(4);
         //Eye icon has class studentEye or companyEye to make sure right item is called
+        console.log(element.classList);
         const isStudent = (Array.from(element.classList).includes('studentEye'))
         //gets relevant list, based on if it's a student or a company
         let list;
         if (isStudent) list = data.student
         else list = data.company
 
+        console.log(list);
+        console.log(id)
+
         //use filter to find the user we want, based on ID 
         const user =  list.filter(obj => obj.id == id)[0]
         const response = document.createElement('div');
         const li = document.createElement('ul');
+        console.log(user);
         li.innerHTML = `<li>Naam: ${user.name}</li>`
         li.innerHTML += `<li>Email: ${user.mail}<br>`
         //Extra info if it's a student

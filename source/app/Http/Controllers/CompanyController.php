@@ -111,6 +111,8 @@ class CompanyController extends Controller
     public function store(Request $request)
     {
         try {
+            $token = "Bearer " . $request['token'];
+
             $validated = $request->validate([
             'name' => 'required|string|max:255',
             'email' => 'required|email|max:255',
@@ -155,8 +157,10 @@ class CompanyController extends Controller
         unset($validated['password1']);
 
 try {
-    $response = Http::post($this->companiesApiUrl, $validated);
-
+    dd($validated);
+    $response = Http::withHeaders( [
+            "Authorization" => $token
+        ])->post($this->companiesApiUrl, $validated);
     return redirect()->back()->with('success', 'Bedrijf succesvol toegevoegd!');
 
 } catch (\Exception $e) {
@@ -219,9 +223,14 @@ try {
         /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
+    public function destroy(string $id, Request $request)
     {
-        $response = Http::delete("{$this->companiesApiUrl}{$id}");
+        $token = "Bearer " . $request['token'];
+        $response = Http::withHeaders( [
+            "Authorization" => $token
+        ])->delete("{$this->companiesApiUrl}{$id}");
+
+        dd($response);
 
 
         return redirect()->back()->with('success', 'Bedrijf succesvol verwijderd!');

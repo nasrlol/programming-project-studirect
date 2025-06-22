@@ -7,7 +7,6 @@ use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
 use Illuminate\View\View;
 use Illuminate\Support\Facades\Http;
-use Illuminate\Support\Facades\Log;
 use App\Http\Controllers\MessageController;
 
 class StudentController extends Controller
@@ -17,7 +16,16 @@ class StudentController extends Controller
     //Function that shows only one specific student, and all of the companies. To be used by the students page
     public function index(string $id)
     {
-        $response = Http::get("{$this->studentsApiUrl}/{$id}");
+        // Check if user is authenticated
+        if (!session('api_token')) {
+            return redirect()->route('student.login.form');
+        }
+
+        $token = "Bearer " . session("api_token");
+
+        $response = Http::withHeaders([
+            "Authorization" => $token
+        ])->get("{$this->studentsApiUrl}/{$id}");
         //If the student is not found, user can go back to welcome page
         if (!$response->successful()) {
             return view('notfound', ['message' => 'Deze student lijkt niet te bestaan (error code 404). Contacteer de beheerder van de site voor meer informatie']);
@@ -25,14 +33,34 @@ class StudentController extends Controller
         //One student exists, so Array just consists of all the keys and their values
         $student = $response->json('data');
 
-        $response = Http::get($this->companiesApiUrl);
+        $skills = Http::withHeaders([
+            "Authorization" => $token
+        ])->get("{$this->apiUrl}skills")->json('data');
+        
+
+        $response = Http::withHeaders([
+            "Authorization" => $token
+        ])->get($this->companiesApiUrl);
         if (!$response->successful()) {
             return view('notfound', ['message' => 'Technisch probleem bij ophalen server (error code 404). Contacteer de beheerder van de site voor meer informatie']);
         }
 
         $companies = $response->json('data');
 
-        $response = Http::get("{$this->appointmentApiUrl}");
+        // Get liked companies for the message list
+        $likedCompanies = $this->getLikedCompanies($id, $token);
+        foreach ($companies as $company) { 
+            foreach ($likedCompanies as $lCompany) {
+                if ($lCompany['id'] == $company['id']) {
+                    $key = array_search($company, $companies);
+                    array_splice( $companies, $key,1);
+                }
+            }
+        }
+
+        $response = Http::withHeaders([
+            "Authorization" => $token
+        ])->get("{$this->appointmentApiUrl}");
         //get all appointments where the student is involved
         $appointments = $response->json('data');
         //Checks which appointments belong to the student
@@ -41,42 +69,43 @@ class StudentController extends Controller
         //Gives names to the ID's
         foreach ($appointments as &$appointment) {
             //translate student and company id to names
-            $appointment['student_name'] = $this->translateStudent($appointment['student_id']);
+            $appointment['student_name'] = $this->translateStudent($appointment['student_id'], $token);
 
 
-            $appointment['company_name'] = $this->translateCompany($appointment['company_id']);
+            $appointment['company_name'] = $this->translateCompany($appointment['company_id'], $token);
         }
 
-        $connections = $this->get_connections($id, 'student');
+        $connectionController = new \App\Http\Controllers\ConnectionController();
+        $connections = $connectionController->getConnections($id, 'student');
 
         // get all messages for this student
         $messageController = new MessageController();
         $allMessages = $messageController->getAllMessagesForStudent($id);
 
         // fetch diplomas for graduation track dropdown
-        $diplomasResponse = Http::get($this->diplomasApiUrl);
+        $diplomasResponse = Http::withHeaders([
+            "Authorization" => $token
+        ])->get($this->diplomasApiUrl);
         if ($diplomasResponse->successful()) {
             $diplomasData = $diplomasResponse->json('data');
 
             // check if the data is nested like companies API
             $diplomas = isset($diplomasData['data']) ? $diplomasData['data'] : $diplomasData;
         } else {
-            Log::error('Diplomas API Failed:', [
-                'status' => $diplomasResponse->status(),
-                'body' => $diplomasResponse->body(),
-                'url' => $this->diplomasApiUrl
-            ]);
             $diplomas = [];
         }
 
         return view('student.html.student', [
             'id' => $id,
             'student' => $student,
-            'companies' => $companies,
+            'companies' => $companies, // All companies for swiping
+            'likedCompanies' => $likedCompanies, // Only liked companies for message list
             'appointments' => $appointments,
             'connections' => $connections,
             'allMessages' => $allMessages,
-            'diplomas' => $diplomas
+            'token' => $token,
+            'diplomas' => $diplomas,
+            'skills' => $skills
         ]);
 
     }
@@ -113,7 +142,8 @@ class StudentController extends Controller
             $appointment['company_name'] = $this->translateCompany($appointment['company_id']);
         }
 
-        $connections = $this->get_connections($id, 'student');
+        $connectionController = new \App\Http\Controllers\ConnectionController();
+        $connections = $connectionController->getConnections($id, 'student');
 
         // Get all messages for this student
         $messageController = new MessageController();
@@ -239,25 +269,41 @@ class StudentController extends Controller
             $validated = $request->validate([
             'first_name' => 'sometimes|string|max:255',
             'last_name' => 'sometimes|string|max:255',
-            'email' => 'sometimes|required|email|unique:students,email',
             'password' => 'sometimes|required|string|min:8',
             'study_direction' => 'sometimes|required|string|max:255',
             'graduation_track' => 'sometimes|required|integer',
             'interests' => 'sometimes|required|string',
             'job_preferences' => 'sometimes|required|string',
-            'cv' => 'nullable|string',
-            'profile_complete' => 'nullable|boolean',
+            'skills' => 'sometimes',
+            'Authorization' => 'required'
         ]);
+            $token = $validated['Authorization'];
+            unset($validated['Authorization']);
         } catch (\Exception $e) {
             if ($request->expectsJson()) {
                 return response()->json(['error' => 'Validation failed: ' . $e->getMessage()], 422);
             }
             return redirect()->back()->with('error', 'Validatie mislukt: ' . $e->getMessage());
         }
+        //Get skills for a student
+        try {
+            $skills = Http::withHeaders([
+                "Authorization" => $token
+            ])->get("{$this->apiUrl}skills/{$validated['skills']}")->json('data');
+
+            $validated['skills'] = $skills;
+        }
+        catch (\Exception $e) {
+            dd($e->getMessage());
+        }
+
 
         try {
+            
             //Current data is taken and merged with the validated data
-            $current = Http::get("{$this->studentsApiUrl}/{$id}");
+            $current = Http::withHeaders([
+                "Authorization" => $token
+            ])->get("{$this->studentsApiUrl}/{$id}");
             if (!$current->successful()) {
                 throw new \Exception('Could not fetch current student data');
             }
@@ -270,7 +316,9 @@ class StudentController extends Controller
                 unset($data['password']);
             }
 
-            $response = Http::patch("{$this->studentsApiUrl}/{$id}", $data);
+            $response = Http::withHeaders([
+                "Authorization" => $token
+            ])->patch("{$this->studentsApiUrl}/{$id}", $data);
 
             if (!$response->successful()) {
                 throw new \Exception('API update failed');
@@ -302,4 +350,66 @@ class StudentController extends Controller
 
         return redirect()->back()->with('success', 'Account succesvol verwijderd!');
     }
+
+    /**
+     * Get companies that the student has liked (status = true in connections)
+     *
+     * @param string $student_id
+     * @param string $token
+     * @return array
+     */
+    protected function getLikedCompanies(string $student_id, string $token): array
+    {
+        try {
+            // Get all connections for this student using ConnectionController
+            $connectionController = new \App\Http\Controllers\ConnectionController();
+            $connections = $connectionController->getConnections($student_id, 'student');
+
+            // If no connections from API, try session backup
+            $likedCompanyIds = [];
+
+            if (empty($connections)) {
+                // Fallback to session storage
+                $sessionKey = "liked_companies_student_{$student_id}";
+                $likedCompanyIds = session($sessionKey, []);
+            } else {
+                // Filter to only liked connections (status = true)
+                $likedConnections = collect($connections)->where('status', true)->all();
+
+                if (empty($likedConnections)) {
+                    return [];
+                }
+
+                // Get company IDs that were liked
+                $likedCompanyIds = collect($likedConnections)->pluck('company_id')->toArray();
+            }
+
+            if (empty($likedCompanyIds)) {
+                return [];
+            }
+
+            // Fetch all companies
+            $response = Http::withHeaders([
+                "Authorization" => $token
+            ])->get($this->companiesApiUrl);
+
+            if (!$response->successful()) {
+                return [];
+            }
+
+            $allCompanies = $response->json('data');
+
+            // Filter companies to only include liked ones
+            $likedCompanies = collect($allCompanies)
+                ->whereIn('id', $likedCompanyIds)
+                ->values()
+                ->toArray();
+
+            return $likedCompanies;
+
+        } catch (\Exception $e) {
+            return [];
+        }
+    }
+    
 }

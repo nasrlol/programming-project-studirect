@@ -37,7 +37,8 @@ class CompanyController extends Controller
             $appointment['company_name'] = $this->translateCompany($appointment['company_id']);
         }
 
-        $connections = $this->get_connections($id, 'company');
+        $connectionController = new \App\Http\Controllers\ConnectionController();
+        $connections = $connectionController->getConnections($id, 'company');
 
         // Fetch students data for messages
         $studentsResponse = Http::get($this->studentsApiUrl);
@@ -82,7 +83,8 @@ class CompanyController extends Controller
             $appointment['company_name'] = $this->translateCompany($appointment['company_id']);
         }
 
-        $connections = $this->get_connections($id, 'company');
+        $connectionController = new \App\Http\Controllers\ConnectionController();
+        $connections = $connectionController->getConnections($id, 'company');
 
         // Fetch students data for messages
         $studentsResponse = Http::get($this->studentsApiUrl);
@@ -157,7 +159,6 @@ class CompanyController extends Controller
         unset($validated['password1']);
 
 try {
-    dd($validated);
     $response = Http::withHeaders( [
             "Authorization" => $token
         ])->post($this->companiesApiUrl, $validated);
@@ -230,8 +231,9 @@ try {
             "Authorization" => $token
         ])->delete("{$this->companiesApiUrl}{$id}");
 
-        dd($response);
-
+        if (!$response->successful()) {
+            return redirect()->back()->with('error', 'Er is een fout opgetreden bij het verwijderen van het bedrijf.');
+        }
 
         return redirect()->back()->with('success', 'Bedrijf succesvol verwijderd!');
     }

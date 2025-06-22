@@ -53,9 +53,16 @@ document.addEventListener('keydown', e => {
     }
 })
 
-document.getElementById('logout').addEventListener('click', () => {
-    localStorage.clear('token')
-    location.href = '/'
+document.getElementById('searchType').addEventListener('change', () => {
+    const searchType = document.getElementById('searchType').value;
+    sortLogs(searchType)
+})
+
+document.getElementById('logout').addEventListener('click', async () => {
+    await localStorage.clear('token');
+    await localStorage.clear('user_type');
+    location.href='/'
+
 })
 
 window.addEventListener("load", () => {

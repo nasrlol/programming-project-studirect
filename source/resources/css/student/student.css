@@ -1236,3 +1236,24 @@ button:disabled, .btn:disabled {
     visibility: visible;
     transform: translateX(-50%) translateY(-4px);
 }
+
+/* No matches message styling */
+.no-matches-message, .no-chat-available {
+    text-align: center;
+    padding: 2rem;
+    color: #64748b;
+    background: rgba(255, 255, 255, 0.5);
+    border-radius: 12px;
+    border: 1px solid #e2e8f0;
+    margin: 1rem 0;
+}
+
+.no-matches-message p, .no-chat-available p {
+    margin: 0;
+    font-size: 1rem;
+    line-height: 1.6;
+}
+
+.hidden {
+    display: none;
+}

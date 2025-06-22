@@ -121,46 +121,41 @@ body {
     display: flex;
 }
 
-.profile-dropdown form {
-    display: contents;
-}
-
-.profile-dropdown a,
-.profile-dropdown button {
-    width: 100%;
+.profile-dropdown a {
     padding: 0.875rem 1.25rem;
-    text-align: left;
-    background: none;
-    border: none;
-    outline: none;
-    color: #475569;
-    font-weight: 500;
-    font-family: inherit;
-    font-size: inherit;
-    cursor: pointer;
-    border-bottom: 1px solid #f1f5f9;
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     text-decoration: none;
-    display: block;
+    color: #475569;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    border-bottom: 1px solid #f1f5f9;
+    font-weight: 500;
 }
 
-.profile-dropdown a:last-child,
-.profile-dropdown button:last-child {
+.profile-dropdown a:last-child {
     border-bottom: none;
-    border-radius: 0 0 12px 12px;
 }
 
-.profile-dropdown a:hover,
-.profile-dropdown button:hover {
+.profile-dropdown a:hover {
     background: rgba(0, 70, 201, 0.1);
     color: #0046C9;
 }
 
+.profile-dropdown a:first-child {
+    border-radius: 12px 12px 0 0;
+}
+
+.profile-dropdown a:last-child {
+    border-radius: 0 0 12px 12px;
+}
+
 /* studirect logo style */
 .nav-logo img {
-    height: 100px;
+    max-height: 64px;
+    height: auto;
+    background: rgba(255, 255, 255, 0.95);
+    border-radius: 16px;
+    padding: 4px;
     filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.1));
-    margin: -45px 0;
+    margin: -10px 0;
 }
 
 /* main container and section styles */
@@ -1420,7 +1415,8 @@ body.dark-theme .theme-option.active {
     border-color: #60a5fa;
 }
 body.dark-theme .theme-preview.light-theme {
-    background: linear-gradient(45deg, #23293a 50%, #334155 50%);
+    background: #fff !important;
+    border: 1px solid #e2e8f0 !important;
 }
 body.dark-theme .theme-preview.dark-theme {
     background: linear-gradient(45deg, #1e293b 50%, #23293a 50%);
@@ -1455,4 +1451,22 @@ body.dark-theme .badge {
 body.dark-theme .tooltip::after {
     background: #23293a;
     color: #f1f5f9;
+}
+
+body.dark-theme h1,
+body.dark-theme h2,
+body.dark-theme h3,
+body.dark-theme h4,
+body.dark-theme h5,
+body.dark-theme h6,
+body.dark-theme p,
+body.dark-theme .page-title,
+body.dark-theme .calendar-title,
+body.dark-theme .message-title {
+    color: #fff !important;
+}
+
+body.dark-theme .theme-options,
+body.dark-theme .theme-option span {
+    color: #fff !important;
 }

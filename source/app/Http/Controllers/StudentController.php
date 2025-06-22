@@ -263,14 +263,15 @@ class StudentController extends Controller
             $validated = $request->validate([
             'first_name' => 'sometimes|string|max:255',
             'last_name' => 'sometimes|string|max:255',
-            'email' => 'sometimes|required|email|unique:students,email',
             'password' => 'sometimes|required|string|min:8',
             'study_direction' => 'sometimes|required|string|max:255',
             'graduation_track' => 'sometimes|required|integer',
             'interests' => 'sometimes|required|string',
             'job_preferences' => 'sometimes|required|string',
-            'profile_complete' => 'nullable|boolean',
+            'Authorization' => 'required'
         ]);
+            $token = $validated['Authorization'];
+            unset($validated['Authorization']);
         } catch (\Exception $e) {
             dd($e->getMessage());
             if ($request->expectsJson()) {
@@ -281,11 +282,12 @@ class StudentController extends Controller
 
         try {
             //Current data is taken and merged with the validated data
-            $current = Http::get("{$this->studentsApiUrl}/{$id}");
+            $current = Http::withHeaders([
+                "Authorization" => $token
+            ])->get("{$this->studentsApiUrl}/{$id}");
             if (!$current->successful()) {
                 throw new \Exception('Could not fetch current student data');
             }
-            dd($current);
 
             $currentData = $current->json('data');
             $data = array_merge($currentData, $validated);
@@ -295,7 +297,9 @@ class StudentController extends Controller
                 unset($data['password']);
             }
 
-            $response = Http::patch("{$this->studentsApiUrl}/{$id}", $data);
+            $response = Http::withHeaders([
+                "Authorization" => $token
+            ])->patch("{$this->studentsApiUrl}/{$id}", $data);
 
             if (!$response->successful()) {
                 throw new \Exception('API update failed');

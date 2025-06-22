@@ -77,8 +77,15 @@ section {
 /*For adding to company*/
 .addUser {
     width:40%;
+    height:80%;
     margin-left:30%;
-    align-content:center;
+    background-color: rgb(202, 202, 202);
+}
+
+.useradd-label {
+    margin-top: 0px;
+    font-size: 200%;
+    text-align: center;
 }
 
 .add {
@@ -92,9 +99,38 @@ form {
     display: flex;
     flex-direction: column;
 }
+.back {
+    border:none;
+    background-color: inherit;
+    font-weight: bold;
+}
 
-.addInput {
-    margin-bottom: 2%;
+.addInput  {
+    border-width: 1.5px;
+    border-radius: 5%;
+    border-color:lightgrey;
+    background-color: white;
+    box-sizing: border-box;
+    height:fit-content;
+    width:35%;
+    margin-left: 32.5%;
+    margin-top: 5%;
+}
+
+.save-container {
+    height:max-content;
+    margin-top: 5%;
+    height:200%;
+}
+
+.save {
+    width:35%;
+    margin-left: 32.5%;
+    background-color: #252D3C;
+    color:white;
+    font-weight: lighter;
+    border:none;
+    border-radius: 5px;
 }
 
 /*Table*/

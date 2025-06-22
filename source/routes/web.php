@@ -133,3 +133,22 @@ Route::post('/student/password/email', [ForgotPasswordController::class, 'sendRe
 Route::get('/test-controller', [RegistrationStudentController::class, 'debug']);
 Route::get('/test-class-load', fn () => "Controller loaded: " . get_class(new \App\Http\Controllers\RegistrationStudentController()));
 Route::get('/test-notfound', fn () => view('notfound', ['message' => 'Testmelding werkt.']));
+
+// API endpoint voor appointments (alle afspraken)
+Route::get('/api/appointments', function(Request $request) {
+    require_once __DIR__.'/student_name_helper.php';
+    $appointments = [
+        [
+            'student_id' => 1,
+            'company_id' => 61,
+            'time_start' => '10:15:00',
+            'time_end' => '10:30:00',
+        ]
+    ];
+    // Voeg student_name toe aan elke afspraak
+    foreach ($appointments as &$appointment) {
+        $appointment['student_name'] = getStudentName($appointment['student_id']);
+    }
+    unset($appointment);
+    return response()->json(['data' => $appointments]);
+});

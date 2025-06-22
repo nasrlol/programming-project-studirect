@@ -179,7 +179,7 @@ export function dashboard() {
 //Code was once lost, and refound by taking it from uglyfied code
 export function createSearch(d, t) {
     return t.innerHTML += 
-    d == 0 ? t.innerHTML += '<input type="text" class="nameSearch" id="nameSearchS">' : t.innerHTML += '<input type="text" class="nameSearch" id="nameSearchC">',
+    d == 0 ? t.innerHTML += '<input type="text" class="nameSearch" id="nameSearchS" placeholder="Naam...">' : t.innerHTML += '<input type="text" class="nameSearch" id="nameSearchC" placeholder="Naam...">',
     t.innerHTML += `<input id="typeSearch" type="hidden" value="${d}">`,
     t.innerHTML += `<button id=search${d} class='filterAction'>Zoek</button>`,
     t

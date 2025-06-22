@@ -29,22 +29,38 @@ section {
 }
 /*Companies and students*/
 
+.add-btn-container {
+    width:93%;
+}
+
 .nameSearch {
     background-color: inherit;
-    border-right:none;
-    height:100%;
+    border:none;
+    height:96%;
+    width:85%;
+    border-right:solid;
+    border-color: inherit;
+    border-radius: inherit;
+    border-width: 1px;
 }
 
 .filterAction {
     background-color: inherit;
-    border-left:none;
+    border:none;
+    height:100%;
 }
 
 .filter {
+    border:solid 1px;
+    border-color: lightgrey;
     margin-left: 3.5%;
+    margin-bottom: 1%;
+
+    border-radius: 5%;
+    height:5%;
+    width:30%;
     display: flex;
     flex-direction: row;
-    margin-bottom: 1%;
 }
 
 /*For appointments*/
@@ -167,7 +183,6 @@ td {
 
     display:flex;
     flex-direction: row;
-    background-color: grey;
     height:90vh;
     width:95vw;
 }
@@ -198,12 +213,12 @@ td {
 .btn-nav {
     border: none;
     height:7%;
-    width:80%;
+    width:60%;
+    margin-left: 20%;
     background-color: inherit;
     color: inherit;
     font-size: 120%;
     border-radius: 5px;
-    background-color: #365B93;
 }
 
 .btn-nav:hover {
@@ -214,6 +229,7 @@ td {
 #logout {
     border:none;
     margin-top: 5%;
+    margin-left: 5%;
     width:45%;
     background-color: grey;
 }
@@ -239,13 +255,13 @@ td {
 }
 /*RESULT ELEMENTS---------------------*/
 #result-container {
-    margin-left: 2%;
+    margin-left: 1%;
     width:82.5%;
+    border-radius: 1%;
 
 
-    height:90%;
-    margin-top: 2.5%;
-    background-color: darkgrey;
+    height:100%;
+    background-color: rgb(216, 216, 216);
 }
 
 #create:hover {

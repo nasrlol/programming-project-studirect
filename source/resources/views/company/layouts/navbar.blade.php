@@ -12,7 +12,10 @@
         <div class="profile-pic"></div>
         <div class="profile-dropdown" id="profileDropdown">
             <a href="#" id="settingsBtn">Settings</a>
-            <a href="#" id="logoutBtn">Log Out</a>
+            <form id="logoutForm" action="{{ route('logout') }}" method="POST" style="display:none;">
+                @csrf
+            </form>
+            <a href="#" id="logoutBtn" onclick="event.preventDefault(); document.getElementById('logoutForm').submit();">Log Out</a>
         </div>
     </div>
 </nav>

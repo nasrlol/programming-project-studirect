@@ -15,9 +15,10 @@ class CompanyController extends Controller
     //Index function to shown on the company page, takes the ID and shows the company
     public function index(string $id): View
     {
-        $response = Http::get("{$this->companiesApiUrl}/{$id}");
+        $token = session('api_token');
+        $response = Http::withToken($token)->get("{$this->companiesApiUrl}/{$id}");
         if (!$response->successful()) {
-            return view('notfound', ['message' => 'Dit bedrijf lijkt niet te bestaan (error code 404). Contacteer de beheerder van de site voor meer informatie']);
+            return view('notfound', ['message' => 'Dit bedrijf lijkt niet te bestaan of je hebt geen toegang (error code ' . $response->status() . '). Contacteer de beheerder van de site voor meer informatie']);
         }
 
         $company = $response->json('data');

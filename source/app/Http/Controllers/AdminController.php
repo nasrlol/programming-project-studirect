@@ -61,7 +61,6 @@ class AdminController extends Controller
             "Authorization" => $token
         ])->get($this->apiUrl . 'diplomas')->json('data');
 
-
         //Final response for logs
         //Check if the apiURL of the requested logs is active.
         if (isset($request['cursor'])) {
@@ -74,6 +73,10 @@ class AdminController extends Controller
         else $response = Http::withHeaders( [
             "Authorization" => $token
         ])->get($apiLogs);
+
+        if (!$response->successful()) {
+            redirect('APINotFound');
+        }
 
         $logs = $response->json('data');
 

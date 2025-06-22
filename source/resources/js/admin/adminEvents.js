@@ -45,6 +45,11 @@ document.addEventListener('keydown', e => {
     if (e.key == "Escape") {
         removePopUp()
         removeForms()
+        if (document.getElementById('details').style.display != 'none') {
+            //If we're checking details of a student, go back to students
+            if (document.getElementsByClassName('viewS').length > 0) switchDisplay('students')
+            else switchDisplay('companies')
+        }
     }
 })
 
@@ -57,6 +62,7 @@ document.getElementById('logout').addEventListener('click', async () => {
     await localStorage.clear('token');
     await localStorage.clear('user_type');
     location.href='/'
+
 })
 
 window.addEventListener("load", () => {

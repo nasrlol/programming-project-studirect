@@ -14,7 +14,6 @@ function tableToObjects() {
     let logins = document.getElementsByClassName("studentLogin");
     const graduation_tracks = document.getElementsByClassName("graduation-track");
     const studys = document.getElementsByClassName('study-direction')
-    const interests = document.getElementsByClassName('interests')
     const preferences = document.getElementsByClassName('job-preferences')
     //for logs that a student may have
     const studentLogIds = document.getElementsByClassName('studentLogId')
@@ -58,7 +57,6 @@ function tableToObjects() {
             login: logins[i].innerHTML,
             graduation_track: graduation_tracks[i].innerHTML.trim(),
             studyDirection: studys[i].innerHTML.trim(),
-            interests: interests[i].innerHTML.trim(),
             preferences: preferences[i].innerHTML.trim(),
             logs: logs
         });
@@ -179,7 +177,7 @@ export function dashboard() {
 //Code was once lost, and refound by taking it from uglyfied code
 export function createSearch(d, t) {
     return t.innerHTML += 
-    d == 0 ? t.innerHTML += '<input type="text" class="nameSearch" id="nameSearchS">' : t.innerHTML += '<input type="text" class="nameSearch" id="nameSearchC">',
+    d == 0 ? t.innerHTML += '<input type="text" class="nameSearch" id="nameSearchS" placeholder="Naam...">' : t.innerHTML += '<input type="text" class="nameSearch" id="nameSearchC" placeholder="Naam...">',
     t.innerHTML += `<input id="typeSearch" type="hidden" value="${d}">`,
     t.innerHTML += `<button id=search${d} class='filterAction'>Zoek</button>`,
     t
@@ -246,9 +244,6 @@ export function createTable(input, extra = null) {
                             <td class='hidden study-direction'>
                                 ${e.studyDirection}
                             </td>
-                            <td class='hidden interests'>
-                                ${e.interests}
-                            </td>
                             <td class='hidden job-preferences'>
                                 ${e.preferences}
                             </td>`
@@ -291,9 +286,6 @@ export function createTable(input, extra = null) {
                 a.innerHTML += `<td class='hidden activated'>${e.activated}</td>
                             <td class='hidden study-direction'>
                                 ${e.studyDirection}
-                            </td>
-                            <td class='hidden interests'>
-                                ${e.interests}
                             </td>
                             <td class='hidden job-preferences'>
                                 ${e.preferences}
@@ -401,22 +393,20 @@ export function setViewFunctionality () {
         if (isStudent) list = data.student
         else list = data.company
 
-        console.log(list);
-        console.log(id)
 
         //use filter to find the user we want, based on ID 
         const user =  list.filter(obj => obj.id == id)[0]
         const response = document.createElement('div');
         const li = document.createElement('ul');
-        console.log(user);
-        li.innerHTML = `<li>Naam: ${user.name}</li>`
+
+        let type = isStudent ? "S": "C"
+
+        li.innerHTML = `<li class='view${type}'>Naam: ${user.name}</li>`
         li.innerHTML += `<li>Email: ${user.mail}<br>`
         //Extra info if it's a student
         if (isStudent) {
             let geactiveerd = (user.activated == 1) ? 'Ja' : 'Nee'
-            
             li.innerHTML += `<li>Geactiveerd: ${geactiveerd}</li>`
-            li.innerHTML += `<li>Job interesses: ${user.interests}</li>`
             li.innerHTML += `<li>Type diploma: ${user.graduation_track}</li>`
             li.innerHTML += `<li>Studierichting: ${user.studyDirection}</li>`
             li.innerHTML += `<li>Job voorkeuren: ${user.preferences}</li>`

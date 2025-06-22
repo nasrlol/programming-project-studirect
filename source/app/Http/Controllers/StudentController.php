@@ -17,7 +17,16 @@ class StudentController extends Controller
     //Function that shows only one specific student, and all of the companies. To be used by the students page
     public function index(string $id)
     {
-        $response = Http::get("{$this->studentsApiUrl}/{$id}");
+        // Check if user is authenticated
+        if (!session('api_token')) {
+            return redirect()->route('student.login.form');
+        }
+
+        $token = "Bearer " . session("api_token");
+
+        $response = Http::withHeaders([
+            "Authorization" => $token
+        ])->get("{$this->studentsApiUrl}/{$id}");
         //If the student is not found, user can go back to welcome page
         if (!$response->successful()) {
             return view('notfound', ['message' => 'Deze student lijkt niet te bestaan (error code 404). Contacteer de beheerder van de site voor meer informatie']);
@@ -25,14 +34,18 @@ class StudentController extends Controller
         //One student exists, so Array just consists of all the keys and their values
         $student = $response->json('data');
 
-        $response = Http::get($this->companiesApiUrl);
+        $response = Http::withHeaders([
+            "Authorization" => $token
+        ])->get($this->companiesApiUrl);
         if (!$response->successful()) {
             return view('notfound', ['message' => 'Technisch probleem bij ophalen server (error code 404). Contacteer de beheerder van de site voor meer informatie']);
         }
 
         $companies = $response->json('data');
 
-        $response = Http::get("{$this->appointmentApiUrl}");
+        $response = Http::withHeaders([
+            "Authorization" => $token
+        ])->get("{$this->appointmentApiUrl}");
         //get all appointments where the student is involved
         $appointments = $response->json('data');
         //Checks which appointments belong to the student
@@ -41,10 +54,10 @@ class StudentController extends Controller
         //Gives names to the ID's
         foreach ($appointments as &$appointment) {
             //translate student and company id to names
-            $appointment['student_name'] = $this->translateStudent($appointment['student_id']);
+            $appointment['student_name'] = $this->translateStudent($appointment['student_id'], $token);
 
 
-            $appointment['company_name'] = $this->translateCompany($appointment['company_id']);
+            $appointment['company_name'] = $this->translateCompany($appointment['company_id'], $token);
         }
 
         $connections = $this->get_connections($id, 'student');
@@ -54,7 +67,9 @@ class StudentController extends Controller
         $allMessages = $messageController->getAllMessagesForStudent($id);
 
         // fetch diplomas for graduation track dropdown
-        $diplomasResponse = Http::get($this->diplomasApiUrl);
+        $diplomasResponse = Http::withHeaders([
+            "Authorization" => $token
+        ])->get($this->diplomasApiUrl);
         if ($diplomasResponse->successful()) {
             $diplomasData = $diplomasResponse->json('data');
 

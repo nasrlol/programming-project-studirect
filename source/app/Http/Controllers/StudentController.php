@@ -44,6 +44,14 @@ class StudentController extends Controller
 
         // Get liked companies for the message list
         $likedCompanies = $this->getLikedCompanies($id, $token);
+        foreach ($companies as $company) { 
+            foreach ($likedCompanies as $lCompany) {
+                if ($lCompany['id'] == $company['id']) {
+                    $key = array_search($company, $companies);
+                    array_splice( $companies, $key,1);
+                }
+            }
+        }
 
         $response = Http::withHeaders([
             "Authorization" => $token

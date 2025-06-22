@@ -324,6 +324,90 @@ function loadTheme() {
     });
 }
 
+// CalendarTable: appointments in kalender zetten
+function getTimeRowIndex(time) {
+    const hour = time.split(":")[0];
+    const mapping = { "09": 1, "10": 2, "11": 3, "12": 4, "13": 5, "14": 6, "15": 7 };
+    return mapping[hour] ?? 1;
+}
+function getMinuteColumnIndex(time) {
+    const minute = time.split(":")[1];
+    const mapping = { "00": 1, "15": 2, "30": 3, "45": 4 };
+    return mapping[minute] ?? 1;
+}
+function setAppointment(rowIndex, colIndex, text) {
+    const table = document.getElementById("calendar-table");
+    if (!table) return;
+    const row = table.rows[rowIndex];
+    if (row && row.cells[colIndex]) {
+        const current = row.cells[colIndex].innerText.trim();
+        if (current === "–" || current === "") {
+            row.cells[colIndex].innerText = text;
+            row.cells[colIndex].style.backgroundColor = "#4CAF50";
+            row.cells[colIndex].style.color = "white";
+        }
+    }
+}
+function fillCalendarTable(appointments) {
+    appointments.forEach(appointment => {
+        // Gebruik time_start voor plaatsing
+        if (appointment.time_start) {
+            const time = appointment.time_start;
+            const rowIndex = getTimeRowIndex(time);
+            const colIndex = getMinuteColumnIndex(time);
+            // Gebruik student_name als beschikbaar, anders fallback naar student_id
+            setAppointment(rowIndex, colIndex, appointment.student_name ? appointment.student_name : (appointment.student_id ? `Student ${appointment.student_id}` : 'Student'));
+        }
+    });
+}
+
+function fillAppointmentList(appointments) {
+    const list = document.getElementById('appointment-list');
+    if (!list) return;
+    list.innerHTML = '';
+    appointments.forEach(app => {
+        // Gebruik student_name als beschikbaar, anders fallback naar student_id
+        const li = document.createElement('li');
+        li.textContent = `${app.student_name ? app.student_name : 'Student ' + app.student_id} | ${app.time_start} - ${app.time_end}`;
+        list.appendChild(li);
+    });
+}
+
+// Vul de kalender en appointment list met afspraken van de juiste company
+async function fetchAndRenderAppointmentsForCompany(companyId) {
+    try {
+        console.log("companyId:", companyId);
+        const response = await fetch('/api/appointments');
+        const result = await response.json();
+        const allAppointments = result.data || [];
+        console.log("Appointments from API:", allAppointments);
+        // Filter op company_id
+        const appointments = allAppointments.filter(app => String(app.company_id) === String(companyId));
+        console.log("Filtered appointments:", appointments);
+
+        // Haal studentenlijst uit window of meta-tag (zoals bij berichten)
+        let students = window.studentsList;
+        if (!students && document.getElementById('message-list')) {
+            students = Array.from(document.querySelectorAll('#message-list [data-user-id]')).map(el => ({
+                id: el.getAttribute('data-user-id'),
+                name: el.querySelector('.contact-info h4')?.textContent || 'Student'
+            }));
+        }
+        // Map student_id naar naam
+        if (students) {
+            appointments.forEach(app => {
+                const found = students.find(s => String(s.id) === String(app.student_id));
+                if (found) app.student_name = found.name;
+            });
+        }
+
+        fillCalendarTable(appointments);
+        fillAppointmentList(appointments);
+    } catch (err) {
+        console.error('Fout bij ophalen afspraken:', err);
+    }
+}
+
 // add event listeners when DOM is loaded
 document.addEventListener('DOMContentLoaded', () => {
     // home button click handler
@@ -358,12 +442,24 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
+    // Vul de kalender met afspraken als ze beschikbaar zijn
+    if (window.appointmentsForCalendar) {
+        fillCalendarTable(window.appointmentsForCalendar);
+    }
+
     // initialize other handlers
     handleStudentSelection();
     handleProfileDropdown();
     handleSettingsNavigation();
     profileChangeTracking();
     loadTheme();
+
+    // Start na DOM load
+    // companyId moet beschikbaar zijn in een global of via een meta-tag
+    const companyId = window.companyId || document.querySelector('meta[name="company-id"]')?.getAttribute('content');
+    if (companyId) {
+        fetchAndRenderAppointmentsForCompany(companyId);
+    }
 
     // start with home view
     renderHome();

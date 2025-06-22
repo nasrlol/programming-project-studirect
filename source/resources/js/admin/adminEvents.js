@@ -53,9 +53,10 @@ document.getElementById('searchType').addEventListener('change', () => {
     sortLogs(searchType)
 })
 
-document.getElementById('logout').addEventListener('click', () => {
-    localStorage.clear('token')
-    location.href = '/'
+document.getElementById('logout').addEventListener('click', async () => {
+    await localStorage.clear('token');
+    await localStorage.clear('user_type');
+    location.href='/'
 })
 
 window.addEventListener("load", () => {

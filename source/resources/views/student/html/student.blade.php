@@ -14,6 +14,7 @@
         localStorage.setItem('user_type', 'student')
     </script>
     @endif
+    
     @include('student.layouts.navbar')
 <main class:"container">
     @include('student.layouts.settings')
@@ -87,6 +88,11 @@
     </div>
 
 </main>
+<script>
+    if (!localStorage.getItem('token')) {
+        location.href='/'
+    }
+</script>
 <script>
     // Pass companies data to JavaScript
     window.companiesData = @json($companies);

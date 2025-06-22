@@ -97,9 +97,19 @@ class AdminController extends Controller
 
 
 
-        foreach ($students as &$student) $student['logs'] = array();
+        foreach ($students as &$student) 
+        {$student['logs'] = array();
+            $student['updated_at'] = substr($student['updated_at'],8,2) . 
+            substr($student['updated_at'], 4, 2) . 
+            substr($student['updated_at'], 0, 4);
+        }
 
-        foreach ($companies as &$company) $company['logs'] = array();
+        foreach ($companies as &$company) 
+        {$company['logs'] = array();
+            $company['updated_at'] = substr($company['updated_at'],8,2) . 
+            substr($company['updated_at'], 4, 2) . 
+            substr($company['updated_at'], 0, 4);
+        }
 
         foreach ($appointments as &$appointment) {
             $appointment['time_slot'] = substr($appointment['time_start'], 0, 5) . ' - '. substr($appointment['time_end'], 0,5);

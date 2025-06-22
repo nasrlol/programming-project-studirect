@@ -68,7 +68,7 @@
                             <td class='studentId'>{{$student['id']}}</td>
                             <td class='studentName' id="s{{$student['id']}}|">{{ $student['first_name'] ?? 'Onbekend' }} {{ $student['last_name'] ?? 'onbekend' }}</td>
                             <td class='studentMail'>{{ $student['email'] ?? 'Geen email' }}</td>
-                            <td class='studentLogin extraTd'>03-06-2025</td>
+                            <td class='studentLogin extraTd'>{{ $student['updated_at']}}</td>
                             <td class='extraTd'>
                                 <span>
                                     <img class='moreInfo extraActions studentEye' id="eyeS{{$student['id']}}" src='../images/eyeball.png'>

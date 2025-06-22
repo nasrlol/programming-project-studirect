@@ -14,7 +14,6 @@ function tableToObjects() {
     let logins = document.getElementsByClassName("studentLogin");
     const graduation_tracks = document.getElementsByClassName("graduation-track");
     const studys = document.getElementsByClassName('study-direction')
-    const preferences = document.getElementsByClassName('job-preferences')
     //for logs that a student may have
     const studentLogIds = document.getElementsByClassName('studentLogId')
     const studentLogAction = document.getElementsByClassName('studentLogAction')
@@ -57,7 +56,6 @@ function tableToObjects() {
             login: logins[i].innerHTML,
             graduation_track: graduation_tracks[i].innerHTML.trim(),
             studyDirection: studys[i].innerHTML.trim(),
-            preferences: preferences[i].innerHTML.trim(),
             logs: logs
         });
     }
@@ -243,9 +241,6 @@ export function createTable(input, extra = null) {
                 a.innerHTML += `<td class='hidden activated'>${e.activated}</td>
                             <td class='hidden study-direction'>
                                 ${e.studyDirection}
-                            </td>
-                            <td class='hidden job-preferences'>
-                                ${e.preferences}
                             </td>`
             }
             else {
@@ -286,9 +281,6 @@ export function createTable(input, extra = null) {
                 a.innerHTML += `<td class='hidden activated'>${e.activated}</td>
                             <td class='hidden study-direction'>
                                 ${e.studyDirection}
-                            </td>
-                            <td class='hidden job-preferences'>
-                                ${e.preferences}
                             </td>`
             }
             else {
@@ -409,7 +401,6 @@ export function setViewFunctionality () {
             li.innerHTML += `<li>Geactiveerd: ${geactiveerd}</li>`
             li.innerHTML += `<li>Type diploma: ${user.graduation_track}</li>`
             li.innerHTML += `<li>Studierichting: ${user.studyDirection}</li>`
-            li.innerHTML += `<li>Job voorkeuren: ${user.preferences}</li>`
         }
         //Extra info if it's a company
         else {

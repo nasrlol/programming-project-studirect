@@ -85,9 +85,6 @@
                             <td class='hidden study-direction'>
                                 {{$student['study_direction']}}
                             </td>
-                            <td class='hidden job-preferences'>
-                                {{$student['job_preferences']}}
-                            </td>
                             <td class='hidden  studentLogs'>
                                 @foreach ($student['logs'] as $log)
                                 <ul>

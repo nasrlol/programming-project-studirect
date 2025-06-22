@@ -53,3 +53,6 @@
         }
     }
 </script>
+
+<!-- Koppel de company.css -->
+<link rel="stylesheet" href="/css/company/company.css">

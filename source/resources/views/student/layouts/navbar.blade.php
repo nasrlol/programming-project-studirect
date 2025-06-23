@@ -5,7 +5,7 @@
     <ul class="nav-links">
         <li><a href="#" id="homeBtn">Home</a></li>
         <li><a href="#" id="matchesBtn">Matches</a></li>
-        <li><a href="#" id="calendarBtn">Calendar</a></li>
+        <li><a href="#" id="calendarBtn">Kalender</a></li>
     </ul>
     <div class="nav-profile" id="profileArea">
         <span class="profile-name">{{ $student['first_name'] ?? 'User' }}</span>

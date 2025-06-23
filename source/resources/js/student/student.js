@@ -7,11 +7,22 @@ let shownCompanies = new Set();
 let isAnimating = false;
 let companiesWithMatchPercentage = [];
 
+// Appointment booking functionality
+let selectedDate = null;
+let selectedTime = null;
+let currentCompanyForAppointment = null;
+let availableAppointments = [];
+
 // Initialize company data and fetch match percentages for sorting
 async function initializeCompanies() {
     if (window.companiesData && window.companiesData.length > 0) {
-        // First filter out any companies already shown/swiped
-        const unswipedCompanies = window.companiesData.filter(company => !shownCompanies.has(company.id));
+        // Get IDs of already liked/matched companies
+        const likedCompanyIds = (window.likedCompanies || []).map(company => company.id);
+
+        // First filter out any companies already shown/swiped OR already liked/matched
+        const unswipedCompanies = window.companiesData.filter(company =>
+            !shownCompanies.has(company.id) && !likedCompanyIds.includes(company.id)
+        );
 
         // Fetch match percentages for sorting (not displayed)
         companiesWithMatchPercentage = await fetchMatchPercentages(unswipedCompanies);
@@ -146,10 +157,12 @@ async function saveConnection(companyId, action) {
         if (response.ok) {
             const result = await response.json();
 
-            // Optionally refresh the matches list if we're on that page
-            const matchesContent = document.getElementById('matches-content');
-            if (matchesContent && matchesContent.classList.contains('active')) {
-                // We could trigger a page reload or fetch updated liked companies here
+            // If we just liked a company, refresh connections list with a small delay
+            if (status === true) {
+                // Add a small delay to ensure the backend has processed the connection
+                setTimeout(async () => {
+                    await refreshConnectionsList();
+                }, 500);
             }
         } else {
             const errorText = await response.text();
@@ -250,6 +263,246 @@ function updateCompanyCounter() {
     // For now, just track the counts internally
 }
 
+// Function to refresh the connections/matches list
+async function refreshConnectionsList() {
+    try {
+        // Fetch updated liked companies from the server using student ID
+        const response = await fetch(`/connections/${window.studentId}`, {
+            method: 'GET',
+            headers: {
+                'Accept': 'application/json',
+                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') || ''
+            }
+        });
+
+        if (response.ok) {
+            const data = await response.json();
+            if (data.success && data.likedCompanies) {
+                // Update the global likedCompanies data
+                window.likedCompanies = data.likedCompanies;
+
+                // Update the message list HTML
+                updateMessageListHTML(data.likedCompanies);
+            }
+        } else {
+            console.error('Failed to refresh connections list');
+        }
+    } catch (error) {
+        console.error('Error refreshing connections:', error);
+    }
+}
+
+// Function to update the message list HTML
+function updateMessageListHTML(likedCompanies) {
+    const messageList = document.getElementById('message-list');
+    if (!messageList) return;
+
+    if (likedCompanies.length > 0) {
+        let html = '';
+        likedCompanies.forEach(company => {
+            const photo = company.photo || '/images/image-placeholder.png';
+            html += `
+                <div class="message-company" data-company-id="${company.id}">
+                    <img src="${photo}"
+                         class="company-thumb"
+                         alt="Company Logo"
+                         onerror="this.src='/images/image-placeholder.png'">
+                    <span class="company-name">${company.name}</span>
+                </div>
+            `;
+        });
+        messageList.innerHTML = html;
+    } else {
+        messageList.innerHTML = `
+            <div class="no-matches-message">
+                <p>Je hebt nog geen bedrijven geliked. Ga naar Home om bedrijven te bekijken en te liken!</p>
+            </div>
+        `;
+    }
+
+    // Re-attach click event listeners to the new message companies
+    setupMessageCompanyClickHandlers();
+}
+
+// Function to setup click handlers for message companies
+function setupMessageCompanyClickHandlers() {
+    document.querySelectorAll('.message-company').forEach(item => {
+        item.addEventListener('click', function() {
+            const companyId = this.dataset.companyId;
+            if (companyId) {
+                // Remove active class from all items
+                document.querySelectorAll('.message-company').forEach(i => i.classList.remove('active'));
+                // Add active class to clicked item
+                this.classList.add('active');
+
+                // Show company info instead of chat
+                showCompanyInfoInMatches(companyId);
+            }
+        });
+    });
+
+    // Setup message button click handler
+    const messageButton = document.getElementById('message-button');
+    if (messageButton) {
+        messageButton.addEventListener('click', function() {
+            // Get the currently selected company
+            const activeCompany = document.querySelector('.message-company.active');
+            if (activeCompany) {
+                const companyId = activeCompany.dataset.companyId;
+                showChatInMatches(companyId);
+            }
+        });
+    }
+
+    // Setup appointment button click handler
+    const appointmentButton = document.getElementById('appointment-button');
+    if (appointmentButton) {
+        appointmentButton.addEventListener('click', function() {
+            // Get the currently selected company
+            const activeCompany = document.querySelector('.message-company.active');
+            if (activeCompany) {
+                const companyId = activeCompany.dataset.companyId;
+                showAppointmentPopup(companyId);
+            }
+        });
+    }
+
+    // Setup back button click handler
+    const backButton = document.getElementById('back-to-company-info');
+    if (backButton) {
+        backButton.addEventListener('click', function() {
+            // Get the currently selected company
+            const activeCompany = document.querySelector('.message-company.active');
+            if (activeCompany) {
+                const companyId = activeCompany.dataset.companyId;
+                showCompanyInfoInMatches(companyId);
+            }
+        });
+    }
+
+    // Setup appointment popup handlers
+    const closePopupBtn = document.getElementById('close-appointment-popup');
+    const cancelBtn = document.getElementById('cancel-appointment');
+    const bookBtn = document.getElementById('book-appointment');
+
+    if (closePopupBtn) {
+        closePopupBtn.addEventListener('click', hideAppointmentPopup);
+    }
+
+    if (cancelBtn) {
+        cancelBtn.addEventListener('click', hideAppointmentPopup);
+    }
+
+    if (bookBtn) {
+        bookBtn.addEventListener('click', bookAppointment);
+    }
+
+    // Close popup when clicking outside
+    const popup = document.getElementById('appointment-popup');
+    if (popup) {
+        popup.addEventListener('click', function(e) {
+            if (e.target === popup) {
+                hideAppointmentPopup();
+            }
+        });
+    }
+}
+
+// Function to show company info in matches page
+function showCompanyInfoInMatches(companyId) {
+    // Find the company data from the available companies or liked companies
+    const company = findCompanyById(companyId);
+    if (!company) return;
+
+    // Show company info section, hide chat section
+    const companyInfoSection = document.getElementById('company-info-section-matches');
+    const chatSection = document.getElementById('chat-section');
+
+    // Use class-based toggling for consistent behavior
+    companyInfoSection.style.display = 'block';
+    chatSection?.classList.remove('active');
+
+    // Hide empty state and show company info
+    const emptyContainer = companyInfoSection?.querySelector('.empty-company-info-container');
+    const infoContainer = companyInfoSection?.querySelector('.company-info-container');
+
+    emptyContainer?.classList.remove('active');
+    infoContainer?.classList.add('active');
+
+    // Update company info elements
+    updateSelectedCompanyInfo(company);
+}
+
+// Function to show chat in matches page
+function showChatInMatches(companyId) {
+    // Hide company info section and show chat section
+    const companyInfoSection = document.getElementById('company-info-section-matches');
+    const chatSection = document.getElementById('chat-section');
+
+    // Use class-based toggling for consistent behavior
+    companyInfoSection.style.display = 'none';
+    chatSection?.classList.add('active');
+
+    // Update chat header with company name
+    const company = findCompanyById(companyId);
+    const chatCompanyName = document.getElementById('chat-company-name');
+    if (chatCompanyName && company) {
+        chatCompanyName.textContent = `Chat met ${company.name}`;
+    }
+
+    // Show chat container
+    const chatContainer = chatSection?.querySelector('.chat-container');
+    chatContainer?.classList.add('active');
+
+    // Trigger company selection for chat
+    window.dispatchEvent(new CustomEvent('companySelected', {
+        detail: { companyId: companyId }
+    }));
+}
+
+// Function to find company by ID from available data
+function findCompanyById(companyId) {
+    // First check in liked companies
+    if (window.likedCompanies) {
+        const likedCompany = window.likedCompanies.find(company => company.id == companyId);
+        if (likedCompany) return likedCompany;
+    }
+
+    // Then check in all companies data
+    if (window.companiesData) {
+        const company = window.companiesData.find(company => company.id == companyId);
+        if (company) return company;
+    }
+
+    return null;
+}
+
+// Function to update selected company info display
+function updateSelectedCompanyInfo(company) {
+    const elements = {
+        name: document.getElementById('selected-company-name'),
+        job: document.getElementById('selected-company-job'),
+        image: document.getElementById('selected-company-image'),
+        domain: document.getElementById('selected-job-domain'),
+        type: document.getElementById('selected-job-type'),
+        description: document.getElementById('selected-job-description'),
+        requirements: document.getElementById('selected-job-requirements'),
+        companyDescription: document.getElementById('selected-company-description')
+    };
+
+    if (elements.name) elements.name.textContent = company.name || 'Bedrijfsnaam';
+    if (elements.job) elements.job.textContent = company.job_title || 'Functietitel';
+    if (elements.image) {
+        elements.image.src = company.photo || '/images/image-placeholder.png';
+        elements.image.alt = company.name || 'Company Logo';
+    }
+    if (elements.domain) elements.domain.textContent = company.job_domain || 'Geen jobdomein opgegeven.';
+    if (elements.type) elements.type.textContent = company.job_types || 'Geen functietype opgegeven.';
+    if (elements.description) elements.description.textContent = company.job_description || 'Geen omschrijving beschikbaar.';
+    if (elements.requirements) elements.requirements.textContent = company.job_requirements || 'Geen vereisten opgegeven.';
+    if (elements.companyDescription) elements.companyDescription.textContent = company.description || company.company_description || 'Er is geen informatie beschikbaar over dit bedrijf.';
+}
+
 // Generic function to render any section
 function renderSection(sectionId, buttonId) {
     // Update active navigation button
@@ -271,15 +524,26 @@ function renderHome() {
 function renderMatches() {
     renderSection('matches-content', 'matchesBtn');
 
-    // Additional matches-specific setup
-    document.querySelectorAll('.message-company').forEach(item => item.classList.remove('active'));
+    // Refresh connections when switching to matches tab
+    refreshConnectionsList();
 
+    // Reset to default state - show company info section with empty state, hide chat
     const chatSection = document.getElementById('chat-section');
-    const emptyContainer = chatSection?.querySelector('.empty-chat-container');
-    const chatContainer = chatSection?.querySelector('.chat-container');
+    const companyInfoSection = document.getElementById('company-info-section-matches');
 
-    emptyContainer?.classList.add('active');
-    chatContainer?.classList.remove('active');
+    // Show company info section (default), hide chat section
+    companyInfoSection.style.display = 'block';
+    chatSection?.classList.remove('active');
+
+    // Show empty state for company info
+    const emptyInfoContainer = companyInfoSection?.querySelector('.empty-company-info-container');
+    const infoContainer = companyInfoSection?.querySelector('.company-info-container');
+
+    emptyInfoContainer?.classList.add('active');
+    infoContainer?.classList.remove('active');
+
+    // Remove active class from all message companies
+    document.querySelectorAll('.message-company').forEach(item => item.classList.remove('active'));
 }
 
 function renderCalendar() {
@@ -661,6 +925,269 @@ async function fetchMatchPercentagesIndividual(companies) {
     return companiesWithMatch;
 }
 
+// Function to show appointment booking popup
+function showAppointmentPopup(companyId) {
+    const company = findCompanyById(companyId);
+    if (!company) return;
+
+    currentCompanyForAppointment = companyId;
+    const popup = document.getElementById('appointment-popup');
+    const companyNameElement = document.getElementById('appointment-company-name');
+
+    if (companyNameElement && company) {
+        companyNameElement.textContent = `Afspraak boeken met ${company.name}`;
+    }
+
+    popup.classList.add('show');
+
+    // Prevent body scroll when popup is open
+    document.body.style.overflow = 'hidden';
+
+    // Reset state
+    selectedDate = null;
+    selectedTime = null;
+    document.getElementById('appointment-loading').style.display = 'block';
+    document.getElementById('appointment-calendar').style.display = 'none';
+    document.getElementById('appointment-error').style.display = 'none';
+    document.getElementById('book-appointment').style.display = 'none';
+
+    // Fetch available appointments
+    fetchAvailableAppointments(companyId);
+}
+
+// Function to hide appointment booking popup
+function hideAppointmentPopup() {
+    const popup = document.getElementById('appointment-popup');
+    popup.classList.remove('show');
+
+    // Restore body scroll when popup is closed
+    document.body.style.overflow = '';
+
+    selectedDate = null;
+    selectedTime = null;
+    currentCompanyForAppointment = null;
+    availableAppointments = [];
+}
+
+// Function to fetch available appointments from backend
+async function fetchAvailableAppointments(companyId) {
+    try {
+        console.log('Fetching appointments for company ID:', companyId); // Debug log
+        const response = await fetch(`/appointments/${companyId}`, {
+            method: 'GET',
+            headers: {
+                'Accept': 'application/json',
+                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') || ''
+            }
+        });
+
+        console.log('Response status:', response.status); // Debug log
+        console.log('Response ok:', response.ok); // Debug log
+
+        if (response.ok) {
+            const data = await response.json();
+            console.log('Appointment data received:', data); // Debug log
+            availableAppointments = data.appointments || [];
+            console.log('Available appointments:', availableAppointments); // Debug log
+
+            document.getElementById('appointment-loading').style.display = 'none';
+
+            // Always show the calendar, even if no appointments exist
+            document.getElementById('appointment-calendar').style.display = 'block';
+            initializeAppointmentCalendar();
+        } else {
+            // Log the response details for debugging
+            const responseText = await response.text();
+            console.log('Response error text:', responseText);
+
+            // If endpoint doesn't exist (404) or other error, treat as no existing appointments
+            console.log('Backend endpoint not available, proceeding with empty appointments array');
+            availableAppointments = [];
+
+            document.getElementById('appointment-loading').style.display = 'none';
+            document.getElementById('appointment-calendar').style.display = 'block';
+            initializeAppointmentCalendar();
+        }
+    } catch (error) {
+        console.error('Error fetching appointments:', error);
+
+        // On network error, proceed with empty appointments (allows booking any slot)
+        console.log('Network error, proceeding with empty appointments array');
+        availableAppointments = [];
+
+        document.getElementById('appointment-loading').style.display = 'none';
+        document.getElementById('appointment-calendar').style.display = 'block';
+        initializeAppointmentCalendar();
+    }
+}
+
+// Function to initialize the appointment calendar (now daily view)
+function initializeAppointmentCalendar() {
+    const today = new Date();
+    // Use today's date as the default date for appointment booking
+    selectedDate = today.toISOString().split('T')[0]; // Format: YYYY-MM-DD
+    renderDailyAppointmentSlots();
+}
+
+// Function to render daily appointment time slots
+function renderDailyAppointmentSlots() {
+    console.log('Rendering daily appointment slots for date:', selectedDate); // Debug log
+    console.log('Available appointments:', availableAppointments); // Debug log
+
+    const slotsContainer = document.getElementById('appointment-time-slots');
+    slotsContainer.innerHTML = '';
+
+    // Generate all possible time slots from 9:00 to 18:00 in 15-minute intervals
+    for (let hour = 9; hour <= 18; hour++) {
+        const row = document.createElement('tr');
+        row.className = 'hour-row';
+        row.dataset.hour = hour;
+
+        // Time column
+        const timeCell = document.createElement('td');
+        timeCell.className = 'time-cell';
+        timeCell.textContent = `${hour.toString().padStart(2, '0')}:00`;
+
+        // Appointment slots column
+        const appointmentCell = document.createElement('td');
+        appointmentCell.className = 'appointment-cell';
+        appointmentCell.dataset.hour = hour;
+
+        const timeSlotsDiv = document.createElement('div');
+        timeSlotsDiv.className = 'time-slots';
+
+        // Generate 4 quarter slots for this hour (0, 15, 30, 45 minutes)
+        for (let quarter = 0; quarter < 4; quarter++) {
+            const minutes = quarter * 15;
+            const timeSlot = `${hour.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}`;
+
+            const quarterDiv = document.createElement('div');
+            quarterDiv.className = 'quarter-slot';
+            quarterDiv.dataset.time = timeSlot;
+
+            // Check if this time slot is already booked
+            const isBooked = isTimeSlotBooked(timeSlot);
+
+            if (isBooked) {
+                // Show booked slot
+                const appointmentBlock = document.createElement('div');
+                appointmentBlock.className = 'appointment-block booked';
+                appointmentBlock.innerHTML = `
+                    <span class="appointment-time">${timeSlot}</span>
+                    <span class="appointment-status">Geboekt</span>
+                `;
+                quarterDiv.appendChild(appointmentBlock);
+            } else {
+                // Show available slot as button
+                const availableBtn = document.createElement('button');
+                availableBtn.className = 'time-slot-btn available';
+                availableBtn.textContent = timeSlot;
+                availableBtn.title = `Boek afspraak voor ${timeSlot}`;
+                availableBtn.addEventListener('click', () => selectAppointmentTime(timeSlot, availableBtn));
+                quarterDiv.appendChild(availableBtn);
+            }
+
+            timeSlotsDiv.appendChild(quarterDiv);
+        }
+
+        appointmentCell.appendChild(timeSlotsDiv);
+        row.appendChild(timeCell);
+        row.appendChild(appointmentCell);
+        slotsContainer.appendChild(row);
+    }
+
+    console.log('Daily appointment slots rendered'); // Debug log
+}
+
+// Function to check if a time slot is booked
+function isTimeSlotBooked(timeSlot) {
+    // Check if any appointment exists for this time slot on the selected date
+    return availableAppointments.some(apt => {
+        // Handle different date formats that might come from the backend
+        let appointmentDate = apt.date;
+        if (apt.date && typeof apt.date === 'string') {
+            // If date includes time, extract just the date part
+            appointmentDate = apt.date.split('T')[0];
+        }
+
+        return appointmentDate === selectedDate && apt.time === timeSlot;
+    });
+}
+
+// Function to select appointment time
+function selectAppointmentTime(time, timeElement) {
+    console.log('Selecting appointment time:', time); // Debug log
+
+    // Remove previous selection
+    document.querySelectorAll('.time-slot-btn.selected').forEach(btn => {
+        btn.classList.remove('selected');
+    });
+
+    // Select new time
+    timeElement.classList.add('selected');
+    selectedTime = time;
+
+    console.log('Selected time set to:', selectedTime); // Debug log
+
+    // Show book appointment button
+    const bookBtn = document.getElementById('book-appointment');
+    if (bookBtn) {
+        bookBtn.style.display = 'block';
+        console.log('Book appointment button shown'); // Debug log
+    }
+}
+
+// Function to book appointment
+async function bookAppointment() {
+    if (!selectedDate || !selectedTime || !currentCompanyForAppointment) {
+        alert('Selecteer eerst een datum en tijd.');
+        return;
+    }
+
+    console.log('Booking appointment:', { // Debug log
+        selectedDate,
+        selectedTime,
+        currentCompanyForAppointment,
+        studentId: window.studentId
+    });
+
+    try {
+        const response = await fetch('/appointments', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Accept': 'application/json',
+                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') || ''
+            },
+            body: JSON.stringify({
+                student_id: window.studentId,
+                company_id: currentCompanyForAppointment,
+                date: selectedDate,
+                time: selectedTime
+            })
+        });
+
+        console.log('Booking response status:', response.status); // Debug log
+
+        if (response.ok) {
+            const result = await response.json();
+            console.log('Booking successful:', result); // Debug log
+            alert('Afspraak succesvol geboekt!');
+            hideAppointmentPopup();
+
+            // Optionally refresh the calendar or update the UI
+            // You could trigger a calendar refresh here if needed
+        } else {
+            const errorData = await response.json().catch(() => ({ message: 'Onbekende fout' }));
+            console.error('Booking error:', errorData); // Debug log
+            alert(`Fout bij het boeken van de afspraak: ${errorData.message || 'Onbekende fout'}`);
+        }
+    } catch (error) {
+        console.error('Error booking appointment:', error);
+        alert('Er is een fout opgetreden bij het boeken van de afspraak.');
+    }
+}
+
 // add event listeners when DOM is loaded
 document.addEventListener('DOMContentLoaded', () => {
     // Check if student ID is available
@@ -706,6 +1233,8 @@ document.addEventListener('DOMContentLoaded', () => {
     renderHome();
     // set up chat functionality immediately
     handleCompanySelection();
+    // set up initial message company click handlers
+    setupMessageCompanyClickHandlers();
     // set up profile dropdown functionality
     handleProfileDropdown();
     // set up settings navigation

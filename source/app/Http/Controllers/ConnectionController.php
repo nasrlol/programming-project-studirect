@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
 use Illuminate\View\View;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Collection;
 
 class ConnectionController extends Controller
 {
@@ -123,6 +124,76 @@ class ConnectionController extends Controller
 
         } catch (\Exception $e) {
             return []; // Return empty array on exception
+        }
+    }
+
+    /**
+     * Get connections for a specific student and return liked companies
+     *
+     * @param int $id The student ID
+     * @param Request $request
+     * @return JsonResponse
+     */
+    public function getConnectionsForStudent($id, Request $request): JsonResponse
+    {
+        try {
+            // Get authentication token from session
+            $token = session('api_token');
+            if (!$token) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Authentication required'
+                ], 401);
+            }
+
+            // Use the StudentController's getLikedCompanies method logic
+            $connections = $this->getConnections($id, 'student');
+
+            // If no connections from API, try session backup
+            $likedCompanyIds = [];
+
+            if (empty($connections)) {
+                // Fallback to session storage
+                $sessionKey = "liked_companies_student_{$id}";
+                $likedCompanyIds = session($sessionKey, []);
+            } else {
+                // Filter to only liked connections (status = true)
+                $likedConnections = collect($connections)->where('status', true)->all();
+
+                if (!empty($likedConnections)) {
+                    // Get company IDs that were liked
+                    $likedCompanyIds = collect($likedConnections)->pluck('company_id')->toArray();
+                }
+            }
+
+            $likedCompanies = [];
+
+            if (!empty($likedCompanyIds)) {
+                // Fetch all companies
+                $httpRequest = Http::withHeaders(['Authorization' => 'Bearer ' . $token]);
+                $response = $httpRequest->get($this->companiesApiUrl);
+
+                if ($response->successful()) {
+                    $allCompanies = $response->json('data');
+
+                    // Filter companies to only include liked ones
+                    $likedCompanies = collect($allCompanies)
+                        ->whereIn('id', $likedCompanyIds)
+                        ->values()
+                        ->toArray();
+                }
+            }
+
+            return response()->json([
+                'success' => true,
+                'likedCompanies' => $likedCompanies
+            ]);
+
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Error fetching connections: ' . $e->getMessage()
+            ], 500);
         }
     }
 }

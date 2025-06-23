@@ -11,7 +11,7 @@ class AdminController extends Controller
     public function show(Request $request)
 {
     try {
-        $apiLogs = $this->apiUrl . 'admin/logs';
+        $apiLogs = $this->apiUrl . '/admin/logs';
         $action = false;
         $token = "";
         //If user just logged in, create session
@@ -43,7 +43,7 @@ class AdminController extends Controller
             dd(2);
         }
         $companies = $response->json('data');
-        //For appointments 
+        //For appointments
         $response = Http::withHeaders( [
             "Authorization" => $token
         ])->get($this->appointmentApiUrl);
@@ -59,17 +59,17 @@ class AdminController extends Controller
         //Degrees
         $degrees = Http::withHeaders( [
             "Authorization" => $token
-        ])->get($this->apiUrl . 'diplomas')->json('data');
+        ])->get($this->apiUrl . '/diplomas')->json('data');
 
         //Final response for logs
         //Check if the apiURL of the requested logs is active.
         if (isset($request['cursor'])) {
             $response = Http::withHeaders( [
             "Authorization" => $token
-        ])->get($this->apiUrl . 'admin/logs?cursor=' . $request['cursor']);
+        ])->get($this->apiUrl . '/admin/logs?cursor=' . $request['cursor']);
         }
-        
-    
+
+
         else $response = Http::withHeaders( [
             "Authorization" => $token
         ])->get($apiLogs);
@@ -100,17 +100,17 @@ class AdminController extends Controller
 
 
 
-        foreach ($students as &$student) 
+        foreach ($students as &$student)
         {$student['logs'] = array();
-            $student['updated_at'] = substr($student['updated_at'],8,2) . 
-            substr($student['updated_at'], 4, 2) . 
+            $student['updated_at'] = substr($student['updated_at'],8,2) .
+            substr($student['updated_at'], 4, 2) .
             substr($student['updated_at'], 0, 4);
         }
 
-        foreach ($companies as &$company) 
+        foreach ($companies as &$company)
         {$company['logs'] = array();
-            $company['updated_at'] = substr($company['updated_at'],8,2) . 
-            substr($company['updated_at'], 4, 2) . 
+            $company['updated_at'] = substr($company['updated_at'],8,2) .
+            substr($company['updated_at'], 4, 2) .
             substr($company['updated_at'], 0, 4);
         }
 
@@ -162,13 +162,13 @@ class AdminController extends Controller
 
             if ($log['actor'] === 'Student') {
                 $log['actor_id'] = $this->translateStudent($id, $token);
-                //This code adds a log to the user 
+                //This code adds a log to the user
                 foreach ($students as &$student) {
                     if ($student['id'] == $id) array_push($student['logs'], $log );
                 }
             } elseif ($log['actor'] === 'Bedrijf') {
                 $log['actor_id'] = $this->translateCompany($id, $token);
-                //This code adds a log to the user 
+                //This code adds a log to the user
                 foreach ($companies as &$company) {
                     if ($company['id'] == $id) array_push($company['logs'], $log );
                 }
@@ -176,11 +176,11 @@ class AdminController extends Controller
             elseif ($log['actor'] === 'Admin') {
                 $log['actor'] = 'Steve';
             }
-        
+
         }
-        
+
         return view('/admin/admin', [
-            'students' => $students, 
+            'students' => $students,
             'companies' => $companies,
             'appointments' => $appointments,
             'connections' => $connections,
@@ -209,7 +209,7 @@ class AdminController extends Controller
 
             if ($connection['status'] === '1') {
                 $connection['status'] = 'Actief';
-            } 
+            }
             else {
                 $connection['status'] = 'Afgesloten';
             }

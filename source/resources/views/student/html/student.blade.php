@@ -8,6 +8,13 @@
     @vite ('resources/css/student/student.css')
 </head>
 <body>
+    @if (session('api_token')) 
+    <script>
+        localStorage.setItem('token', "{{ $token }}")
+        localStorage.setItem('user_type', 'student')
+    </script>
+    @endif
+    
     @include('student.layouts.navbar')
 <main class="container">
     @include('student.layouts.settings')
@@ -158,9 +165,17 @@
                 <button id="cancel-appointment" class="cancel-btn">Annuleren</button>
             </div>
         </div>
+
+    <div id="calendar-content" class:"content-container">
+
     </div>
 
 </main>
+<script>
+    if (!localStorage.getItem('token')) {
+        location.href='/'
+    }
+</script>
 <script>
     // Pass companies data to JavaScript
     window.companiesData = @json($companies);

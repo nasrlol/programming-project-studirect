@@ -33,6 +33,11 @@ class StudentController extends Controller
         //One student exists, so Array just consists of all the keys and their values
         $student = $response->json('data');
 
+        $skills = Http::withHeaders([
+            "Authorization" => $token
+        ])->get("{$this->apiUrl}skills")->json('data');
+        
+
         $response = Http::withHeaders([
             "Authorization" => $token
         ])->get($this->companiesApiUrl);
@@ -44,6 +49,14 @@ class StudentController extends Controller
 
         // Get liked companies for the message list
         $likedCompanies = $this->getLikedCompanies($id, $token);
+        foreach ($companies as $company) { 
+            foreach ($likedCompanies as $lCompany) {
+                if ($lCompany['id'] == $company['id']) {
+                    $key = array_search($company, $companies);
+                    array_splice( $companies, $key,1);
+                }
+            }
+        }
 
         $response = Http::withHeaders([
             "Authorization" => $token
@@ -90,7 +103,9 @@ class StudentController extends Controller
             'appointments' => $appointments,
             'connections' => $connections,
             'allMessages' => $allMessages,
-            'diplomas' => $diplomas
+            'token' => $token,
+            'diplomas' => $diplomas,
+            'skills' => $skills
         ]);
 
     }
@@ -254,25 +269,41 @@ class StudentController extends Controller
             $validated = $request->validate([
             'first_name' => 'sometimes|string|max:255',
             'last_name' => 'sometimes|string|max:255',
-            'email' => 'sometimes|required|email|unique:students,email',
             'password' => 'sometimes|required|string|min:8',
             'study_direction' => 'sometimes|required|string|max:255',
             'graduation_track' => 'sometimes|required|integer',
             'interests' => 'sometimes|required|string',
             'job_preferences' => 'sometimes|required|string',
-            'cv' => 'nullable|string',
-            'profile_complete' => 'nullable|boolean',
+            'skills' => 'sometimes',
+            'Authorization' => 'required'
         ]);
+            $token = $validated['Authorization'];
+            unset($validated['Authorization']);
         } catch (\Exception $e) {
             if ($request->expectsJson()) {
                 return response()->json(['error' => 'Validation failed: ' . $e->getMessage()], 422);
             }
             return redirect()->back()->with('error', 'Validatie mislukt: ' . $e->getMessage());
         }
+        //Get skills for a student
+        try {
+            $skills = Http::withHeaders([
+                "Authorization" => $token
+            ])->get("{$this->apiUrl}skills/{$validated['skills']}")->json('data');
+
+            $validated['skills'] = $skills;
+        }
+        catch (\Exception $e) {
+            dd($e->getMessage());
+        }
+
 
         try {
+            
             //Current data is taken and merged with the validated data
-            $current = Http::get("{$this->studentsApiUrl}/{$id}");
+            $current = Http::withHeaders([
+                "Authorization" => $token
+            ])->get("{$this->studentsApiUrl}/{$id}");
             if (!$current->successful()) {
                 throw new \Exception('Could not fetch current student data');
             }
@@ -285,7 +316,9 @@ class StudentController extends Controller
                 unset($data['password']);
             }
 
-            $response = Http::patch("{$this->studentsApiUrl}/{$id}", $data);
+            $response = Http::withHeaders([
+                "Authorization" => $token
+            ])->patch("{$this->studentsApiUrl}/{$id}", $data);
 
             if (!$response->successful()) {
                 throw new \Exception('API update failed');
@@ -378,4 +411,5 @@ class StudentController extends Controller
             return [];
         }
     }
+    
 }

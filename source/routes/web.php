@@ -83,7 +83,7 @@ Route::post('/students', [StudentController::class, 'store'])->name('students.cr
 Route::post('/companies', [CompanyController::class, 'store'])->name('companies.create');
 
 Route::patch('/student/{id}', [StudentController::class, 'update']);
-Route::patch('/students/{id}', [StudentController::class, 'update']);
+Route::patch('/students/{id}', [StudentController::class, 'update'])->name('students.change');
 Route::patch('/company/{id}', [CompanyController::class, 'update']);
 Route::patch('/companies/{id}', [CompanyController::class, 'update']);
 
@@ -132,4 +132,31 @@ Route::post('/api/matches/{student_id}', [MatchController::class, 'getMultipleMa
 Route::get('/student/password/reset', [ForgotPasswordController::class, 'showLinkRequestForm'])->name('student.password.request');
 Route::post('/student/password/email', [ForgotPasswordController::class, 'sendResetLinkEmail'])->name('student.password.email');
 
+
+// =======================
+// TEST ROUTES
+// =======================
+
+Route::get('/test-controller', [RegistrationStudentController::class, 'debug']);
+Route::get('/test-class-load', fn () => "Controller loaded: " . get_class(new \App\Http\Controllers\RegistrationStudentController()));
+Route::get('/test-notfound', fn () => view('notfound', ['message' => 'Testmelding werkt.']));
+
+// API endpoint voor appointments (alle afspraken)
+Route::get('/api/appointments', function(Request $request) {
+    require_once __DIR__.'/student_name_helper.php';
+    $appointments = [
+        [
+            'student_id' => 1,
+            'company_id' => 61,
+            'time_start' => '10:15:00',
+            'time_end' => '10:30:00',
+        ]
+    ];
+    // Voeg student_name toe aan elke afspraak
+    foreach ($appointments as &$appointment) {
+        $appointment['student_name'] = getStudentName($appointment['student_id']);
+    }
+    unset($appointment);
+    return response()->json(['data' => $appointments]);
+});
 

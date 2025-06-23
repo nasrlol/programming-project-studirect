@@ -1359,6 +1359,7 @@ body {
     line-height: 1.6;
 }
 
+
 #selected-company-info li:before {
     content: "•";
     color: #0046C9;
@@ -1373,4 +1374,8 @@ body {
     line-height: 1.7;
     font-size: 1rem;
     margin: 0;
+}
+
+.hidden {
+    display: none;
 }

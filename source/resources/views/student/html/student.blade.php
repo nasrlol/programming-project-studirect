@@ -6,15 +6,17 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>StuDirect</title>
     @vite ('resources/css/student/student.css')
+
+    @vite ('resources/css/company/company.css')
 </head>
 <body>
-    @if (session('api_token')) 
+    @if (session('api_token'))
     <script>
         localStorage.setItem('token', "{{ $token }}")
         localStorage.setItem('user_type', 'student')
     </script>
     @endif
-    
+
     @include('student.layouts.navbar')
 <main class="container">
     @include('student.layouts.settings')
@@ -165,11 +167,7 @@
                 <button id="cancel-appointment" class="cancel-btn">Annuleren</button>
             </div>
         </div>
-
-    <div id="calendar-content" class:"content-container">
-
     </div>
-
 </main>
 <script>
     if (!localStorage.getItem('token')) {

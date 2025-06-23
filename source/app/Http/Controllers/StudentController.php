@@ -23,9 +23,13 @@ class StudentController extends Controller
 
         $token = "Bearer " . session("api_token");
 
+
+        $url = "{$this->studentsApiUrl}/{$id}";
+
         $response = Http::withHeaders([
             "Authorization" => $token
-        ])->get("{$this->studentsApiUrl}/{$id}");
+        ])->get("{$url}");
+
         //If the student is not found, user can go back to welcome page
         if (!$response->successful()) {
             return view('notfound', ['message' => 'Deze student lijkt niet te bestaan (error code 404). Contacteer de beheerder van de site voor meer informatie']);
@@ -35,8 +39,8 @@ class StudentController extends Controller
 
         $skills = Http::withHeaders([
             "Authorization" => $token
-        ])->get("{$this->apiUrl}skills")->json('data');
-        
+        ])->get("{$this->apiUrl}/skills")->json('data');
+
 
         $response = Http::withHeaders([
             "Authorization" => $token
@@ -49,7 +53,7 @@ class StudentController extends Controller
 
         // Get liked companies for the message list
         $likedCompanies = $this->getLikedCompanies($id, $token);
-        foreach ($companies as $company) { 
+        foreach ($companies as $company) {
             foreach ($likedCompanies as $lCompany) {
                 if ($lCompany['id'] == $company['id']) {
                     $key = array_search($company, $companies);
@@ -299,7 +303,7 @@ class StudentController extends Controller
 
 
         try {
-            
+
             //Current data is taken and merged with the validated data
             $current = Http::withHeaders([
                 "Authorization" => $token
@@ -411,5 +415,5 @@ class StudentController extends Controller
             return [];
         }
     }
-    
+
 }

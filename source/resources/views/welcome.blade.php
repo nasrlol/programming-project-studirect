@@ -56,7 +56,7 @@
     </header>
 
     <section class="mt-10 animate-fade-up delay-300">
-        <a href="/student/login" class="bg-blue-600 hover:bg-blue-700 text-white px-8 py-3 rounded-lg text-lg font-semibold shadow-lg transition duration-300">
+        <a href="/login" class="bg-blue-600 hover:bg-blue-700 text-white px-8 py-3 rounded-lg text-lg font-semibold shadow-lg transition duration-300">
             Log in
         </a>
     </section>

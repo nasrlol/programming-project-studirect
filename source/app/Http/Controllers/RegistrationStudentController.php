@@ -11,7 +11,9 @@ use Illuminate\Support\Facades\Log;
 class RegistrationStudentController extends Controller
 {
     protected string $studentsApiUrl = 'http://10.2.160.208/api/students';
+    protected string $diplomasApiUrl = 'http://10.2.160.208/api/diplomas'; // Deze regel toevoegen!
 
+    
     public function debug()
     {
         return 'Controller werkt!';
@@ -25,7 +27,7 @@ class RegistrationStudentController extends Controller
             'last_name' => 'required|string|max:255',
             'email' => 'required|email',
             'password' => 'required|string|min:8',
-            'study_direction' => 'required|string|max:255',
+
         ]);
 
         session(['registration.step1' => $validated]);
@@ -33,12 +35,43 @@ class RegistrationStudentController extends Controller
         return redirect()->route('student.register.step2');
     }
 
+    // Wijziging: extra methode om het step2 formulier te tonen met diploma data
+    public function showStep2()
+    {
+        // Controleer of stap 1 is voltooid
+        if (!session('registration.step1')) {
+            return redirect()->route('student.register.step1')
+                ->withErrors(['incomplete' => 'Je moet eerst stap 1 voltooien.']);
+        }
+
+        // Haal diploma-opties op van API
+        $diplomasResponse = Http::get($this->diplomasApiUrl);
+        
+        $diplomas = [];
+        if ($diplomasResponse->successful()) {
+            $diplomasData = $diplomasResponse->json('data');
+            $diplomas = isset($diplomasData['data']) ? $diplomasData['data'] : $diplomasData;
+        } else {
+            Log::warning('Kon geen diploma-opties ophalen, gebruik fallback waarden');
+            $diplomas = [
+                ['id' => '1', 'type' => 'Bachelor'],
+                ['id' => '2', 'type' => 'Master'],
+                ['id' => '3', 'type' => 'Graduaat']
+            ];
+        }
+
+        return view('student.register.register2', [
+            'diplomas' => $diplomas,
+            'step1data' => session('registration.step1')
+        ]);
+    }
+
     // Stap 2: Gegevens opslaan in sessie
     public function step2(Request $request)
     {
         $validated = $request->validate([
-            'graduation_track' => 'required|string|max:255',
-            'interests' => 'nullable|string',
+            'study_direction' => 'required|string|max:255',
+            'graduation_track' => 'required|numeric', // Gewijzigd naar numeric omdat we nu ID's gebruiken
             'linkedin' => 'nullable|url|max:255',
             'cv' => 'nullable|file|mimes:pdf,doc,docx|max:2048',
         ]);
@@ -79,7 +112,7 @@ class RegistrationStudentController extends Controller
             'last_name' => $step1['last_name'],
             'email' => $step1['email'],
             'password' => $step1['password'],
-            'study_direction' => $step1['study_direction'],
+            'study_direction' => $step2['study_direction'],
             'graduation_track' => $step2['graduation_track'],
             'interests' => $step2['interests'] ?? 'Nog niet ingevuld',
             'linkedin' => $step2['linkedin'] ?? '',
@@ -111,10 +144,19 @@ class RegistrationStudentController extends Controller
             Log::info('API response status: ' . $response->status());
             Log::info('API response body: ' . $response->body());
 
+            // Met dit:
             if ($response->successful()) {
+                // Verwijder sessiegegevens
                 session()->forget('registration.step1');
                 session()->forget('registration.step2');
-                return redirect()->route('student.login.form')->with('status', 'Registratie geslaagd!');
+                
+                // Haal het ID van de nieuwe student op
+                $studentData = $response->json('data');
+                $studentId = $studentData['id'];
+                
+                // Redirect naar de skills toevoegen pagina
+                return redirect()->route('student.skills.add', ['id' => $studentId]);
+            
             } else {
                 Log::error('API Registration failed: ' . $response->status() . ' - ' . $response->body());
                 $errorMsg = json_decode($response->body(), true);

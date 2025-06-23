@@ -6,13 +6,14 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\StudentController;
 use App\Http\Controllers\CompanyController;
 use App\Http\Controllers\AdminController;
-use App\Http\Controllers\loginstudent\ForgotPasswordController;
-use App\Http\Controllers\loginstudent\LoginController;
 use App\Http\Controllers\RegistrationStudentController;
+use App\Http\Controllers\ForgotPasswordController;
+use App\Http\Controllers\LoginController;
 use App\Http\Controllers\AppointmentController;
 use App\Http\Controllers\ConnectionController;
 use App\Http\Controllers\MessageController;
 use App\Http\Controllers\MatchController;
+use App\Http\Controllers\SkillsToevoegenController;
 
 /*
 |--------------------------------------------------------------------------
@@ -27,11 +28,9 @@ Route::get('/', fn () => view('welcome'))->name('home');
 // LOGIN / LOGOUT ROUTES
 // =======================
 
-// GET loginpagina (één formulier voor student & bedrijf)
-Route::get('/student/login', fn () => view('login.login'))->name('student.login.form');
-
-// POST login (stuurt naar frontend LoginController)
-Route::post('/student/login', [LoginController::class, 'submit'])->name('student.login');
+// GET/ pOSTloginpagina (één formulier voor student & bedrijf)
+Route::get('/login', fn () => view('login.login'))->name('login.login');
+Route::post('/login', [LoginController::class, 'submit'])->name('login.login');
 
 // LOGOUT (via API logout + sessie leegmaken)
 Route::post('/logout', function (Request $request) {
@@ -41,7 +40,7 @@ Route::post('/logout', function (Request $request) {
         report($e);
     }
     session()->forget('api_token');
-    return redirect()->route('student.login.form');
+    return redirect()->route('login.form');
 })->name('logout');
 
 
@@ -54,12 +53,14 @@ Route::get('/student/register', fn () => view('student.register.register1'))->na
 Route::get('/student/register1', fn () => view('student.register.register1'))->name('student.register.step1');
 Route::post('/student/register1', [RegistrationStudentController::class, 'step1'])->name('student.register.step1.submit');
 
-Route::get('/student/register2', fn () => view('student.register.register2'))->name('student.register.step2');
+Route::get('/student/register2', [RegistrationStudentController::class, 'showStep2'])->name('student.register.step2');
 Route::post('/student/register2', [RegistrationStudentController::class, 'step2'])->name('student.register.step2.submit');
 
 Route::get('/student/register3', fn () => view('student.register.register3'))->name('student.register.step3');
 Route::post('/student/register3', [RegistrationStudentController::class, 'submit'])->name('student.register.step3.submit');
 
+Route::get('/student/{id}/skills', [SkillsToevoegenController::class, 'showSkillsForm'])->name('student.skills.add');
+Route::post('/student/{id}/skills', [SkillsToevoegenController::class, 'saveSkills'])->name('student.skills.save');
 
 // =======================
 // STUDENT & COMPANY PAGES
@@ -126,11 +127,11 @@ Route::get('/api/match/{student_id}/{company_id}', [MatchController::class, 'get
 Route::post('/api/matches/{student_id}', [MatchController::class, 'getMultipleMatches']);
 
 // =======================
-// PASSWORD RESET (student)
+// PASSWORD RESET
 // =======================
 
-Route::get('/student/password/reset', [ForgotPasswordController::class, 'showLinkRequestForm'])->name('student.password.request');
-Route::post('/student/password/email', [ForgotPasswordController::class, 'sendResetLinkEmail'])->name('student.password.email');
+Route::get('/password/reset', [ForgotPasswordController::class, 'showLinkRequestForm'])->name('student.password.request');
+Route::post('/password/email', [ForgotPasswordController::class, 'sendResetLinkEmail'])->name('student.password.email');
 
 
 // =======================

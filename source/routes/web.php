@@ -108,6 +108,7 @@ Route::delete('/appointments/{id}', [AppointmentController::class, 'destroy']);
 
 Route::post('/connections', [ConnectionController::class, 'makeConnection']);
 Route::patch('/connections/{id}', [ConnectionController::class, 'removeConnection']);
+Route::get('/connections/{id}', [ConnectionController::class, 'getConnectionsForStudent']);
 
 // =======================
 // MESSAGES

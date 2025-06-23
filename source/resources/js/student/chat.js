@@ -91,10 +91,10 @@ function startMessagePolling(companyId, isInactive = false) {
     if (!companyId) return;
 
     currentPollingCompanyId = companyId;
-    
+
     // Determine polling interval based on user activity
     const interval = isInactive ? 10000 : (isUserActive ? 3000 : 7000); // 3s active, 7s semi-active, 10s inactive
-    
+
     pollingInterval = setInterval(() => {
         if (currentPollingCompanyId === companyId) {
             fetchNewMessages(companyId);
@@ -121,7 +121,7 @@ function fetchNewMessages(companyId) {
         headers: {
             'Content-Type': 'application/json',
             'Accept': 'application/json',
-            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') || 
+            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') ||
                            document.querySelector('input[name="_token"]')?.value || ''
         },
         body: JSON.stringify(conversationData)
@@ -148,7 +148,7 @@ function updateConversationWithNewMessages(companyId, messages) {
     if (!messages || messages.length === 0) return;
 
     const conversation = chatMessages.querySelector(`[data-company-id="${companyId}"]`);
-    
+
     // If no conversation exists, create one
     if (!conversation) {
         createNewConversation(companyId, messages);
@@ -158,28 +158,28 @@ function updateConversationWithNewMessages(companyId, messages) {
     // Get current messages in the conversation
     const currentMessages = conversation.querySelectorAll('.message');
     const currentMessageCount = currentMessages.length;
-    
+
     // If we have new messages, update the conversation
     if (messages.length > currentMessageCount) {
         // Clear and rebuild conversation to ensure proper order
         conversation.innerHTML = '';
-        
+
         messages.forEach(message => {
             const messageDiv = createMessageElement(message);
             conversation.appendChild(messageDiv);
         });
-        
+
         // Update last message time
         if (messages.length > 0) {
             const lastMessage = messages[messages.length - 1];
             lastMessageTime = lastMessage.created_at;
         }
-        
+
         // Scroll to bottom if this is the active conversation
         if (currentPollingCompanyId === companyId) {
             scrollToBottom();
         }
-        
+
         // Show notification for new messages if tab is not active
         if (!isUserActive && messages.length > currentMessageCount) {
             showNewMessageNotification();
@@ -206,14 +206,14 @@ function createNewConversation(companyId, messages) {
     conversation.className = 'conversation';
     conversation.setAttribute('data-company-id', companyId);
     conversation.style.display = currentPollingCompanyId === companyId ? 'block' : 'none';
-    
+
     messages.forEach(message => {
         const messageDiv = createMessageElement(message);
         conversation.appendChild(messageDiv);
     });
-    
+
     chatMessages.appendChild(conversation);
-    
+
     if (currentPollingCompanyId === companyId) {
         scrollToBottom();
     }
@@ -223,21 +223,21 @@ function createNewConversation(companyId, messages) {
 function createMessageElement(message) {
     const messageDiv = document.createElement('div');
     messageDiv.className = `message ${message.sender_type === 'App\\Models\\Student' ? 'sent' : 'received'}`;
-    
+
     const messageContent = document.createElement('div');
     messageContent.className = 'message-content';
-    
+
     const messageText = document.createElement('p');
     messageText.textContent = message.content;
-    
+
     const messageTime = document.createElement('div');
     messageTime.className = 'message-time';
     messageTime.textContent = formatTime(message.created_at);
-    
+
     messageContent.appendChild(messageText);
     messageContent.appendChild(messageTime);
     messageDiv.appendChild(messageContent);
-    
+
     return messageDiv;
 }
 
@@ -275,7 +275,7 @@ function handleCompanySelection(companyId) {
 
     currentCompanyId.value = companyId;
     showConversation(companyId);
-    
+
     // Start polling for this company
     startMessagePolling(companyId);
 }
@@ -320,7 +320,7 @@ function showEmptyStateForCompany() {
 
     const emptyDiv = document.createElement('div');
     emptyDiv.className = 'no-messages-company';
-    emptyDiv.innerHTML = '<p>No messages yet. Start the conversation!</p>';
+    emptyDiv.innerHTML = '<p>Nog geen berichten. Start het gesprek!</p>';
 
     // Remove any existing empty state
     const existingEmpty = chatMessages.querySelector('.no-messages-company');

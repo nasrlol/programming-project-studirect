@@ -8,7 +8,9 @@
         </p>
     </div>
     <div id="company-logo">
-        <img src="{{ $company_logo }}">
+        <img src="{{ !empty($company_logo) ? $company_logo : asset('images/image-placeholder.png') }}"
+             alt="Company Logo"
+             onerror="this.src='{{ asset('images/image-placeholder.png') }}'">
     </div>
     <div id="swipe">
         <button id="dislike">✕</button>
